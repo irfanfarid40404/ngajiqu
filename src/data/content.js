@@ -1,0 +1,381 @@
+export const siteConfig = {
+  name: "NgajiQ",
+  tagline: "Platform belajar Al-Qur'an online yang menghubungkan santri dengan ustadz & ustadzah bersanad.",
+  whatsappNumber: "6281234567890",
+  whatsappDefaultMsg: "Halo Admin NgajiQ, saya ingin konsultasi dan daftar kelas mengaji privat.",
+  instagram: "https://instagram.com/ngajiq",
+  tiktok: "https://tiktok.com/@ngajiq",
+  youtube: "https://youtube.com/@ngajiq",
+};
+
+export const stats = [
+  { value: "3.000+", label: "Pelajar Aktif", desc: "Santri dewasa, anak-anak, & keluarga" },
+  { value: "300+", label: "Guru Bersanad", desc: "Ustadz & Ustadzah lulus uji kompetensi" },
+  { value: "800+", label: "Kelas Berjalan", desc: "Sesi privat interaktif setiap harinya" },
+  { value: "4.9 / 5.0", label: "Rating Kepuasan", desc: "Berdasarkan 4.800+ ulasan terverifikasi" },
+];
+
+export const whyFeatures = [
+  {
+    id: "sanad",
+    icon: "UserCheck",
+    title: "Guru Bersanad & Amanah",
+    description: "Diajar langsung oleh ustadz dan ustadzah tersertifikasi dengan sanad bacaan yang jelas.",
+  },
+  {
+    id: "flexible",
+    icon: "Clock",
+    title: "Waktu Belajar Fleksibel",
+    description: "Pilih jam belajar bebas 24/7 sesuai ritme kerja santri dan jadwal sekolah anak.",
+  },
+  {
+    id: "private",
+    icon: "Star",
+    title: "100% Privat 1-on-1",
+    description: "Belajar privat tanpa rasa malu atau takut salah, dibimbing dengan sabar dari nol.",
+  },
+  {
+    id: "structured",
+    icon: "BookOpen",
+    title: "Kurikulum Terstruktur",
+    description: "Materi belajar bertahap dari pengenalan huruf hijaiyah hingga tartil dan tahfidz.",
+  },
+  {
+    id: "gender",
+    icon: "ClipboardCheck",
+    title: "Pemisahan Pengajar",
+    description: "Santri ikhwan bersama ustadz, dan santri akhwat bersama ustadzah untuk menjaga kenyamanan.",
+  },
+  {
+    id: "parents",
+    icon: "Monitor",
+    title: "Laporan untuk Orang Tua",
+    description: "Pantau kemajuan bacaan dan hafalan anak melalui laporan berkala di setiap akhir sesi.",
+  },
+  {
+    id: "reschedule",
+    icon: "Calendar",
+    title: "Bebas Reschedule",
+    description: "Jadwal dinamis bisa diatur ulang maksimal 2 jam sebelum sesi tanpa biaya hangus.",
+  },
+  {
+    id: "live",
+    icon: "MessageCircle",
+    title: "Talaqqi Interaktif Live",
+    description: "Koreksi makhraj huruf dan hukum tajwid secara langsung saat membaca ayat demi ayat.",
+  },
+  {
+    id: "materials",
+    icon: "FileText",
+    title: "Modul & Mushaf Digital",
+    description: "Dilengkapi modul panduan tajwid ringkas dan mushaf digital berstandar Kemenag.",
+  },
+  {
+    id: "guarantee",
+    icon: "TrendingUp",
+    title: "Garansi Ganti Guru",
+    description: "Garansi ganti guru gratis tanpa biaya tambahan jika merasa gaya mengajar kurang cocok.",
+  },
+];
+
+export const pricingPlans = [
+  {
+    id: "basic",
+    name: "Paket Basic",
+    badge: null,
+    popular: false,
+    priceMonthly: "Rp 249.000",
+    priceQuarterly: "Rp 599.000",
+    description: "Untuk santri pemula yang ingin mulai belajar dengan ritme santai dan teratur.",
+    features: [
+      "Kelas Al-Qur'an online 1-on-1",
+      "Materi pembelajaran digital lengkap",
+      "Jadwal belajar terstruktur (2x / minggu)",
+      "Pembelajaran live via Google Meet / Zoom",
+      "Laporan perkembangan bulanan",
+      "Garansi ganti guru gratis",
+    ],
+  },
+  {
+    id: "premium",
+    name: "Paket Premium",
+    badge: "Paling Populer",
+    popular: true,
+    priceMonthly: "Rp 449.000",
+    priceQuarterly: "Rp 1.099.000",
+    description: "Untuk santri dan orang tua yang ingin akselerasi bacaan dengan bimbingan intensif.",
+    features: [
+      "Semua fasilitas Paket Basic",
+      "Guru spesialis tahsin & tajwid bersanad",
+      "Evaluasi & koreksi makhraj mingguan",
+      "Pendampingan belajar & PR tilawah",
+      "Rekaman sesi & catatan koreksi audio",
+      "Konsultasi tanya jawab via WhatsApp",
+    ],
+  },
+  {
+    id: "private",
+    name: "Paket Private VIP",
+    badge: null,
+    popular: false,
+    priceMonthly: "Rp 649.000",
+    priceQuarterly: "Rp 1.599.000",
+    description: "Sesi privat eksklusif dengan guru pilihan, jadwal super fleksibel, dan target personal.",
+    features: [
+      "Kelas privat eksklusif 1-on-1 prioritas",
+      "Bebas pilih ustadz / ustadzah favorit",
+      "Jadwal belajar super fleksibel bebas atur",
+      "Target personal (Persiapan Nikah / Khatam)",
+      "Voice note koreksi bacaan harian",
+      "Garansi bimbingan sampai lancar",
+    ],
+  },
+];
+
+export const teachers = [
+  {
+    id: 1,
+    number: "001",
+    name: "Ustazah Syaimaa'",
+    title: "Ustazah",
+    specialty: "Tahsin & Tajwid Al-Qur'an",
+    specialization: "Tahsin & Tajwid Al-Qur'an",
+    credential: "Sanad Matn Jazariyyah",
+    experience: "8 Tahun Pengalaman",
+    description: "Membimbing santri pemula dan dewasa memperbaiki makhraj huruf serta kaidah tajwid secara bertahap dan menyenangkan.",
+    image: "/teachers/teacher-1.png",
+    photo: "/teachers/teacher-1.png",
+    rating: 5.0,
+    reviews: 342,
+    ctaText: "Lihat Profil",
+    ctaUrl: "#",
+    tag: "Tahsin Bersanad",
+  },
+  {
+    id: 2,
+    number: "002",
+    name: "Ustazah Hanifah",
+    title: "Ustazah",
+    specialty: "Tilawah & Tahfidz Quran",
+    specialization: "Tilawah & Tahfidz Quran",
+    credential: "Hafidzah 30 Juz Bersanad",
+    experience: "10 Tahun Pengalaman",
+    description: "Pendampingan tilawah tartil dan hafalan surat pilihan dengan target belajar yang disesuaikan kemampuan personal.",
+    image: "/teachers/teacher-2.png",
+    photo: "/teachers/teacher-2.png",
+    rating: 5.0,
+    reviews: 487,
+    ctaText: "Lihat Profil",
+    ctaUrl: "#",
+    tag: "Hafidzah 30 Juz",
+  },
+  {
+    id: 3,
+    number: "003",
+    name: "Ustazah Asyiqin",
+    title: "Ustazah",
+    specialty: "Iqro & Pemula Dewasa",
+    specialization: "Iqro & Pemula Dewasa",
+    credential: "Spesialis Bimbingan Sabar Dari Nol",
+    experience: "6 Tahun Pengalaman",
+    description: "Pembelajaran mengaji ramah dari nol mutlak bagi santri dewasa yang ingin belajar membaca Al-Qur'an tanpa rasa malu.",
+    image: "/teachers/teacher-3.png",
+    photo: "/teachers/teacher-3.png",
+    rating: 4.9,
+    reviews: 285,
+    ctaText: "Lihat Profil",
+    ctaUrl: "#",
+    tag: "Khusus Pemula",
+  },
+  {
+    id: 4,
+    number: "004",
+    name: "Ustadz Ahmad Fauzi",
+    title: "Ustadz",
+    specialty: "Tartil & Makhraj Al-Qur'an",
+    specialization: "Tartil & Makhraj Al-Qur'an",
+    credential: "Sanad Riwayat Hafsh 'an 'Ashim",
+    experience: "7 Tahun Pengalaman",
+    description: "Fokus pada kelancaran membaca mushaf standar Madinah dan bimbingan artikulasi fashahah yang benar.",
+    image: "/teachers/teacher-4.png",
+    photo: "/teachers/teacher-4.png",
+    rating: 5.0,
+    reviews: 310,
+    ctaText: "Lihat Profil",
+    ctaUrl: "#",
+    tag: "Tartil & Makhraj",
+  },
+];
+
+export const howItWorksSteps = [
+  {
+    step: "01",
+    title: "Daftar & Pilih Preferensi",
+    description:
+      "Isi formulir singkat: nama, nomor WhatsApp, kemampuan awal (nol/terbata/lancar), dan preferensi pengajar (Ustadz/Ustadzah).",
+  },
+  {
+    step: "02",
+    title: "Konsultasi & Penentuan Jadwal",
+    description:
+      "Tim admin mencocokkan jadwal dan guru yang paling pas dengan kesibukan Anda dalam 1×24 jam kerja via WhatsApp.",
+  },
+  {
+    step: "03",
+    title: "Sesi Belajar Live 1-on-1",
+    description:
+      "Belajar tatap muka via Google Meet atau Zoom. Ustadz menyimak bacaan Anda dan mengoreksi makhraj huruf secara real-time.",
+  },
+  {
+    step: "04",
+    title: "Evaluasi & Pantau Kemajuan",
+    description:
+      "Dapatkan laporan catatan evaluasi setiap sesi. Jadwal bisa di-reschedule kapan saja dengan mudah dan fleksibel.",
+  },
+];
+
+export const curriculumLevels = [
+  {
+    level: "Tingkat 1",
+    title: "Iqro & Pengenalan Huruf Hijaiyah",
+    target: "Khusus santri pemula (dewasa & anak) yang belum mengenal huruf Arab atau masih sering tertukar.",
+    points: [
+      "Mengenal 28 huruf hijaiyah tunggal dan bentuk sambung",
+      "Memahami harakat dasar (fathah, kasrah, dhammah, tanwin)",
+      "Latihan merangkai kata pendek dengan intonasi tepat",
+      "Praktek membaca buku jilid Iqro 1 sampai 3 dengan sabar",
+    ],
+    duration: "4 - 8 Minggu",
+  },
+  {
+    level: "Tingkat 2",
+    title: "Tahsin Dasar & Kaidah Tajwid",
+    target: "Untuk santri yang sudah kenal huruf tapi bacaan masih terbata-bata atau sering keliru panjang-pendek.",
+    points: [
+      "Makharijul Huruf (titik artikulasi keluarnya bunyi huruf)",
+      "Hukum Mad (panjang pendek bacaan 2 hingga 6 harakat)",
+      "Hukum Nun Mati & Tanwin (Idzhar, Idgham, Ikhfa, Iqlab)",
+      "Hukum Mim Mati, Qalqalah, dan Ghunnah",
+    ],
+    duration: "6 - 10 Minggu",
+  },
+  {
+    level: "Tingkat 3",
+    title: "Tahsin Lanjutan & Kelancaran Tilawah",
+    target: "Untuk yang ingin memperhalus bacaan Al-Qur'an 30 juz dan memahami tanda waqaf-ibtida.",
+    points: [
+      "Sifat-sifat huruf (Hams, Jahr, Isti'la, Tafkhim & Tarqiq)",
+      "Kaidah Waqaf dan Ibtida' (titik berhenti dan memulai ayat)",
+      "Gharib (kaidah bacaan-bacaan khusus dalam Al-Qur'an)",
+      "Penerapan langsung tilawah surat-surat dalam Al-Qur'an",
+    ],
+    duration: "8 - 12 Minggu",
+  },
+  {
+    level: "Tingkat 4",
+    title: "Tahfidz & Tadabbur Tematik",
+    target: "Menambah hafalan surat pilihan / Juz 30 disertai pemahaman makna ayat yang menyejukkan hati.",
+    points: [
+      "Metode menghafal mudah untuk santri dewasa yang sibuk",
+      "Setoran hafalan 1-on-1 dengan koreksi makhraj teliti",
+      "Tadabbur intisari ayat untuk panduan kehidupan harian",
+      "Bimbingan muraja'ah agar hafalan tetap terjaga kokoh",
+    ],
+    duration: "Berkelanjutan",
+  },
+];
+
+export const testimonials = [
+  {
+    id: 1,
+    name: "Alya Putri",
+    role: "Karyawan Swasta · Santri Dewasa",
+    message: "Belajar mengaji di NgajiQ jadi jauh lebih tenang dan percaya diri. Ustadzahnya sangat sabar membimbing dari nol tanpa membuat saya canggung. Sekarang sudah lancar membaca Juz 30 dengan tajwid yang tepat.",
+    image: "/persona-bride.jpg",
+    avatar: "/persona-bride.jpg",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "Rizky Maulana",
+    role: "Civil Engineer · Profesional",
+    message: "Saya lebih percaya diri membaca Al-Qur'an setelah rutin belajar tahsin bersama guru di NgajiQ. Jadwalnya fleksibel bisa malam hari sepulang proyek, dan materi tahsinnya langsung dipraktekkan ayat per ayat.",
+    image: "/persona-engineer.jpg",
+    avatar: "/persona-engineer.jpg",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Nabila Azzahra",
+    role: "Digital Marketer · Kelas Pranikah",
+    message: "Jadwal belajar fleksibel dan gurunya sangat membantu. Saya ambil kelas privat untuk persiapan sebelum akad nikah. Alhamdulillah dalam beberapa pekan bacaan Surat Ar-Rahman jadi lancar dan tartil.",
+    image: "/persona-office.jpg",
+    avatar: "/persona-office.jpg",
+    rating: 5,
+  },
+  {
+    id: 4,
+    name: "Hj. Siti Rahmawati",
+    role: "Ibu Rumah Tangga · Kelas Keluarga",
+    message: "Awalnya sempat ragu belajar online di usia 50-an, ternyata metode 1-on-1 di NgajiQ sangat mudah diikuti dari HP. Ustadzah begitu teliti mengoreksi makhraj huruf dengan ramah dan penuh kehangatan.",
+    image: "/persona-family.jpg",
+    avatar: "/persona-family.jpg",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "dr. Farhan Hidayat",
+    role: "Dokter Umum · Profesional Sibuk",
+    message: "Sebagai dokter dengan jadwal jaga yang sering berubah, fitur reschedule gratis di NgajiQ sangat membantu. Ustadz selalu tepat waktu dan memberikan evaluasi detail setiap selesai sesi talaqqi.",
+    image: "/persona-engineer.jpg",
+    avatar: "/persona-engineer.jpg",
+    rating: 5,
+  },
+  {
+    id: 6,
+    name: "Annisa Triana",
+    role: "Mahasiswi · Program Tahfidz",
+    message: "Metode muraja'ah dan setoran 1-on-1 bersama ustadzah membuat target hafalan saya lebih konsisten. Setiap harakat dan dengung dikoreksi dengan teliti sehingga kualitas hafalan semakin kuat.",
+    image: "/persona-bride.jpg",
+    avatar: "/persona-bride.jpg",
+    rating: 5,
+  },
+];
+
+export const faqs = [
+  {
+    category: "Umum",
+    question: "Apa itu NgajiQ?",
+    answer: "NgajiQ adalah platform bimbingan belajar Al-Qur'an online privat 1-on-1 yang menghubungkan santri (anak-anak, dewasa, dan orang tua) dengan ustadz dan ustadzah berpengalaman serta bersanad. Kami membimbing dari nol mutlak hingga lancar tartil.",
+  },
+  {
+    category: "Metode",
+    question: "Apakah pembelajaran dilakukan secara online?",
+    answer: "Ya, seluruh sesi belajar dilakukan secara online via Google Meet atau Zoom. Guru melakukan screen-sharing mushaf Al-Qur'an digital beresolusi tinggi sehingga santri bisa menyimak setiap huruf dan harakat dengan jelas dari HP maupun laptop.",
+  },
+  {
+    category: "Pemula",
+    question: "Apakah tersedia kelas untuk pemula dewasa yang belum bisa sama sekali?",
+    answer: "Sangat tersedia. Lebih dari 60% santri kami adalah orang dewasa yang memulai dari nol mutlak (belum kenal huruf hijaiyah). Bimbingan dilakukan 1-on-1 dengan suasana privat, ramah, dan bebas dari rasa malu.",
+  },
+  {
+    category: "Pengajar",
+    question: "Apakah santri perempuan diajar oleh Ustadzah dan santri laki-laki oleh Ustadz?",
+    answer: "Ya, kami memberlakukan pemisahan gender secara ketat untuk kenyamanan belajar. Santri akhwat/perempuan dibimbing oleh Ustadzah, dan santri ikhwan/laki-laki dibimbing oleh Ustadz.",
+  },
+  {
+    category: "Pendaftaran",
+    question: "Bagaimana cara mendaftar kelas atau trial gratis?",
+    answer: "Cukup klik tombol 'Mulai Belajar' atau 'Daftar Trial Gratis', isi formulir nama, WhatsApp, level, dan waktu luang. Tim admin kami akan menghubungi Anda via WhatsApp dalam 1×24 jam untuk konfirmasi sesi perdana.",
+  },
+  {
+    category: "Biaya",
+    question: "Bagaimana sistem pembayaran dan apakah ada biaya tersembunyi?",
+    answer: "Pembayaran dilakukan per paket (bulanan atau 3 bulanan) melalui transfer bank atau QRIS setelah jadwal disetujui. Tidak ada biaya pendaftaran tersembunyi. Biaya sudah mencakup modul digital, ujian level, dan sertifikat.",
+  },
+  {
+    category: "Jadwal",
+    question: "Apakah jadwal belajar bisa diganti jika berhalangan hadir?",
+    answer: "Ya, jadwal sangat fleksibel. Anda dapat mengajukan reschedule sesi maksimal 2 jam sebelum waktu belajar dimulai tanpa hangus.",
+  },
+];
