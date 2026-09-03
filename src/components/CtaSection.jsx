@@ -12,11 +12,6 @@ export default function CtaSection({ onOpenModal }) {
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
-        
-        {/* Eyebrow in gold/amber */}
-        <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-amber-400">
-          SIAP UNTUK MEMULAI?
-        </p>
 
         {/* Massive Bold Heading */}
         <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-white leading-[1.02] max-w-4xl mx-auto">
@@ -28,7 +23,7 @@ export default function CtaSection({ onOpenModal }) {
         <div className="flex items-center justify-center pt-2">
           <button
             onClick={() => onOpenModal && onOpenModal("Final CTA")}
-            className="px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-full text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
+            className="px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-xl text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
           >
             <span>Daftar Trial Class</span>
             <ArrowRight className="w-4 h-4" />

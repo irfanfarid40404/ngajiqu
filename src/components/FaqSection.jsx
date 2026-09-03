@@ -6,15 +6,15 @@ export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="py-24 bg-slate-50/60 border-b border-slate-200/80">
+    <section id="faq" className="py-20 md:py-28 bg-[#FBFBFC] border-b border-slate-200/80">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight">
-            FAQ
+        <div className="text-center mb-16 space-y-3">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-tight">
+            Pertanyaan yang Sering Ditanyakan
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600">
+          <p className="text-sm sm:text-base text-slate-600">
             Pertanyaan yang sering diajukan seputar bimbingan belajar mengaji di NgajiQ.
           </p>
         </div>
@@ -30,6 +30,8 @@ export default function FaqSection() {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${idx}`}
                   className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-bold text-slate-950 text-sm sm:text-base focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#049788] rounded-2xl"
                 >
                   <span className="leading-snug">{faq.question}</span>
@@ -41,6 +43,8 @@ export default function FaqSection() {
                 </button>
 
                 <div
+                  id={`faq-answer-${idx}`}
+                  role="region"
                   className={`grid transition-all duration-200 ease-out ${
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}

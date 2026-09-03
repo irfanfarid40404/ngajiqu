@@ -44,8 +44,8 @@ function TestimonialCard({ item }) {
         </div>
 
         {/* Testimonial Message */}
-        <blockquote className="text-xs sm:text-sm text-slate-700 leading-relaxed italic line-clamp-4">
-          "{item.message || item.quote}"
+        <blockquote className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+          &ldquo;{item.message || item.quote}&rdquo;
         </blockquote>
 
       </div>
@@ -76,7 +76,7 @@ export default function TestimonialSection({
   const marqueeRow2 = [...row2, ...row2, ...row2];
 
   return (
-    <section id="testimoni" className={cn("py-24 bg-white border-b border-slate-200/80 relative overflow-hidden", className)}>
+    <section id="testimoni" className={cn("py-20 md:py-28 bg-white border-b border-slate-200/80 relative overflow-hidden", className)}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Heading */}

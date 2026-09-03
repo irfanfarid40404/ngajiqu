@@ -35,6 +35,7 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
       hasDropdown: true,
       children: [
         { label: "Kursus Al-Qur'an", href: "/kursus/alquran", desc: "Tahsin, Tajwid, & Tahfidz Privat" },
+        { label: "Kursus Fiqih", href: "/kursus/fiqih", desc: "Ibadah, Muamalah, & Fiqih Kontemporer" },
         { label: "Program Pembelajaran", href: "/#program", desc: "Jenjang SD, SMP, SMA, & Dewasa" },
         { label: "Paket & Biaya Kelas", href: "/#kelas", desc: "Pilihan paket privat 1-on-1" },
         { label: "Promo Spesial", href: "/#promo", desc: "Voucher & diskon pendaftaran" },
@@ -62,7 +63,7 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
 
     const href = item.href;
 
-    if (href === "/kursus/alquran" || href === "/guru-pengajar") {
+    if (href === "/kursus/alquran" || href === "/kursus/fiqih" || href === "/guru-pengajar") {
       e.preventDefault();
       if (onNavigate) {
         onNavigate(href);
@@ -164,7 +165,7 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
             }`}>
               {navItems.map((item) => {
                 const isTeacherActive = item.href === "/guru-pengajar" && currentPath === "/guru-pengajar";
-                const isKursusActive = item.hasDropdown && currentPath === "/kursus/alquran";
+                const isKursusActive = item.hasDropdown && (currentPath === "/kursus/alquran" || currentPath === "/kursus/fiqih");
 
                 if (item.hasDropdown) {
                   return (

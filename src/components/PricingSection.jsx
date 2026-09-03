@@ -6,15 +6,15 @@ export default function PricingSection({ onOpenModal }) {
   const [cycle, setCycle] = useState("monthly");
 
   return (
-    <section id="kelas" className="py-24 bg-white border-b border-slate-200/80">
+    <section id="kelas" className="py-20 md:py-28 bg-white border-b border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-tight">
             Pilih Paket Kelas
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
+          <p className="text-base sm:text-lg text-slate-600">
             Temukan paket belajar yang sesuai dengan kebutuhan dan ritme belajarmu.
           </p>
 
@@ -44,7 +44,7 @@ export default function PricingSection({ onOpenModal }) {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 max-w-6xl mx-auto items-stretch">
           {pricingPlans.map((plan) => {
             const price = cycle === "monthly" ? plan.priceMonthly : plan.priceQuarterly;
             const periodLabel = cycle === "monthly" ? "/bulan" : "/3 bulan";

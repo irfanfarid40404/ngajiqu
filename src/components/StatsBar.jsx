@@ -20,9 +20,9 @@ export default function StatsBar() {
   const mainStats = stats.slice(0, 3);
 
   return (
-    <section className="bg-slate-50 border-b border-slate-200/80 py-10">
+    <section className="bg-white border-b border-slate-200/80 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100">
           {mainStats.map((item, idx) => (
             <div
               key={idx}
@@ -30,7 +30,7 @@ export default function StatsBar() {
                 idx > 0 ? "pt-4 md:pt-0 md:pl-8" : ""
               }`}
             >
-              <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-[#EBF8F6] border border-[#C8EDE9] shadow-2xs flex items-center justify-center shrink-0">
                 {getIcon(idx)}
               </div>
               <div>

@@ -7,6 +7,7 @@ import BentoLearningSection from "./components/BentoLearningSection";
 import TeachersSection from "./components/TeachersSection";
 import TeachersPage from "./components/TeachersPage";
 import QuranCoursePage from "./components/QuranCoursePage";
+import FiqihCoursePage from "./components/FiqihCoursePage";
 import HowItWorksSection from "./components/HowItWorksSection";
 import GallerySection from "./components/GallerySection";
 import PromoSection from "./components/PromoSection";
@@ -38,6 +39,8 @@ export default function App() {
   useEffect(() => {
     if (currentPath === "/kursus/alquran") {
       document.title = "Kursus Al-Qur'an Online | NgajiQ";
+    } else if (currentPath === "/kursus/fiqih") {
+      document.title = "Kursus Fiqih Online | NgajiQ";
     } else if (currentPath === "/guru-pengajar") {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
     } else {
@@ -74,6 +77,7 @@ export default function App() {
 
   const isTeachersPage = currentPath === "/guru-pengajar";
   const isQuranCoursePage = currentPath === "/kursus/alquran";
+  const isFiqihCoursePage = currentPath === "/kursus/fiqih";
 
   return (
     <div className="min-h-screen bg-[#FBFBFC] text-slate-900 flex flex-col font-sans selection:bg-[#049788] selection:text-white">
@@ -89,6 +93,9 @@ export default function App() {
         {isQuranCoursePage ? (
           /* Dedicated Quran Course Page */
           <QuranCoursePage onOpenModal={handleOpenModal} />
+        ) : isFiqihCoursePage ? (
+          /* Dedicated Fiqih Course Page */
+          <FiqihCoursePage onOpenModal={handleOpenModal} />
         ) : isTeachersPage ? (
           /* Dedicated Teachers Page */
           <TeachersPage onOpenModal={handleOpenModal} />

@@ -145,8 +145,9 @@ export default function PromoSection({ onOpenModal }) {
                     </div>
                     <button
                       onClick={() => handleCopy(promo.code)}
-                      className="text-xs font-semibold text-[#049788] hover:text-[#038073] flex items-center gap-1 transition-colors"
+                      className="text-xs font-semibold text-[#049788] hover:text-[#038073] flex items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] rounded-md px-1"
                       title="Salin kode promo"
+                      aria-label={`Salin kode promo ${promo.code}`}
                     >
                       {isCopied ? (
                         <>
@@ -166,7 +167,7 @@ export default function PromoSection({ onOpenModal }) {
                     onClick={() => {
                       if (onOpenModal) onOpenModal(`Klaim Promo ${promo.code}`);
                     }}
-                    className="w-full py-3 bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm"
+                    className="w-full py-3 bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788]"
                   >
                     <span>Klaim Promo Sekarang</span>
                     <ArrowRight className="w-4 h-4" />

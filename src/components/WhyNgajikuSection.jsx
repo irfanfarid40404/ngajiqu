@@ -200,10 +200,7 @@ export default function WhyNgajikuSection() {
                   </div>
 
                   {/* Subtle Card Accent Footnote */}
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                    <span className="font-medium text-[#049788]">Fitur Unggulan</span>
-                    <span className="text-xs text-slate-400 font-mono">0{card.id}</span>
-                  </div>
+                  <div className="pt-4 border-t border-slate-100" />
                 </Card3D>
               </motion.div>
             );
