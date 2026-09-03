@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BookOpen, Menu, X, ArrowUpRight, MessageSquare, ChevronDown, Clock, MapPin } from "lucide-react";
+import { BookOpen, Menu, X, ArrowUpRight, MessageSquare, ChevronDown, Clock, MapPin, User } from "lucide-react";
 import { siteConfig } from "../data/content";
 
 export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) {
@@ -68,7 +68,9 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       href === "/kursus/nahwu-shorof" ||
       href === "/guru-pengajar" ||
       href === "/daftar-kelas" ||
-      href === "/daftar"
+      href === "/daftar" ||
+      href === "/dashboard" ||
+      href === "/santri"
     ) {
       e.preventDefault();
       if (onNavigate) {
@@ -278,7 +280,22 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
             </nav>
 
             {/* Action Button (Right) */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-2">
+              <a
+                href="/dashboard"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onNavigate) onNavigate("/dashboard");
+                  else window.location.pathname = "/dashboard";
+                }}
+                className={`inline-flex items-center gap-1.5 font-bold text-slate-700 hover:text-[#049788] bg-slate-100 hover:bg-[#EBF8F6] active:scale-95 rounded-full transition-all border border-slate-200/80 cursor-pointer ${
+                  isScrolled ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-xs"
+                }`}
+              >
+                <User className="w-3.5 h-3.5 text-[#049788]" />
+                <span>Area Santri</span>
+              </a>
+
               <a
                 href="/daftar-kelas"
                 onClick={(e) => {
@@ -290,7 +307,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                   isScrolled ? "px-4 py-1.5 text-xs" : "px-5 py-2.5 text-xs sm:text-sm"
                 }`}
               >
-                <span>Daftar Kelas Percobaan</span>
+                <span>Daftar Kelas</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -384,6 +401,20 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
               >
                 <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Konsultasi WhatsApp</span>
+              </a>
+
+              <a
+                href="/dashboard"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  if (onNavigate) onNavigate("/dashboard");
+                  else window.location.pathname = "/dashboard";
+                }}
+                className="w-full py-2.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-[#EBF8F6] rounded-full flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-[#049788]" />
+                <span>Masuk Area Santri (Dashboard)</span>
               </a>
 
               <a

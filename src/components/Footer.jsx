@@ -86,6 +86,7 @@ export default function Footer({ onNavigate }) {
                   Hubungi Kami
                 </a>
               </li>
+              <li><a href="/dashboard" onClick={(e) => handleNav(e, "/dashboard")} className="hover:text-white transition-colors text-teal-300 font-semibold">Area Santri (Dashboard)</a></li>
               <li><a href="/#faq" onClick={(e) => handleNav(e, "/#faq")} className="hover:text-white transition-colors">FAQ</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Syarat & Ketentuan</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Kebijakan Privasi</a></li>

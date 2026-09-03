@@ -397,7 +397,7 @@ function BentoNahwuTrendAnim() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function NahwuShorofCoursePage({ onOpenModal }) {
+export default function NahwuShorofCoursePage({ onOpenModal, onNavigate }) {
   const shouldReduceMotion = useReducedMotion();
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
@@ -453,13 +453,22 @@ export default function NahwuShorofCoursePage({ onOpenModal }) {
 
           {/* Centered CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-4">
-            <button
-              onClick={() => onOpenModal && onOpenModal("Kursus Nahwu Shorof - Hero")}
+            <a
+              href="/daftar-kelas"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate("/daftar-kelas");
+                } else if (onOpenModal) {
+                  e.preventDefault();
+                  onOpenModal("Kursus Nahwu Shorof - Hero");
+                }
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm sm:text-base font-bold text-white bg-[#049788] hover:bg-[#038073] active:scale-[0.99] rounded-xl shadow-lg shadow-[#049788]/25 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
             >
               <span>Mulai Belajar</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
 
             <a
               href="#program-nahwu-shorof"
@@ -773,7 +782,7 @@ export default function NahwuShorofCoursePage({ onOpenModal }) {
                     ))}
                   </div>
                   <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
-                    {`"${t.quote}"`}
+                    &ldquo;{t.quote}&rdquo;
                   </p>
                 </div>
 
@@ -821,6 +830,7 @@ export default function NahwuShorofCoursePage({ onOpenModal }) {
                   className="rounded-2xl border border-slate-200 bg-white overflow-hidden transition-colors"
                 >
                   <button
+                    id={`nahwu-faq-btn-${idx}`}
                     onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
                     aria-expanded={isOpen}
                     aria-controls={`nahwu-faq-answer-${idx}`}
@@ -837,6 +847,8 @@ export default function NahwuShorofCoursePage({ onOpenModal }) {
                   {isOpen && (
                     <div
                       id={`nahwu-faq-answer-${idx}`}
+                      role="region"
+                      aria-labelledby={`nahwu-faq-btn-${idx}`}
                       className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4 animate-in fade-in duration-200"
                     >
                       {faq.a}
@@ -868,13 +880,22 @@ export default function NahwuShorofCoursePage({ onOpenModal }) {
           </p>
 
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <button
-              onClick={() => onOpenModal && onOpenModal("Final CTA Kursus Nahwu Shorof")}
+            <a
+              href="/daftar-kelas"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate("/daftar-kelas");
+                } else if (onOpenModal) {
+                  e.preventDefault();
+                  onOpenModal("Final CTA Kursus Nahwu Shorof");
+                }
+              }}
               className="w-full sm:w-auto px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-xl text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
             >
               <span>Mulai Belajar Sekarang</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
       </section>

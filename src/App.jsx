@@ -21,6 +21,8 @@ import CtaSection from "./components/CtaSection";
 import Footer from "./components/Footer";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import RegisterModal from "./components/RegisterModal";
+import TrialPromoModal from "./components/TrialPromoModal";
+import ClientDashboard from "./components/ClientDashboard";
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,6 +49,8 @@ export default function App() {
       document.title = "Kursus Nahwu & Shorof Online | NgajiQ";
     } else if (currentPath === "/daftar" || currentPath === "/daftar-kelas") {
       document.title = "Pendaftaran Kelas Bimbingan Privat 1-on-1 | NgajiQ";
+    } else if (currentPath === "/dashboard" || currentPath === "/santri" || currentPath === "/client-dashboard") {
+      document.title = "Area Santri | Dashboard Pembelajaran NgajiQ";
     } else if (currentPath === "/guru-pengajar") {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
     } else {
@@ -62,6 +66,32 @@ export default function App() {
     }
   };
 
+  const [promoModalOpen, setPromoModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Auto trigger promo modal after 8 seconds if not dismissed in this session
+    const isDismissed = sessionStorage.getItem("ngajiku_promo_dismissed");
+    let timer;
+    if (!isDismissed) {
+      timer = setTimeout(() => {
+        setPromoModalOpen(true);
+      }, 8000);
+    }
+
+    const handleOpenPromoEvent = () => setPromoModalOpen(true);
+    window.addEventListener("open-trial-promo", handleOpenPromoEvent);
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("open-trial-promo", handleOpenPromoEvent);
+    };
+  }, []);
+
+  const handleClosePromoModal = () => {
+    setPromoModalOpen(false);
+    sessionStorage.setItem("ngajiku_promo_dismissed", "true");
+  };
+
   const handleOpenModal = (packageName = "") => {
     setSelectedPackageForModal(packageName);
     setModalOpen(true);
@@ -73,19 +103,28 @@ export default function App() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape" && modalOpen) {
-        handleCloseModal();
+      if (e.key === "Escape") {
+        if (modalOpen) handleCloseModal();
+        if (promoModalOpen) handleClosePromoModal();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [modalOpen]);
+  }, [modalOpen, promoModalOpen]);
 
   const isTeachersPage = currentPath === "/guru-pengajar";
   const isQuranCoursePage = currentPath === "/kursus/alquran";
   const isFiqihCoursePage = currentPath === "/kursus/fiqih";
   const isNahwuShorofCoursePage = currentPath === "/kursus/nahwu-shorof";
   const isRegisterPage = currentPath === "/daftar" || currentPath === "/daftar-kelas";
+  const isDashboardPage =
+    currentPath === "/dashboard" ||
+    currentPath === "/santri" ||
+    currentPath === "/client-dashboard";
+
+  if (isDashboardPage) {
+    return <ClientDashboard onNavigate={handleNavigate} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#FBFBFC] text-slate-900 flex flex-col font-sans selection:bg-[#049788] selection:text-white">
@@ -103,13 +142,13 @@ export default function App() {
           <RegisterPage />
         ) : isQuranCoursePage ? (
           /* Dedicated Quran Course Page */
-          <QuranCoursePage onOpenModal={handleOpenModal} />
+          <QuranCoursePage onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
         ) : isFiqihCoursePage ? (
           /* Dedicated Fiqih Course Page */
-          <FiqihCoursePage onOpenModal={handleOpenModal} />
+          <FiqihCoursePage onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
         ) : isNahwuShorofCoursePage ? (
           /* Dedicated Nahwu & Shorof Course Page */
-          <NahwuShorofCoursePage onOpenModal={handleOpenModal} />
+          <NahwuShorofCoursePage onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
         ) : isTeachersPage ? (
           /* Dedicated Teachers Page */
           <TeachersPage onOpenModal={handleOpenModal} />
@@ -167,6 +206,13 @@ export default function App() {
         isOpen={modalOpen}
         onClose={handleCloseModal}
         defaultPackage={selectedPackageForModal}
+      />
+
+      {/* Trial Promo Modal */}
+      <TrialPromoModal
+        isOpen={promoModalOpen}
+        onClose={handleClosePromoModal}
+        onNavigate={handleNavigate}
       />
     </div>
   );

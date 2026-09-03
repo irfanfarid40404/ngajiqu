@@ -382,7 +382,7 @@ function BentoTrendAnim() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function QuranCoursePage({ onOpenModal }) {
+export default function QuranCoursePage({ onOpenModal, onNavigate }) {
   const shouldReduceMotion = useReducedMotion();
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
@@ -392,7 +392,7 @@ export default function QuranCoursePage({ onOpenModal }) {
   return (
     <div className="bg-[#FBFBFC] text-slate-900 flex flex-col font-sans">
       
-      {/* ================= 1. HERO SECTION (Matching Teachers Page Style) ================= */}
+      {/* ================= 1. HERO SECTION ================= */}
       <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 bg-gradient-to-b from-[#E8F7F5] via-[#F3FAF8] to-white border-b border-slate-200/80 overflow-hidden text-center">
         {/* Ambient Glows */}
         <div className="absolute -top-20 left-1/4 w-[480px] h-[480px] bg-[#049788]/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
@@ -438,13 +438,22 @@ export default function QuranCoursePage({ onOpenModal }) {
 
           {/* Centered CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-4">
-            <button
-              onClick={() => onOpenModal && onOpenModal("Kursus Al-Qur'an - Hero")}
+            <a
+              href="/daftar-kelas"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate("/daftar-kelas");
+                } else if (onOpenModal) {
+                  e.preventDefault();
+                  onOpenModal("Kursus Al-Qur'an - Hero");
+                }
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm sm:text-base font-bold text-white bg-[#049788] hover:bg-[#038073] active:scale-[0.99] rounded-xl shadow-lg shadow-[#049788]/25 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
             >
               <span>Mulai Belajar</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
 
             <a
               href="#program-quran"
@@ -759,7 +768,7 @@ export default function QuranCoursePage({ onOpenModal }) {
                     ))}
                   </div>
                   <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
-                    "{t.quote}"
+                    &ldquo;{t.quote}&rdquo;
                   </p>
                 </div>
 
@@ -785,7 +794,7 @@ export default function QuranCoursePage({ onOpenModal }) {
         </div>
       </section>
 
-      {/* ================= 10. FAQ ================= */}
+      {/* ================= 9. FAQ ================= */}
       <section className="py-20 md:py-28 bg-[#FBFBFC] border-b border-slate-200/80">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -807,6 +816,7 @@ export default function QuranCoursePage({ onOpenModal }) {
                   className="rounded-2xl border border-slate-200 bg-white overflow-hidden transition-colors"
                 >
                   <button
+                    id={`quran-faq-btn-${idx}`}
                     onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
                     aria-expanded={isOpen}
                     aria-controls={`quran-faq-answer-${idx}`}
@@ -823,6 +833,8 @@ export default function QuranCoursePage({ onOpenModal }) {
                   {isOpen && (
                     <div
                       id={`quran-faq-answer-${idx}`}
+                      role="region"
+                      aria-labelledby={`quran-faq-btn-${idx}`}
                       className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-4 animate-in fade-in duration-200"
                     >
                       {faq.a}
@@ -836,7 +848,7 @@ export default function QuranCoursePage({ onOpenModal }) {
         </div>
       </section>
 
-      {/* ================= 11. FINAL CTA ================= */}
+      {/* ================= 10. FINAL CTA ================= */}
       <section className="py-24 sm:py-32 bg-slate-950 text-white relative overflow-hidden">
         <div 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[360px] bg-[#049788]/15 rounded-full blur-[120px] pointer-events-none" 
@@ -844,10 +856,6 @@ export default function QuranCoursePage({ onOpenModal }) {
         />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
-          <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-amber-400">
-            SIAP UNTUK MEMULAI?
-          </p>
-
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
             Mulai Belajar Al-Qur'an <br className="hidden sm:inline" />
             <span className="text-[#049788]">Bersama NgajiQ</span>
@@ -858,13 +866,22 @@ export default function QuranCoursePage({ onOpenModal }) {
           </p>
 
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <button
-              onClick={() => onOpenModal && onOpenModal("Final CTA Kursus Al-Qur'an")}
-              className="w-full sm:w-auto px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-full text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
+            <a
+              href="/daftar-kelas"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate("/daftar-kelas");
+                } else if (onOpenModal) {
+                  e.preventDefault();
+                  onOpenModal("Final CTA Kursus Al-Qur'an");
+                }
+              }}
+              className="w-full sm:w-auto px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-xl text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
             >
               <span>Mulai Belajar Sekarang</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </a>
           </div>
         </div>
       </section>
