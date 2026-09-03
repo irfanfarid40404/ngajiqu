@@ -62,6 +62,8 @@ export default function Footer({ onNavigate }) {
               <li><a href="/guru-pengajar" onClick={(e) => handleNav(e, "/guru-pengajar")} className="hover:text-white transition-colors">Tenaga Pengajar</a></li>
               <li><a href="/kursus/alquran" onClick={(e) => handleNav(e, "/kursus/alquran")} className="hover:text-white transition-colors">Kursus Al-Qur'an</a></li>
               <li><a href="/kursus/fiqih" onClick={(e) => handleNav(e, "/kursus/fiqih")} className="hover:text-white transition-colors">Kursus Fiqih</a></li>
+              <li><a href="/kursus/nahwu-shorof" onClick={(e) => handleNav(e, "/kursus/nahwu-shorof")} className="hover:text-white transition-colors">Kursus Nahwu & Shorof</a></li>
+              <li><a href="/daftar-kelas" onClick={(e) => handleNav(e, "/daftar-kelas")} className="hover:text-white transition-colors font-bold text-[#2DD4BF]">Daftar Kelas Online</a></li>
               <li><a href="/#program" onClick={(e) => handleNav(e, "/#program")} className="hover:text-white transition-colors">Program & Kelas</a></li>
               <li><a href="/#cara-kerja" onClick={(e) => handleNav(e, "/#cara-kerja")} className="hover:text-white transition-colors">Lokasi & Cara Kerja</a></li>
               <li><a href="/#testimoni" onClick={(e) => handleNav(e, "/#testimoni")} className="hover:text-white transition-colors">Testimoni</a></li>

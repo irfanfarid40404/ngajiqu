@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Menu, X, ArrowUpRight, MessageSquare, ChevronDown, Clock, MapPin } from "lucide-react";
 import { siteConfig } from "../data/content";
 
-export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
+export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [kelasDropdownOpen, setKelasDropdownOpen] = useState(false);
@@ -36,6 +36,7 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
       children: [
         { label: "Kursus Al-Qur'an", href: "/kursus/alquran", desc: "Tahsin, Tajwid, & Tahfidz Privat" },
         { label: "Kursus Fiqih", href: "/kursus/fiqih", desc: "Ibadah, Muamalah, & Fiqih Kontemporer" },
+        { label: "Kursus Nahwu & Shorof", href: "/kursus/nahwu-shorof", desc: "Kaidah Bahasa Arab & Baca Kitab" },
         { label: "Program Pembelajaran", href: "/#program", desc: "Jenjang SD, SMP, SMA, & Dewasa" },
         { label: "Paket & Biaya Kelas", href: "/#kelas", desc: "Pilihan paket privat 1-on-1" },
         { label: "Promo Spesial", href: "/#promo", desc: "Voucher & diskon pendaftaran" },
@@ -61,9 +62,14 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
       return;
     }
 
-    const href = item.href;
-
-    if (href === "/kursus/alquran" || href === "/kursus/fiqih" || href === "/guru-pengajar") {
+    if (
+      href === "/kursus/alquran" ||
+      href === "/kursus/fiqih" ||
+      href === "/kursus/nahwu-shorof" ||
+      href === "/guru-pengajar" ||
+      href === "/daftar-kelas" ||
+      href === "/daftar"
+    ) {
       e.preventDefault();
       if (onNavigate) {
         onNavigate(href);
@@ -165,7 +171,11 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
             }`}>
               {navItems.map((item) => {
                 const isTeacherActive = item.href === "/guru-pengajar" && currentPath === "/guru-pengajar";
-                const isKursusActive = item.hasDropdown && (currentPath === "/kursus/alquran" || currentPath === "/kursus/fiqih");
+                const isKursusActive =
+                  item.hasDropdown &&
+                  (currentPath === "/kursus/alquran" ||
+                    currentPath === "/kursus/fiqih" ||
+                    currentPath === "/kursus/nahwu-shorof");
 
                 if (item.hasDropdown) {
                   return (
@@ -269,25 +279,35 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
 
             {/* Action Button (Right) */}
             <div className="hidden sm:flex items-center gap-2.5">
-              <button
-                onClick={() => onOpenModal("Navbar CTA")}
-                className={`inline-flex items-center gap-1.5 font-bold text-white bg-[#049788] hover:bg-[#038073] active:scale-95 rounded-full transition-all shadow-sm shadow-[#049788]/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] ${
+              <a
+                href="/daftar-kelas"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onNavigate) onNavigate("/daftar-kelas");
+                  else window.location.pathname = "/daftar-kelas";
+                }}
+                className={`inline-flex items-center gap-1.5 font-bold text-white bg-[#049788] hover:bg-[#038073] active:scale-95 rounded-full transition-all shadow-sm shadow-[#049788]/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer ${
                   isScrolled ? "px-4 py-1.5 text-xs" : "px-5 py-2.5 text-xs sm:text-sm"
                 }`}
               >
                 <span>Daftar Kelas Percobaan</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
 
             {/* Mobile Menu Toggle */}
             <div className="flex lg:hidden items-center gap-2">
-              <button
-                onClick={() => onOpenModal("Mobile Nav CTA")}
-                className="sm:hidden px-3.5 py-1.5 text-xs font-bold text-white bg-[#049788] rounded-full active:scale-95 shadow-xs"
+              <a
+                href="/daftar-kelas"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onNavigate) onNavigate("/daftar-kelas");
+                  else window.location.pathname = "/daftar-kelas";
+                }}
+                className="sm:hidden px-3.5 py-1.5 text-xs font-bold text-white bg-[#049788] rounded-full active:scale-95 shadow-xs cursor-pointer"
               >
                 Daftar
-              </button>
+              </a>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="w-9 h-9 flex items-center justify-center text-slate-700 hover:text-slate-950 rounded-full border border-slate-200 bg-white shadow-2xs active:scale-95"
@@ -366,16 +386,19 @@ export default function Navbar({ onOpenModal, currentPath = "/", onNavigate }) {
                 <span>Konsultasi WhatsApp</span>
               </a>
 
-              <button
-                onClick={() => {
+              <a
+                href="/daftar-kelas"
+                onClick={(e) => {
+                  e.preventDefault();
                   setMobileMenuOpen(false);
-                  onOpenModal("Drawer Mobile");
+                  if (onNavigate) onNavigate("/daftar-kelas");
+                  else window.location.pathname = "/daftar-kelas";
                 }}
-                className="w-full py-2.5 text-xs font-bold text-white bg-[#049788] hover:bg-[#038073] rounded-full shadow-md shadow-[#049788]/20 flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 text-xs font-bold text-white bg-[#049788] hover:bg-[#038073] rounded-full shadow-md shadow-[#049788]/20 flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <span>Daftar Kelas Percobaan</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
           </div>
         )}

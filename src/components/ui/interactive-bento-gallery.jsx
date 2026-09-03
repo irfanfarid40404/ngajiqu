@@ -34,7 +34,7 @@ const initialGalleryItems = [
     title: "Belajar Bersama Ustadz",
     desc: "Sesi bimbingan sabar dari nol untuk santri pemula dewasa.",
     url: "/persona-engineer.jpg",
-    span: "col-span-1 sm:col-span-2 sm:row-span-1",
+    span: "col-span-1 sm:col-span-1 sm:row-span-1",
   },
   {
     id: 5,
@@ -42,7 +42,7 @@ const initialGalleryItems = [
     title: "Aktivitas Santri & Keluarga",
     desc: "Momen kegiatan belajar mengaji anak di rumah dengan suasana menyenangkan.",
     url: "/persona-family.jpg",
-    span: "col-span-1 sm:col-span-1 sm:row-span-1",
+    span: "col-span-1 sm:col-span-2 sm:row-span-1",
   },
   {
     id: 6,
@@ -50,7 +50,7 @@ const initialGalleryItems = [
     title: "Kelas Khusus Pra-Nikah",
     desc: "Akselerasi membaca Al-Qur'an tartil untuk persiapan momen sakral.",
     url: "/persona-bride.jpg",
-    span: "col-span-1 sm:col-span-1 sm:row-span-1",
+    span: "col-span-1 sm:col-span-2 sm:row-span-1",
   },
 ];
 
@@ -123,7 +123,7 @@ export function InteractiveBentoGallery({
         </div>
 
         {/* Bento Grid Container */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 auto-rows-[220px] sm:auto-rows-[200px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 auto-rows-[220px] sm:auto-rows-[210px] grid-flow-dense">
           {mediaItems.map((item, index) => (
             <motion.div
               key={item.id}

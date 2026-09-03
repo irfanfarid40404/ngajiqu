@@ -8,6 +8,8 @@ import TeachersSection from "./components/TeachersSection";
 import TeachersPage from "./components/TeachersPage";
 import QuranCoursePage from "./components/QuranCoursePage";
 import FiqihCoursePage from "./components/FiqihCoursePage";
+import NahwuShorofCoursePage from "./components/NahwuShorofCoursePage";
+import RegisterPage from "./components/RegisterPage";
 import HowItWorksSection from "./components/HowItWorksSection";
 import GallerySection from "./components/GallerySection";
 import PromoSection from "./components/PromoSection";
@@ -41,6 +43,10 @@ export default function App() {
       document.title = "Kursus Al-Qur'an Online | NgajiQ";
     } else if (currentPath === "/kursus/fiqih") {
       document.title = "Kursus Fiqih Online | NgajiQ";
+    } else if (currentPath === "/kursus/nahwu-shorof") {
+      document.title = "Kursus Nahwu & Shorof Online | NgajiQ";
+    } else if (currentPath === "/daftar" || currentPath === "/daftar-kelas") {
+      document.title = "Pendaftaran Kelas Bimbingan Privat 1-on-1 | NgajiQ";
     } else if (currentPath === "/guru-pengajar") {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
     } else {
@@ -78,6 +84,8 @@ export default function App() {
   const isTeachersPage = currentPath === "/guru-pengajar";
   const isQuranCoursePage = currentPath === "/kursus/alquran";
   const isFiqihCoursePage = currentPath === "/kursus/fiqih";
+  const isNahwuShorofCoursePage = currentPath === "/kursus/nahwu-shorof";
+  const isRegisterPage = currentPath === "/daftar" || currentPath === "/daftar-kelas";
 
   return (
     <div className="min-h-screen bg-[#FBFBFC] text-slate-900 flex flex-col font-sans selection:bg-[#049788] selection:text-white">
@@ -90,12 +98,18 @@ export default function App() {
       />
 
       <main className="flex-grow pt-20">
-        {isQuranCoursePage ? (
+        {isRegisterPage ? (
+          /* Dedicated Registration Page */
+          <RegisterPage />
+        ) : isQuranCoursePage ? (
           /* Dedicated Quran Course Page */
           <QuranCoursePage onOpenModal={handleOpenModal} />
         ) : isFiqihCoursePage ? (
           /* Dedicated Fiqih Course Page */
           <FiqihCoursePage onOpenModal={handleOpenModal} />
+        ) : isNahwuShorofCoursePage ? (
+          /* Dedicated Nahwu & Shorof Course Page */
+          <NahwuShorofCoursePage onOpenModal={handleOpenModal} />
         ) : isTeachersPage ? (
           /* Dedicated Teachers Page */
           <TeachersPage onOpenModal={handleOpenModal} />
