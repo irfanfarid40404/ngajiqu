@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Menu, X, ArrowUpRight, MessageSquare, ChevronDown, Clock, MapPin, User } from "lucide-react";
-import { siteConfig } from "../data/content";
+import { siteConfig } from "@/data/content";
 
 export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) {
   const [isScrolled, setIsScrolled] = useState(false);

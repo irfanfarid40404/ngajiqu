@@ -1,6 +1,6 @@
 import React from "react";
 import { Star } from "lucide-react";
-import { testimonials as defaultTestimonials } from "../data/content";
+import { testimonials as defaultTestimonials } from "@/data/content";
 import { cn } from "@/lib/utils";
 
 function TestimonialCard({ item }) {

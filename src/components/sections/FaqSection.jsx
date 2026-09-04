@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { faqs, siteConfig } from "../data/content";
+import { faqs, siteConfig } from "@/data/content";
 import { ChevronDown, MessageSquare } from "lucide-react";
 
 export default function FaqSection() {

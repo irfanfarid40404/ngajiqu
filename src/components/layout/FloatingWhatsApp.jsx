@@ -1,6 +1,6 @@
 import React from "react";
 import { MessageSquare } from "lucide-react";
-import { siteConfig } from "../data/content";
+import { siteConfig } from "@/data/content";
 
 export default function FloatingWhatsApp() {
   return (

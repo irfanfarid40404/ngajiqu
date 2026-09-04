@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Users, Award, BookOpen } from "lucide-react";
-import { stats } from "../data/content";
+import { stats } from "@/data/content";
 
 export default function StatsBar() {
   const shouldReduceMotion = useReducedMotion();

@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import StatsBar from "./components/StatsBar";
-import WhyNgajikuSection from "./components/WhyNgajikuSection";
-import BentoLearningSection from "./components/BentoLearningSection";
-import TeachersSection from "./components/TeachersSection";
-import TeachersPage from "./components/TeachersPage";
-import QuranCoursePage from "./components/QuranCoursePage";
-import FiqihCoursePage from "./components/FiqihCoursePage";
-import NahwuShorofCoursePage from "./components/NahwuShorofCoursePage";
-import RegisterPage from "./components/RegisterPage";
-import BlogPage from "./components/BlogPage";
-import HowItWorksSection from "./components/HowItWorksSection";
-import GallerySection from "./components/GallerySection";
-import PromoSection from "./components/PromoSection";
-import PricingSection from "./components/PricingSection";
-import TestimonialSection from "./components/TestimonialSection";
-import ArticlesSection from "./components/ArticlesSection";
-import FaqSection from "./components/FaqSection";
-import CtaSection from "./components/CtaSection";
-import Footer from "./components/Footer";
-import FloatingWhatsApp from "./components/FloatingWhatsApp";
-import RegisterModal from "./components/RegisterModal";
-import TrialPromoModal from "./components/TrialPromoModal";
-import ClientDashboard from "./components/ClientDashboard";
-import AdminDashboard from "./components/AdminDashboard";
+
+// Layout & Global Components
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/Footer";
+import FloatingWhatsApp from "./components/layout/FloatingWhatsApp";
+
+// Modals
+import RegisterModal from "./components/modals/RegisterModal";
+import TrialPromoModal from "./components/modals/TrialPromoModal";
+
+// Full Pages
+import AdminDashboard from "./pages/AdminDashboard";
+import ClientDashboard from "./pages/ClientDashboard";
+import QuranCoursePage from "./pages/QuranCoursePage";
+import FiqihCoursePage from "./pages/FiqihCoursePage";
+import NahwuShorofCoursePage from "./pages/NahwuShorofCoursePage";
+import RegisterPage from "./pages/RegisterPage";
+import BlogPage from "./pages/BlogPage";
+import TeachersPage from "./pages/TeachersPage";
+
+// Landing Page Sections (Homepage)
+import Hero from "./components/sections/Hero";
+import StatsBar from "./components/sections/StatsBar";
+import WhyNgajikuSection from "./components/sections/WhyNgajikuSection";
+import BentoLearningSection from "./components/sections/BentoLearningSection";
+import TeachersSection from "./components/sections/TeachersSection";
+import HowItWorksSection from "./components/sections/HowItWorksSection";
+import GallerySection from "./components/sections/GallerySection";
+import PromoSection from "./components/sections/PromoSection";
+import PricingSection from "./components/sections/PricingSection";
+import TestimonialSection from "./components/sections/TestimonialSection";
+import ArticlesSection from "./components/sections/ArticlesSection";
+import FaqSection from "./components/sections/FaqSection";
+import CtaSection from "./components/sections/CtaSection";
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);

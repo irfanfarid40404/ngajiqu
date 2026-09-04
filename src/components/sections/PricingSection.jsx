@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { pricingPlans } from "../data/content";
+import { pricingPlans } from "@/data/content";
 import { Check, ArrowRight } from "lucide-react";
 
 export default function PricingSection({ onOpenModal }) {

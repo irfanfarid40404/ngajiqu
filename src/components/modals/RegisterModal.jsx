@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { X, ArrowRight, Check } from "lucide-react";
-import { siteConfig } from "../data/content";
+import { siteConfig } from "@/data/content";
 
 export default function RegisterModal({ isOpen, onClose, defaultPackage }) {
   const [formData, setFormData] = useState({

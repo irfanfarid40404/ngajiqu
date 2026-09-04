@@ -1,6 +1,6 @@
 import React from "react";
 import { BookOpen } from "lucide-react";
-import { siteConfig } from "../data/content";
+import { siteConfig } from "@/data/content";
 
 export default function Footer({ onNavigate }) {
   const handleNav = (e, path) => {
