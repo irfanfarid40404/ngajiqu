@@ -18,6 +18,7 @@ import NahwuShorofCoursePage from "./pages/NahwuShorofCoursePage";
 import RegisterPage from "./pages/RegisterPage";
 import BlogPage from "./pages/BlogPage";
 import TeachersPage from "./pages/TeachersPage";
+import LoginPage from "./pages/LoginPage";
 
 // Landing Page Sections (Homepage)
 import Hero from "./components/sections/Hero";
@@ -57,6 +58,8 @@ export default function App() {
       document.title = "Kursus Fiqih Online | NgajiQ";
     } else if (currentPath === "/kursus/nahwu-shorof") {
       document.title = "Kursus Nahwu & Shorof Online | NgajiQ";
+    } else if (currentPath === "/login" || currentPath === "/masuk") {
+      document.title = "Masuk ke Akun | NgajiQ";
     } else if (currentPath === "/daftar" || currentPath === "/daftar-kelas") {
       document.title = "Pendaftaran Kelas Bimbingan Privat 1-on-1 | NgajiQ";
     } else if (currentPath === "/dashboard" || currentPath === "/santri" || currentPath === "/client-dashboard") {
@@ -131,7 +134,11 @@ export default function App() {
   const isQuranCoursePage = currentPath === "/kursus/alquran";
   const isFiqihCoursePage = currentPath === "/kursus/fiqih";
   const isNahwuShorofCoursePage = currentPath === "/kursus/nahwu-shorof";
-  const isRegisterPage = currentPath === "/daftar" || currentPath === "/daftar-kelas";
+  const isRegisterPage =
+    currentPath === "/daftar" ||
+    currentPath === "/daftar-kelas" ||
+    currentPath === "/signup";
+  const isLoginPage = currentPath === "/login" || currentPath === "/masuk";
   const isDashboardPage =
     currentPath === "/dashboard" ||
     currentPath === "/santri" ||
@@ -139,6 +146,10 @@ export default function App() {
   const isAdminPage =
     currentPath === "/admin" ||
     currentPath === "/admin-dashboard";
+
+  if (isLoginPage) {
+    return <LoginPage onNavigate={handleNavigate} />;
+  }
 
   if (isDashboardPage) {
     return <ClientDashboard onNavigate={handleNavigate} />;

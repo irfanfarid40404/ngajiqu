@@ -30,6 +30,7 @@ import {
   ArrowUpRight,
   MessageSquare,
   Award,
+  ArrowLeft,
 } from "lucide-react";
 import { siteConfig } from "@/data/content";
 
@@ -1003,7 +1004,7 @@ export default function AdminDashboard({ onNavigate }) {
           </div>
 
           {/* Bottom Footer User Pill */}
-          <div className="space-y-2 pt-3 border-t border-slate-100">
+          <div className="space-y-1.5 pt-3 border-t border-slate-100">
             <button
               onClick={() => {
                 if (onNavigate) onNavigate("/");
@@ -1011,8 +1012,20 @@ export default function AdminDashboard({ onNavigate }) {
               }}
               className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5 rotate-180" />
+              <ArrowLeft className="w-3.5 h-3.5" />
               <span>Kembali ke Beranda</span>
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("ngajiq_user");
+                sessionStorage.removeItem("ngajiq_user");
+                if (onNavigate) onNavigate("/login");
+                else window.location.pathname = "/login";
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Keluar (Logout)</span>
             </button>
           </div>
         </aside>
@@ -1073,16 +1086,30 @@ export default function AdminDashboard({ onNavigate }) {
                 </nav>
               </div>
 
-              <button
-                onClick={() => {
-                  if (onNavigate) onNavigate("/");
-                  else window.location.pathname = "/";
-                }}
-                className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 border-t border-slate-100"
-              >
-                <LogOut className="w-3.5 h-3.5 rotate-180" />
-                <span>Kembali ke Beranda</span>
-              </button>
+              <div className="space-y-1 border-t border-slate-100 pt-2">
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate("/");
+                    else window.location.pathname = "/";
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Kembali ke Beranda</span>
+                </button>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("ngajiq_user");
+                    sessionStorage.removeItem("ngajiq_user");
+                    if (onNavigate) onNavigate("/login");
+                    else window.location.pathname = "/login";
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Keluar (Logout)</span>
+                </button>
+              </div>
             </div>
           </div>
         )}

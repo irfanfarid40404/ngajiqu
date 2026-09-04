@@ -1,13 +1,54 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BookOpen, Menu, X, ArrowUpRight, MessageSquare, ChevronDown, Clock, MapPin, User } from "lucide-react";
+import {
+  BookOpen,
+  Menu,
+  X,
+  ArrowUpRight,
+  MessageSquare,
+  ChevronDown,
+  Clock,
+  MapPin,
+  User,
+  LogIn,
+  LogOut,
+  ShieldCheck,
+} from "lucide-react";
 import { siteConfig } from "@/data/content";
+import LoginModal from "@/components/modals/LoginModal";
 
 export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [kelasDropdownOpen, setKelasDropdownOpen] = useState(false);
   const [waktuSolatModalOpen, setWaktuSolatModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  // Authenticated user state
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("ngajiq_user") || sessionStorage.getItem("ngajiq_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const dropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("ngajiq_user");
+    sessionStorage.removeItem("ngajiq_user");
+    setCurrentUser(null);
+    setUserDropdownOpen(false);
+    if (onNavigate) onNavigate("/");
+    else window.location.pathname = "/";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +62,9 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setKelasDropdownOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -290,20 +334,67 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
 
             {/* Action Button (Right) */}
             <div className="hidden sm:flex items-center gap-2">
-              <a
-                href="/dashboard"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onNavigate) onNavigate("/dashboard");
-                  else window.location.pathname = "/dashboard";
-                }}
-                className={`inline-flex items-center gap-1.5 font-bold text-slate-700 hover:text-[#049788] bg-slate-100 hover:bg-[#EBF8F6] active:scale-95 rounded-full transition-all border border-slate-200/80 cursor-pointer ${
-                  isScrolled ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-xs"
-                }`}
-              >
-                <User className="w-3.5 h-3.5 text-[#049788]" />
-                <span>Area Santri</span>
-              </a>
+              {currentUser ? (
+                <div className="relative" ref={userDropdownRef}>
+                  <button
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className={`inline-flex items-center gap-2 font-bold text-slate-800 bg-[#EBF8F6] hover:bg-[#DCF3F0] rounded-full transition-all border border-[#049788]/20 cursor-pointer ${
+                      isScrolled ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-xs"
+                    }`}
+                  >
+                    <div className="w-5 h-5 rounded-full bg-[#049788] text-white flex items-center justify-center text-[10px] font-black">
+                      {currentUser.avatar || currentUser.name.charAt(0)}
+                    </div>
+                    <span className="max-w-[90px] truncate">{currentUser.name}</span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${userDropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in zoom-in-95 duration-150 text-xs">
+                      <div className="p-2.5 border-b border-slate-100">
+                        <p className="font-bold text-slate-900 truncate">{currentUser.name}</p>
+                        <span className="text-[10px] text-emerald-600 font-semibold block">
+                          {currentUser.role === "admin" ? "Super Admin" : "Santri Aktif"}
+                        </span>
+                      </div>
+                      <a
+                        href={currentUser.role === "admin" ? "/admin" : "/dashboard"}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setUserDropdownOpen(false);
+                          const path = currentUser.role === "admin" ? "/admin" : "/dashboard";
+                          if (onNavigate) onNavigate(path);
+                          else window.location.pathname = path;
+                        }}
+                        className="flex items-center gap-2 p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 font-semibold cursor-pointer"
+                      >
+                        {currentUser.role === "admin" ? <ShieldCheck className="w-4 h-4 text-[#049788]" /> : <User className="w-4 h-4 text-[#049788]" />}
+                        <span>Buka Dashboard</span>
+                      </a>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 p-2.5 rounded-xl hover:bg-rose-50 text-rose-600 font-semibold cursor-pointer text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Keluar (Logout)</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    if (onNavigate) onNavigate("/login");
+                    else window.location.pathname = "/login";
+                  }}
+                  className={`inline-flex items-center gap-1.5 font-bold text-slate-700 hover:text-[#049788] bg-slate-100 hover:bg-[#EBF8F6] active:scale-95 rounded-full transition-all border border-slate-200/80 cursor-pointer ${
+                    isScrolled ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-xs"
+                  }`}
+                >
+                  <LogIn className="w-3.5 h-3.5 text-[#049788]" />
+                  <span>Masuk</span>
+                </button>
+              )}
 
               <a
                 href="/daftar-kelas"
@@ -412,19 +503,55 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                 <span>Konsultasi WhatsApp</span>
               </a>
 
-              <a
-                href="/dashboard"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMobileMenuOpen(false);
-                  if (onNavigate) onNavigate("/dashboard");
-                  else window.location.pathname = "/dashboard";
-                }}
-                className="w-full py-2.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-[#EBF8F6] rounded-full flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
-              >
-                <User className="w-3.5 h-3.5 text-[#049788]" />
-                <span>Masuk Area Santri (Dashboard)</span>
-              </a>
+              {currentUser ? (
+                <div className="space-y-1.5">
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-[#049788] text-white flex items-center justify-center font-bold text-xs">
+                        {currentUser.avatar || currentUser.name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">{currentUser.name}</p>
+                        <span className="text-[10px] text-emerald-600 font-medium">
+                          {currentUser.role === "admin" ? "Super Admin" : "Santri Aktif"}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="text-[11px] text-rose-600 font-bold hover:underline"
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                  <a
+                    href={currentUser.role === "admin" ? "/admin" : "/dashboard"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      const path = currentUser.role === "admin" ? "/admin" : "/dashboard";
+                      if (onNavigate) onNavigate(path);
+                      else window.location.pathname = path;
+                    }}
+                    className="w-full py-2.5 text-xs font-bold text-white bg-[#049788] hover:bg-[#038073] rounded-full flex items-center justify-center gap-2 shadow-sm"
+                  >
+                    <span>Buka Dashboard</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onNavigate) onNavigate("/login");
+                    else window.location.pathname = "/login";
+                  }}
+                  className="w-full py-2.5 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-[#EBF8F6] rounded-full flex items-center justify-center gap-2 border border-slate-200 cursor-pointer"
+                >
+                  <LogIn className="w-3.5 h-3.5 text-[#049788]" />
+                  <span>Masuk ke Akun (Login)</span>
+                </button>
+              )}
 
               <a
                 href="/daftar-kelas"
@@ -503,6 +630,14 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
           </div>
         </div>
       )}
+
+      {/* Interactive Login Modal */}
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onNavigate={onNavigate}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </>
   );
 }
