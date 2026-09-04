@@ -29,6 +29,7 @@ export default function FaqSection() {
                 className="rounded-2xl border border-slate-200 bg-white overflow-hidden transition-colors"
               >
                 <button
+                  id={`faq-btn-${idx}`}
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
                   aria-expanded={isOpen}
                   aria-controls={`faq-answer-${idx}`}
@@ -45,6 +46,7 @@ export default function FaqSection() {
                 <div
                   id={`faq-answer-${idx}`}
                   role="region"
+                  aria-labelledby={`faq-btn-${idx}`}
                   className={`grid transition-all duration-200 ease-out ${
                     isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}

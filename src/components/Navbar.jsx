@@ -70,7 +70,9 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       href === "/daftar-kelas" ||
       href === "/daftar" ||
       href === "/dashboard" ||
-      href === "/santri"
+      href === "/santri" ||
+      href === "/admin" ||
+      href === "/admin-dashboard"
     ) {
       e.preventDefault();
       if (onNavigate) {

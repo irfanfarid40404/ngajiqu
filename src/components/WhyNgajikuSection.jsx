@@ -1,14 +1,12 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
-  Users,
-  BookOpen,
-  Clock,
-  MessageCircle,
-  TrendingUp,
-  ShieldCheck,
-  Sparkles,
+  Award,
   Heart,
+  Users,
+  Clock,
+  BookOpen,
+  TrendingUp,
 } from "lucide-react";
 import { Card3D } from "@/components/ui/card-3d";
 import { cn } from "@/lib/utils";
@@ -16,67 +14,51 @@ import { cn } from "@/lib/utils";
 const cards = [
   {
     id: 1,
-    title: "Guru Berpengalaman",
+    title: "Guru Bersanad & Terpilih",
     description:
-      "Belajar mengaji bersama guru dan ustadz yang berpengalaman serta siap membimbing proses belajar secara bertahap.",
-    icon: Users,
+      "Bimbingan langsung dari ustadz dan ustadzah teruji lulusan universitas Islam terkemuka yang memegang sanad bacaan muttashil.",
+    icon: Award,
     theme: "primary",
   },
   {
     id: 2,
-    title: "Belajar Sesuai Kemampuan",
+    title: "Bimbingan Ramah Tanpa Canggung",
     description:
-      "Materi pembelajaran dapat disesuaikan dengan kemampuan dan perkembangan setiap pelajar, dari pemula hingga tingkat lanjutan.",
-    icon: BookOpen,
+      "Pendekatan sabar dan telaten dari nol mutlak. Sangat ramah bagi santri dewasa yang ingin belajar mengaji tanpa rasa malu.",
+    icon: Heart,
     theme: "secondary",
   },
   {
     id: 3,
-    title: "Belajar Lebih Fleksibel",
+    title: "Talaqqi 1-on-1 Eksklusif",
     description:
-      "Atur waktu belajar dengan lebih fleksibel tanpa harus datang ke tempat les. Belajar bisa dilakukan dari mana saja.",
-    icon: Clock,
+      "Sesi privat menyimak bacaan ayat demi ayat, koreksi makhraj huruf langsung, dan tanya jawab hukum tajwid secara leluasa.",
+    icon: Users,
     theme: "info",
   },
   {
     id: 4,
-    title: "Pembelajaran Interaktif",
+    title: "Jadwal Fleksibel 24/7",
     description:
-      "Proses belajar dibuat lebih menarik dengan interaksi langsung bersama guru dan materi yang mudah dipahami.",
-    icon: MessageCircle,
+      "Tentukan jam belajar pagi, siang, sore, atau malam sesuai kesibukan Anda, lengkap dengan fasilitas reschedule sesi gratis.",
+    icon: Clock,
     theme: "success",
   },
   {
     id: 5,
-    title: "Kemajuan Belajar Terpantau",
+    title: "Kurikulum Bertahap & Jelas",
     description:
-      "Pantau perkembangan belajar secara lebih terstruktur agar pelajar mengetahui kemampuan dan materi yang sudah dikuasai.",
-    icon: TrendingUp,
+      "Materi disusun sistematis dari pengenalan huruf hijaiyah, sifatul huruf, hukum nun sukun, hingga praktik tartil juz 30.",
+    icon: BookOpen,
     theme: "accent",
   },
   {
     id: 6,
-    title: "Lingkungan Belajar Aman",
+    title: "Laporan Evaluasi & Rekaman",
     description:
-      "NgajiQ menghadirkan lingkungan belajar yang nyaman dan positif untuk membantu pelajar fokus meningkatkan kemampuan mengaji.",
-    icon: ShieldCheck,
+      "Dapatkan catatan perkembangan berkala dari ustadz serta arsip rekaman video sesi untuk diulang mandiri di rumah.",
+    icon: TrendingUp,
     theme: "neutral",
-  },
-  {
-    id: 7,
-    title: "Mudah Digunakan",
-    description:
-      "Antarmuka sederhana dan mudah dipahami sehingga pelajar maupun orang tua dapat menggunakan NgajiQ tanpa kesulitan.",
-    icon: Sparkles,
-    theme: "warning",
-  },
-  {
-    id: 8,
-    title: "Membangun Kebiasaan Mengaji",
-    description:
-      "Bantu membangun kebiasaan belajar mengaji secara konsisten melalui proses pembelajaran yang terarah dan berkelanjutan.",
-    icon: Heart,
-    theme: "danger",
   },
 ];
 
@@ -170,7 +152,7 @@ export default function WhyNgajikuSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                className={cn("h-full", index === 6 && "lg:col-start-1 lg:col-span-1", index === 7 && "lg:col-span-1")}
+                className="h-full"
               >
                 <Card3D>
                   <div>

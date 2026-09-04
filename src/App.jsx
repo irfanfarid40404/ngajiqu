@@ -23,6 +23,7 @@ import FloatingWhatsApp from "./components/FloatingWhatsApp";
 import RegisterModal from "./components/RegisterModal";
 import TrialPromoModal from "./components/TrialPromoModal";
 import ClientDashboard from "./components/ClientDashboard";
+import AdminDashboard from "./components/AdminDashboard";
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +52,8 @@ export default function App() {
       document.title = "Pendaftaran Kelas Bimbingan Privat 1-on-1 | NgajiQ";
     } else if (currentPath === "/dashboard" || currentPath === "/santri" || currentPath === "/client-dashboard") {
       document.title = "Area Santri | Dashboard Pembelajaran NgajiQ";
+    } else if (currentPath === "/admin" || currentPath === "/admin-dashboard") {
+      document.title = "Panel Operasional & Manajemen Admin | NgajiQ";
     } else if (currentPath === "/guru-pengajar") {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
     } else {
@@ -121,9 +124,16 @@ export default function App() {
     currentPath === "/dashboard" ||
     currentPath === "/santri" ||
     currentPath === "/client-dashboard";
+  const isAdminPage =
+    currentPath === "/admin" ||
+    currentPath === "/admin-dashboard";
 
   if (isDashboardPage) {
     return <ClientDashboard onNavigate={handleNavigate} />;
+  }
+
+  if (isAdminPage) {
+    return <AdminDashboard onNavigate={handleNavigate} />;
   }
 
   return (
@@ -156,7 +166,7 @@ export default function App() {
           /* Full Landing Page Flow */
           <>
             {/* 2. Hero — Apa itu NgajiQ? Untuk siapa? CTA utama. */}
-            <Hero onOpenModal={handleOpenModal} />
+            <Hero onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
 
             {/* 3. Statistik — Social proof awal: jumlah santri, guru, rating */}
             <StatsBar />
@@ -190,7 +200,7 @@ export default function App() {
             <FaqSection />
 
             {/* 13. CTA — Mulai belajar mengaji */}
-            <CtaSection onOpenModal={handleOpenModal} />
+            <CtaSection onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
           </>
         )}
       </main>

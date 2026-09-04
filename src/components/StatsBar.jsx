@@ -1,8 +1,11 @@
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Users, Award, BookOpen } from "lucide-react";
 import { stats } from "../data/content";
 
 export default function StatsBar() {
+  const shouldReduceMotion = useReducedMotion();
+
   const getIcon = (idx) => {
     switch (idx) {
       case 0:
@@ -24,8 +27,12 @@ export default function StatsBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100">
           {mainStats.map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
+              initial={shouldReduceMotion ? undefined : { opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className={`flex items-center gap-4 ${
                 idx > 0 ? "pt-4 md:pt-0 md:pl-8" : ""
               }`}
@@ -44,7 +51,7 @@ export default function StatsBar() {
                   {item.desc}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
