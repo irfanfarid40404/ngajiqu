@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   BookOpen,
-  Sparkles,
   CheckCircle2,
   Clock,
   ShieldCheck,
@@ -201,14 +200,6 @@ Mohon info ketersediaan jadwal dan ustadz/ustadzah. Terima kasih!`;
         />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-4">
-          {/* Eyebrow badge */}
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 text-[#049788] text-xs font-bold border border-[#C8EDE9] shadow-2xs uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Formulir Pendaftaran Kelas</span>
-            </span>
-          </div>
-
           {/* Main Hero Title */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight">
             Mulai Belajar Mengaji Privat <br className="hidden sm:inline" />
