@@ -8,6 +8,18 @@ export default function CtaSection({ onOpenModal, onNavigate }) {
   return (
     <section className="py-24 sm:py-32 bg-slate-950 text-white relative overflow-hidden border-t border-slate-900">
       
+      {/* Islamic Arabesque Star Motif on Dark Background */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.12]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232DD4BF' stroke-width='1'%3E%3Cpath d='M40 0 L50 20 L70 10 L60 30 L80 40 L60 50 L70 70 L50 60 L40 80 L30 60 L10 70 L20 50 L0 40 L20 30 L10 10 L30 20 Z'/%3E%3Ccircle cx='40' cy='40' r='14' stroke='%232DD4BF' stroke-width='0.75'/%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "80px 80px",
+          maskImage: "radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%)",
+        }}
+        aria-hidden="true"
+      />
+
       {/* Ambient background teal radial glow with slow breathing */}
       <motion.div 
         animate={shouldReduceMotion ? undefined : { scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
@@ -16,7 +28,7 @@ export default function CtaSection({ onOpenModal, onNavigate }) {
         aria-hidden="true"
       />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
 
         {/* Heading */}
         <motion.h2 
@@ -30,13 +42,24 @@ export default function CtaSection({ onOpenModal, onNavigate }) {
           <span className="text-[#049788]">Membaca Al-Qur'an Lebih Tartil</span>
         </motion.h2>
 
-        {/* Centered Primary CTA Button */}
-        <motion.div 
+        {/* Subtitle */}
+        <motion.p
           initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex items-center justify-center pt-2"
+          className="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl mx-auto leading-relaxed"
+        >
+          Bergabunglah bersama ribuan santri yang telah merasakan kemudahan dan keberkahan bimbingan belajar Al-Qur'an bersama para ustadz & ustadzah kami.
+        </motion.p>
+
+        {/* Primary CTA Button */}
+        <motion.div 
+          initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="pt-2 flex items-center justify-center"
         >
           <a
             href="/daftar-kelas"
@@ -49,27 +72,11 @@ export default function CtaSection({ onOpenModal, onNavigate }) {
                 onOpenModal("Final CTA");
               }
             }}
-            className="px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-xl text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
+            className="w-full sm:w-auto px-9 py-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] font-bold rounded-xl text-sm sm:text-base text-white flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-[#049788]/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] cursor-pointer"
           >
-            <span>Daftar Trial Class</span>
+            <span>Daftar Kelas Mengaji Sekarang</span>
             <ArrowRight className="w-4 h-4" />
           </a>
-        </motion.div>
-
-        {/* Subtitle & Guarantee Footnote */}
-        <motion.div 
-          initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-2 pt-2"
-        >
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Bergabunglah bersama ribuan santri yang telah merasakan kemudahan dan keberkahan bimbingan belajar Al-Qur'an bersama para ustadz & ustadzah kami.
-          </p>
-          <p className="text-xs text-slate-500 font-medium">
-            Garansi ganti guru jika belum merasa cocok · Jadwal fleksibel 24/7
-          </p>
         </motion.div>
 
       </div>

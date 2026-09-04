@@ -10,6 +10,7 @@ import QuranCoursePage from "./components/QuranCoursePage";
 import FiqihCoursePage from "./components/FiqihCoursePage";
 import NahwuShorofCoursePage from "./components/NahwuShorofCoursePage";
 import RegisterPage from "./components/RegisterPage";
+import BlogPage from "./components/BlogPage";
 import HowItWorksSection from "./components/HowItWorksSection";
 import GallerySection from "./components/GallerySection";
 import PromoSection from "./components/PromoSection";
@@ -56,6 +57,8 @@ export default function App() {
       document.title = "Panel Operasional & Manajemen Admin | NgajiQ";
     } else if (currentPath === "/guru-pengajar") {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
+    } else if (currentPath === "/blog" || currentPath === "/artikel") {
+      document.title = "Blog & Panduan Belajar Mengaji | NgajiQ";
     } else {
       document.title = "NgajiQ — Bimbingan Mengaji Privat 1-on-1 untuk Dewasa & Anak";
     }
@@ -116,6 +119,7 @@ export default function App() {
   }, [modalOpen, promoModalOpen]);
 
   const isTeachersPage = currentPath === "/guru-pengajar";
+  const isBlogPage = currentPath === "/blog" || currentPath === "/artikel";
   const isQuranCoursePage = currentPath === "/kursus/alquran";
   const isFiqihCoursePage = currentPath === "/kursus/fiqih";
   const isNahwuShorofCoursePage = currentPath === "/kursus/nahwu-shorof";
@@ -150,6 +154,9 @@ export default function App() {
         {isRegisterPage ? (
           /* Dedicated Registration Page */
           <RegisterPage />
+        ) : isBlogPage ? (
+          /* Dedicated Blog Page */
+          <BlogPage onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
         ) : isQuranCoursePage ? (
           /* Dedicated Quran Course Page */
           <QuranCoursePage onOpenModal={handleOpenModal} onNavigate={handleNavigate} />
@@ -194,7 +201,7 @@ export default function App() {
             <TestimonialSection onOpenModal={handleOpenModal} />
 
             {/* 11. Artikel & Panduan Mengaji */}
-            <ArticlesSection />
+            <ArticlesSection onNavigate={handleNavigate} />
 
             {/* 12. FAQ — Pertanyaan seputar bimbingan mengaji */}
             <FaqSection />

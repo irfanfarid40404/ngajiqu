@@ -46,7 +46,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
     { label: "Lokasi", href: "/#cara-kerja" },
     { label: "Waktu Solat", action: "waktu-solat" },
     { label: "Testimoni", href: "/#testimoni" },
-    { label: "Blog", href: "/#artikel" },
+    { label: "Blog", href: "/blog" },
   ];
 
   const handleLinkClick = (e, item) => {
@@ -62,11 +62,15 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       return;
     }
 
+    const href = item.href;
+
     if (
       href === "/kursus/alquran" ||
       href === "/kursus/fiqih" ||
       href === "/kursus/nahwu-shorof" ||
       href === "/guru-pengajar" ||
+      href === "/blog" ||
+      href === "/artikel" ||
       href === "/daftar-kelas" ||
       href === "/daftar" ||
       href === "/dashboard" ||
@@ -175,6 +179,9 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
             }`}>
               {navItems.map((item) => {
                 const isTeacherActive = item.href === "/guru-pengajar" && currentPath === "/guru-pengajar";
+                const isBlogActive =
+                  (item.href === "/blog" || item.href === "/artikel") &&
+                  (currentPath === "/blog" || currentPath === "/artikel");
                 const isKursusActive =
                   item.hasDropdown &&
                   (currentPath === "/kursus/alquran" ||
@@ -268,7 +275,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                     href={item.href}
                     onClick={(e) => handleLinkClick(e, item)}
                     className={`font-semibold transition-all ${
-                      isTeacherActive
+                      isTeacherActive || isBlogActive
                         ? "text-[#049788] bg-[#EBF8F6] px-3 py-1.5 rounded-full text-xs font-bold"
                         : isScrolled
                         ? "px-3 py-1.5 rounded-full text-xs text-slate-700 hover:text-[#049788] hover:bg-white shadow-2xs"

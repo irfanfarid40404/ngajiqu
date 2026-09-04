@@ -417,14 +417,6 @@ export default function QuranCoursePage({ onOpenModal, onNavigate }) {
         />
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-4">
-          {/* Eyebrow badge */}
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/90 text-[#049788] text-xs font-bold border border-[#C8EDE9] shadow-2xs uppercase tracking-wider">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>Kursus Al-Qur'an</span>
-            </span>
-          </div>
-
           {/* Main Hero Title */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight">
             Belajar Al-Qur'an dengan <br className="hidden sm:inline" />
@@ -850,6 +842,18 @@ export default function QuranCoursePage({ onOpenModal, onNavigate }) {
 
       {/* ================= 10. FINAL CTA ================= */}
       <section className="py-24 sm:py-32 bg-slate-950 text-white relative overflow-hidden">
+        {/* Islamic Arabesque Star Motif on Dark Background */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.12]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%232DD4BF' stroke-width='1'%3E%3Cpath d='M40 0 L50 20 L70 10 L60 30 L80 40 L60 50 L70 70 L50 60 L40 80 L30 60 L10 70 L20 50 L0 40 L20 30 L10 10 L30 20 Z'/%3E%3Ccircle cx='40' cy='40' r='14' stroke='%232DD4BF' stroke-width='0.75'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: "80px 80px",
+            maskImage: "radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%)",
+            WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 40%, transparent 90%)",
+          }}
+          aria-hidden="true"
+        />
+
         <div 
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[360px] bg-[#049788]/15 rounded-full blur-[120px] pointer-events-none" 
           aria-hidden="true"
@@ -865,7 +869,7 @@ export default function QuranCoursePage({ onOpenModal, onNavigate }) {
             Bangun kemampuan membaca Al-Qur'an secara bertahap bersama guru yang siap membimbingmu dari nol hingga tartil.
           </p>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+          <div className="pt-2 flex items-center justify-center">
             <a
               href="/daftar-kelas"
               onClick={(e) => {

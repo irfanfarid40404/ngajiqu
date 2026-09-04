@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ArrowRight } from "lucide-react";
 import { BlogPostCard } from "@/components/ui/blog-post-card";
 
 const articlesData = [
@@ -58,7 +58,7 @@ const articlesData = [
   },
 ];
 
-export default function ArticlesSection() {
+export default function ArticlesSection({ onNavigate }) {
   const [activeArticle, setActiveArticle] = useState(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -111,6 +111,23 @@ export default function ArticlesSection() {
                 />
               </motion.div>
             ))}
+          </div>
+
+          {/* View All Articles Button */}
+          <div className="text-center pt-4">
+            <a
+              href="/blog"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate("/blog");
+                }
+              }}
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-white hover:bg-slate-100 active:scale-[0.98] border border-slate-200/90 text-slate-800 hover:text-[#049788] text-xs sm:text-sm font-bold rounded-xl transition-all shadow-2xs cursor-pointer"
+            >
+              <span>Jelajahi Semua Artikel & Panduan Mengaji</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
 
         </div>
