@@ -13,108 +13,78 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const unifiedTheme = {
+  cardBg: "bg-white",
+  border: "border-slate-200/90 hover:border-[#049788]/40",
+  iconBg: "bg-[#EBF8F6] text-[#049788] border-[#C8EDE9]",
+  badgeBg: "bg-slate-100 text-slate-700 border-slate-200",
+  tagBg: "bg-slate-50 text-slate-700 border-slate-200/80",
+  ctaColor: "text-[#049788] hover:text-[#038073]",
+};
+
 const learningPrograms = [
   {
     id: "sd",
     badge: "SD • Usia 7–12 Tahun",
     title: "Dasar Al-Qur'an & Fiqih",
     description:
-      "Membangun dasar membaca Al-Qur'an dengan benar sekaligus mengenal doa, ibadah, dan fiqih dasar melalui pembelajaran yang menyenangkan.",
+      "Fondasi membaca Al-Qur'an tartil, tajwid dasar, hafalan juz amma, dan adab harian santri.",
     icon: BookOpen,
     subjects: [
-      "Membaca Al-Qur'an",
-      "Tajwid dasar",
-      "Hafalan surat pendek",
-      "Doa sehari-hari",
-      "Fiqih ibadah dasar",
-      "Adab sehari-hari",
+      "Tahsin & Tajwid Dasar",
+      "Hafalan Juz 30",
+      "Doa Sehari-hari",
+      "Fiqih Ibadah Praktis",
     ],
     ctaText: "Lihat Program SD",
-    theme: {
-      cardBg: "bg-[#EDF8F5]",
-      border: "border-[#D2EFE9]",
-      iconBg: "bg-white text-[#049788] border-[#C8EDE9]",
-      badgeBg: "bg-white/95 text-[#049788] border-[#C8EDE9]",
-      tagBg: "bg-white/85 text-emerald-950 border-emerald-100",
-      ctaColor: "text-[#049788] hover:text-[#038073]",
-    },
+    theme: unifiedTheme,
   },
   {
     id: "smp",
     badge: "SMP • Usia 13–15 Tahun",
     title: "Al-Qur'an, Fiqih & Bahasa Arab",
     description:
-      "Memperkuat kemampuan membaca dan memahami Al-Qur'an sekaligus memperdalam fiqih dan dasar bahasa Arab.",
+      "Penguatan tahsin, hafalan terarah, fiqih aplikatif, dan dasar tata bahasa Arab.",
     icon: Languages,
     subjects: [
-      "Tajwid",
-      "Tahsin",
-      "Hafalan Al-Qur'an",
-      "Fiqih",
-      "Akhlak",
-      "Dasar Nahwu",
-      "Dasar Shorof",
+      "Tahsin & Tahfidz",
+      "Tajwid Aplikatif",
+      "Fiqih Remaja",
+      "Dasar Nahwu & Shorof",
     ],
     ctaText: "Lihat Program SMP",
-    theme: {
-      cardBg: "bg-[#EEF4FF]",
-      border: "border-[#D6E4FF]",
-      iconBg: "bg-white text-indigo-700 border-indigo-200",
-      badgeBg: "bg-white/95 text-indigo-700 border-indigo-200",
-      tagBg: "bg-white/85 text-indigo-950 border-indigo-100",
-      ctaColor: "text-indigo-700 hover:text-indigo-800",
-    },
+    theme: unifiedTheme,
   },
   {
     id: "sma",
     badge: "SMA • Usia 16–18 Tahun",
     title: "Pendalaman Al-Qur'an & Nahwu Shorof",
     description:
-      "Mendalami Al-Qur'an dan ilmu agama dengan materi yang lebih terstruktur, termasuk Nahwu dan Shorof sebagai dasar memahami bahasa Arab.",
+      "Pendalaman bacaan berstandar sanad, kajian tafsir dasar, dan gramatika bahasa Arab.",
     icon: Award,
     subjects: [
-      "Tahsin lanjutan",
-      "Tahfidz",
-      "Tafsir dasar",
-      "Fiqih",
-      "Nahwu",
-      "Shorof",
-      "Bahasa Arab",
+      "Tahsin Lanjutan",
+      "Tafsir Ayat Pilihan",
+      "Kaidah Nahwu-Shorof",
+      "Fiqih Muamalah",
     ],
     ctaText: "Lihat Program SMA",
-    theme: {
-      cardBg: "bg-[#FFF5ED]",
-      border: "border-[#FFE3D1]",
-      iconBg: "bg-white text-amber-800 border-amber-200",
-      badgeBg: "bg-white/95 text-amber-800 border-amber-200",
-      tagBg: "bg-white/85 text-amber-950 border-amber-100",
-      ctaColor: "text-amber-800 hover:text-amber-900",
-    },
+    theme: unifiedTheme,
   },
   {
     id: "semua",
     badge: "SEMUA JENJANG",
     title: "Belajar Sesuai Kemampuan",
     description:
-      "Tidak semua anak belajar dengan kecepatan yang sama. NgajiQ membantu menyesuaikan materi dengan kemampuan dan perkembangan setiap pelajar.",
+      "Bimbingan fleksibel yang menyesuaikan tingkat pemahaman dan target belajar setiap santri.",
     icon: Layers,
     subjects: [
-      "Al-Qur'an",
-      "Fiqih",
-      "Nahwu",
-      "Shorof",
-      "Tahsin",
-      "Tahfidz",
+      "Kurikulum Personal",
+      "Jadwal Fleksibel 1-on-1",
+      "Semua Tingkatan Usia",
     ],
     ctaText: "Cari Program yang Tepat",
-    theme: {
-      cardBg: "bg-[#EBF8F6]",
-      border: "border-[#C8EDE9]",
-      iconBg: "bg-white text-[#049788] border-[#C8EDE9]",
-      badgeBg: "bg-white/95 text-[#049788] border-[#C8EDE9]",
-      tagBg: "bg-white/85 text-teal-950 border-teal-100",
-      ctaColor: "text-[#049788] hover:text-[#038073]",
-    },
+    theme: unifiedTheme,
   },
 ];
 
@@ -122,10 +92,25 @@ export default function BentoLearningSection({ onOpenModal }) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section id="program" className="py-20 md:py-28 bg-white border-b border-slate-200/80 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
+    <section
+      id="program"
+      aria-label="Program Pembelajaran NgajiQ"
+      className="py-20 md:py-28 bg-white border-b border-slate-200/80 relative overflow-hidden"
+    >
+      {/* Subtle Islamic Motif Background Watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.18] mix-blend-multiply"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23049788' stroke-width='1' stroke-opacity='0.25'%3E%3Cpath d='M40 0 L50 20 L70 10 L60 30 L80 40 L60 50 L70 70 L50 60 L40 80 L30 60 L10 70 L20 50 L0 40 L20 30 L10 10 L30 20 Z'/%3E%3Ccircle cx='40' cy='40' r='14' stroke='%23049788' stroke-width='0.75' stroke-opacity='0.2'/%3E%3Ccircle cx='40' cy='40' r='6' fill='%23049788' fill-opacity='0.08' stroke='none'/%3E%3Cpath d='M0 0 L15 15 M80 0 L65 15 M0 80 L15 65 M80 80 L65 65' stroke-opacity='0.15'/%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "80px 80px",
+          maskImage: "radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Section Header — The Heading Self-Weight Rule (No kicker pill) */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-tight">
             Program Pembelajaran NgajiQ
@@ -136,15 +121,14 @@ export default function BentoLearningSection({ onOpenModal }) {
           </p>
         </div>
 
-        {/* Bento Grid Layout */}
+        {/* Bento Grid Layout (Original Structure Preserved) */}
         <div className="space-y-6 sm:space-y-7 max-w-6xl mx-auto">
-          
           {/* Top Row: SD, SMP, SMA (3 Columns on desktop, 1 column on mobile) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             {learningPrograms.slice(0, 3).map((prog, index) => {
               const Icon = prog.icon;
               return (
-                <motion.div
+                <motion.article
                   key={prog.id}
                   initial={shouldReduceMotion ? undefined : { opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -163,39 +147,43 @@ export default function BentoLearningSection({ onOpenModal }) {
                     }
                   }}
                   className={cn(
-                    "group rounded-[28px] border p-7 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden relative",
+                    "group rounded-[28px] border p-7 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#049788]",
                     prog.theme.cardBg,
                     prog.theme.border
                   )}
                 >
                   <div>
                     {/* Top Header with Icon and Badge */}
-                    <div className="flex items-center justify-between gap-3 mb-6">
-                      <div className={cn(
-                        "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-2xs group-hover:scale-110 transition-transform duration-300",
-                        prog.theme.iconBg
-                      )}>
-                        <Icon className="w-7 h-7 stroke-[2.2]" />
+                    <div className="flex items-center justify-between gap-3 mb-5">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-2xl flex items-center justify-center border shadow-2xs group-hover:scale-105 transition-transform duration-300",
+                          prog.theme.iconBg
+                        )}
+                      >
+                        <Icon className="w-6 h-6 stroke-[2.2]" />
                       </div>
-                      
-                      <span className={cn(
-                        "inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs border",
-                        prog.theme.badgeBg
-                      )}>
+
+                      <span
+                        className={cn(
+                          "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-2xs border",
+                          prog.theme.badgeBg
+                        )}
+                      >
                         {prog.badge}
                       </span>
                     </div>
 
-                    {/* Title & Description */}
-                    <h3 className="text-xl font-black text-slate-950 tracking-tight leading-snug mb-3">
+                    {/* Title & Concise Description */}
+                    <h3 className="text-xl font-black text-slate-950 tracking-tight leading-snug mb-2">
                       {prog.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-5">
                       {prog.description}
                     </p>
 
-                    {/* Subject Materi Pills */}
-                    <div className="flex flex-wrap gap-1.5 mb-6">
+                    {/* Subject Materi Pills (Concise 4 key tags) */}
+                    <div className="flex flex-wrap gap-1.5 mb-5">
                       {prog.subjects.map((sub, i) => (
                         <span
                           key={i}
@@ -212,27 +200,31 @@ export default function BentoLearningSection({ onOpenModal }) {
                   </div>
 
                   {/* Bottom CTA Arrow Link */}
-                  <div className="pt-4 border-t border-slate-900/5 flex items-center justify-between">
-                    <span className={cn("text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 transition-colors", prog.theme.ctaColor)}>
+                  <div className="pt-4 border-t border-slate-900/5 flex items-center justify-between min-h-[44px]">
+                    <span
+                      className={cn(
+                        "text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 transition-colors",
+                        prog.theme.ctaColor
+                      )}
+                    >
                       <span>{prog.ctaText}</span>
                       <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                     </span>
                     <span className="text-xs text-slate-400 font-medium">1-on-1 Talaqqi</span>
                   </div>
-                </motion.div>
+                </motion.article>
               );
             })}
           </div>
 
           {/* Bottom Row: Card 4 (Semua Jenjang - 1 Col) + Card 5 (Large CTA - 2 Cols) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7">
-            
             {/* Card 4: Semua Jenjang */}
             {(() => {
               const prog = learningPrograms[3];
               const Icon = prog.icon;
               return (
-                <motion.div
+                <motion.article
                   initial={shouldReduceMotion ? undefined : { opacity: 0, y: 15 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -250,37 +242,42 @@ export default function BentoLearningSection({ onOpenModal }) {
                     }
                   }}
                   className={cn(
-                    "group lg:col-span-1 rounded-[28px] border p-7 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden relative",
+                    "group lg:col-span-1 rounded-[28px] border p-7 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden relative focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#049788]",
                     prog.theme.cardBg,
                     prog.theme.border
                   )}
                 >
                   <div>
                     {/* Top Header with Icon & Badge */}
-                    <div className="flex items-center justify-between gap-3 mb-6">
-                      <div className={cn(
-                        "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-2xs group-hover:scale-110 transition-transform duration-300",
-                        prog.theme.iconBg
-                      )}>
-                        <Icon className="w-7 h-7 stroke-[2.2]" />
+                    <div className="flex items-center justify-between gap-3 mb-5">
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-2xl flex items-center justify-center border shadow-2xs group-hover:scale-105 transition-transform duration-300",
+                          prog.theme.iconBg
+                        )}
+                      >
+                        <Icon className="w-6 h-6 stroke-[2.2]" />
                       </div>
-                      
-                      <span className={cn(
-                        "inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold shadow-2xs border",
-                        prog.theme.badgeBg
-                      )}>
+
+                      <span
+                        className={cn(
+                          "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold shadow-2xs border",
+                          prog.theme.badgeBg
+                        )}
+                      >
                         {prog.badge}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-black text-slate-950 tracking-tight leading-snug mb-3">
+                    <h3 className="text-xl font-black text-slate-950 tracking-tight leading-snug mb-2">
                       {prog.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-5">
                       {prog.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-1.5 mb-6">
+                    {/* Concise 3 key tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-5">
                       {prog.subjects.map((sub, i) => (
                         <span
                           key={i}
@@ -296,67 +293,75 @@ export default function BentoLearningSection({ onOpenModal }) {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-900/5 flex items-center justify-between">
-                    <span className={cn("text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 transition-colors", prog.theme.ctaColor)}>
+                  <div className="pt-4 border-t border-slate-900/5 flex items-center justify-between min-h-[44px]">
+                    <span
+                      className={cn(
+                        "text-xs sm:text-sm font-bold inline-flex items-center gap-1.5 transition-colors",
+                        prog.theme.ctaColor
+                      )}
+                    >
                       <span>{prog.ctaText}</span>
                       <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                     </span>
                     <span className="text-xs text-slate-400 font-medium">Fleksibel</span>
                   </div>
-                </motion.div>
+                </motion.article>
               );
             })()}
 
-            {/* Card 5: Large CTA Focal Point (2 Columns on desktop) with Clean Vector Features */}
+            {/* Card 5: Large CTA Focal Point (2 Columns on desktop) */}
             <motion.div
               initial={shouldReduceMotion ? undefined : { opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="lg:col-span-2 rounded-[28px] bg-slate-950 text-white p-7 sm:p-10 flex flex-col justify-between border border-slate-800 shadow-xl relative overflow-hidden"
+              className="lg:col-span-2 rounded-[28px] bg-slate-950 text-white p-7 sm:p-9 flex flex-col justify-between border border-slate-800 shadow-lg relative overflow-hidden"
             >
-              {/* Subtle background ambient mesh */}
-              <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px] opacity-35 pointer-events-none" />
+              {/* Subtle Islamic Motif in Dark Card instead of generic SaaS dots */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-10 mix-blend-screen"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='white' stroke-width='1'%3E%3Cpath d='M40 0 L50 20 L70 10 L60 30 L80 40 L60 50 L70 70 L50 60 L40 80 L30 60 L10 70 L20 50 L0 40 L20 30 L10 10 L30 20 Z'/%3E%3Ccircle cx='40' cy='40' r='14' stroke='white' stroke-width='0.75'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundSize: "60px 60px",
+                }}
+                aria-hidden="true"
+              />
               <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-[#049788]/20 blur-3xl pointer-events-none" />
 
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
-                
-                {/* Left Text & CTA */}
-                <div className="md:col-span-7 space-y-4">
+                {/* Left Text & CTA (Concise, no duplicate paragraph) */}
+                <div className="md:col-span-7 space-y-3.5">
                   <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
-                    Belum yakin program mana yang cocok untuk anak Anda?
+                    Belum yakin program yang cocok untuk anak Anda?
                   </h3>
 
                   <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    Kenali kebutuhan belajar anak dan temukan program NgajiQ yang sesuai dengan usia, kemampuan, dan tujuan belajarnya.
-                  </p>
-
-                  <p className="text-xs font-semibold text-[#74CEC3]">
-                    Mulai dari jenjang dan kemampuan anak Anda.
+                    Konsultasikan usia, kemampuan awal, dan target belajar anak bersama tim pengajar kami secara gratis.
                   </p>
 
                   <div className="pt-2">
                     <button
+                      type="button"
                       onClick={() => {
                         if (onOpenModal) onOpenModal("Konsultasi Program Jenjang");
                       }}
-                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-[#049788]/30 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788]"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm shadow-md shadow-[#049788]/20 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788]"
                     >
-                      <span>Konsultasikan Program</span>
+                      <span>Konsultasi Program Gratis</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
                 {/* Right Feature Highlights Box with Icons */}
-                <div className="md:col-span-5 space-y-3 bg-slate-900/90 rounded-2xl p-5 border border-slate-800 shadow-lg">
+                <div className="md:col-span-5 space-y-3 bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-md">
                   <div className="flex items-start gap-3">
                     <div className="w-9 h-9 rounded-xl bg-[#049788]/20 border border-[#049788]/30 text-[#2DD4BF] flex items-center justify-center shrink-0">
                       <UserCheck className="w-4 h-4" />
                     </div>
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-white">Guru Tersertifikasi</h4>
-                      <p className="text-xs text-slate-400">Pemisahan pengajar ikhwan & akhwat</p>
+                      <p className="text-xs text-slate-400">Pemisahan guru ikhwan & akhwat</p>
                     </div>
                   </div>
 
@@ -366,7 +371,7 @@ export default function BentoLearningSection({ onOpenModal }) {
                     </div>
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-white">Waktu Fleksibel</h4>
-                      <p className="text-xs text-slate-400">Bebas atur dan reschedule jadwal</p>
+                      <p className="text-xs text-slate-400">Bebas atur dan reschedule sesi</p>
                     </div>
                   </div>
 
@@ -380,15 +385,12 @@ export default function BentoLearningSection({ onOpenModal }) {
                     </div>
                   </div>
                 </div>
-
               </div>
             </motion.div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );
 }
+

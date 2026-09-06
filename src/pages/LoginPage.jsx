@@ -150,8 +150,8 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
   return (
     <div className="h-screen w-screen bg-slate-950 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden font-sans">
       
-      {/* ─── LEFT PANEL: Visual Artwork & NgajiQ Brand Identity ─── */}
-      <div className="relative overflow-hidden h-64 sm:h-80 md:h-full md:flex-1 shrink-0 bg-gradient-to-br from-slate-950 via-[#033B36] to-slate-900 flex flex-col justify-between p-6 sm:p-10">
+      {/* ─── LEFT PANEL: Visual Artwork & NgajiQ Brand Identity (Desktop Only) ─── */}
+      <div className="hidden md:flex relative overflow-hidden md:h-full md:flex-1 shrink-0 bg-gradient-to-br from-slate-950 via-[#033B36] to-slate-900 flex-col justify-between p-6 sm:p-10">
         
         {/* Ambient Teal Glow Orbs */}
         <div 
@@ -197,7 +197,7 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
         </div>
 
         {/* Bottom Hero Highlight on Left Panel */}
-        <div className="relative z-10 hidden md:block space-y-3 max-w-md">
+        <div className="relative z-10 space-y-3 max-w-md">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-[#049788] text-white flex items-center justify-center shadow-lg shadow-[#049788]/30">
               <BookOpen className="w-5 h-5" />
@@ -206,7 +206,7 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
               <span className="text-xl font-black tracking-tight text-white block leading-none">
                 NgajiQ
               </span>
-              <span className="text-[11px] font-semibold text-teal-300 uppercase tracking-wider">
+              <span className="text-xs font-semibold text-teal-300 uppercase tracking-wider">
                 Belajar Al-Qur'an & Fiqih
               </span>
             </div>
@@ -214,16 +214,14 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
 
           <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight leading-snug">
             Bimbingan Mengaji Privat <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2DD4BF] to-teal-200">
-              Bersama Guru Bersanad.
-            </span>
+            <span className="text-[#2DD4BF]">Bersama Guru Bersanad.</span>
           </h2>
           
           <p className="text-xs text-slate-300 leading-relaxed">
             Tingkatkan kualitas bacaan Al-Qur'an dan pemahaman ibadah Anda dengan kurikulum terstruktur, waktu fleksibel 24/7, dan bimbingan 1-on-1 intensif.
           </p>
 
-          <div className="pt-2 flex items-center gap-4 text-[11px] text-teal-100/90 font-medium">
+          <div className="pt-2 flex items-center gap-4 text-xs text-teal-100/90 font-medium">
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#2DD4BF]" />
               <span>1.200+ Santri Aktif</span>
@@ -238,18 +236,28 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
       </div>
 
       {/* ─── RIGHT PANEL: Form Section (NgajiQ Colorway) ─── */}
-      <div className="flex-1 flex items-center justify-center bg-white p-6 sm:p-10 md:p-12 lg:p-14 overflow-y-auto">
+      <div className="flex-1 min-h-screen md:min-h-0 flex items-center justify-center bg-white p-5 sm:p-8 md:p-12 lg:p-14 overflow-y-auto">
         <div className="w-full max-w-md py-4">
           
-          {/* Header Mobile Brand & Greetings */}
-          <div className="mb-7">
-            <div className="flex items-center gap-2.5 mb-4 md:hidden">
-              <div className="w-8 h-8 rounded-xl bg-[#049788] text-white flex items-center justify-center shadow-md shadow-[#049788]/20">
-                <BookOpen className="w-4 h-4" />
+          {/* Header Mobile: Back Button & Brand */}
+          <div className="flex items-center justify-between mb-6 md:hidden">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer py-1"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Kembali</span>
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-xl bg-[#049788] text-white flex items-center justify-center shadow-xs">
+                <BookOpen className="w-3.5 h-3.5" />
               </div>
-              <span className="font-black text-slate-950 text-base">NgajiQ</span>
+              <span className="font-black text-slate-950 text-sm">NgajiQ</span>
             </div>
+          </div>
 
+          <div className="mb-7">
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight mb-2">
               Selamat Datang Kembali
             </h1>
@@ -412,7 +420,7 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
 
             {/* Quick Demo Logins for Fast Review */}
             <div className="pt-2 border-t border-slate-100 space-y-2">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block text-center">
+              <span className="text-xs uppercase font-bold text-slate-400 tracking-wider block text-center">
                 Akses Uji Coba Cepat (Demo 1-Klik)
               </span>
               <div className="grid grid-cols-2 gap-2">
@@ -440,7 +448,7 @@ export function LoginPage({ onNavigate, onLoginSuccess }) {
           </form>
 
           {/* Footer Copyright */}
-          <div className="mt-8 text-center text-[11px] text-slate-400">
+          <div className="mt-8 text-center text-xs text-slate-400">
             © 2026 NgajiQ. Seluruh Hak Cipta Dilindungi.
           </div>
 

@@ -1,57 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Tag, Copy, Check, ArrowRight, Gift, Users, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { Copy, Check, ArrowRight, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const promos = [
   {
     id: 1,
-    badge: "Diskon 25%",
-    badgeColor: "bg-emerald-500 text-white",
     code: "BERKAH25",
-    title: "Promo Santri Baru",
-    description: "Potongan 25% biaya belajar bulan pertama untuk pendaftaran kelas privat 1-on-1 jenjang apa saja.",
-    icon: Gift,
-    benefits: [
-      "Berlaku untuk semua paket reguler & intensif",
-      "Termasuk 1 sesi tes level kemampuan gratis",
-      "Garansi ganti guru tanpa biaya tambahan"
-    ],
-    highlight: "Hemat s/d Rp195.000",
-    theme: "border-[#049788]/30 bg-gradient-to-b from-[#F2FAF8] to-white",
+    badge: "Santri Baru",
+    discount: "25% OFF",
+    title: "Diskon Bulan Pertama",
+    desc: "Potongan 25% biaya bimbingan privat 1-on-1 Al-Qur'an atau Fiqih (hemat s/d Rp195.000).",
+    isFeatured: true,
   },
   {
     id: 2,
-    badge: "Hemat 30%",
-    badgeColor: "bg-[#049788] text-white",
     code: "KELUARGA30",
-    title: "Paket Belajar Keluarga",
-    description: "Daftarkan 2 santri atau lebih (kakak, adik, orang tua) dan nikmati diskon khusus keluarga bahagia.",
-    icon: Users,
-    benefits: [
-      "Bebas tentukan guru ikhwan/akhwat masing-masing",
-      "Jadwal fleksibel terpisah untuk tiap anggota",
-      "Laporan kemajuan berkala setiap akhir pekan"
-    ],
-    highlight: "Potongan biaya langganan bulanan",
-    theme: "border-indigo-200 bg-gradient-to-b from-[#F0F4FF] to-white",
+    badge: "Paket Keluarga",
+    discount: "30% OFF",
+    title: "Subsidi Multi Santri",
+    desc: "Diskon 30% untuk pendaftaran 2 santri atau lebih dalam satu keluarga dengan jadwal terpisah.",
+    isFeatured: false,
   },
   {
     id: 3,
-    badge: "Bonus Fisik",
-    badgeColor: "bg-amber-500 text-white",
     code: "MUSHAFPLUS",
-    title: "Bonus Mushaf & Buku Tajwid",
-    description: "Ambil paket kuartalan (3 bulan) dan dapatkan mushaf standar Madinah serta modul tajwid dikirim ke rumah.",
-    icon: BookOpen,
-    benefits: [
-      "Mushaf rasm Utsmani cetakan standar Kemenag",
-      "Modul ringkas panduan makhraj dan hukum tajwid",
-      "Gratis ongkos kirim ke seluruh Indonesia"
-    ],
-    highlight: "Hadiah senilai Rp150.000",
-    theme: "border-amber-200 bg-gradient-to-b from-[#FFF9F2] to-white",
+    badge: "Paket 3 Bulan",
+    discount: "GRATIS MUSHAF",
+    title: "Hadiah Mushaf & Tajwid",
+    desc: "Ambil paket kuartalan dan dapatkan Mushaf Madinah rasm Utsmani serta buku tajwid ke rumah.",
+    isFeatured: false,
   },
 ];
 
@@ -62,97 +40,127 @@ export default function PromoSection({ onOpenModal }) {
   const handleCopy = (code) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
-    setTimeout(() => setCopiedCode(null), 2500);
+    setTimeout(() => setCopiedCode(null), 2200);
   };
 
   return (
-    <section id="promo" className="py-20 md:py-28 bg-[#FBFBFC] border-b border-slate-200/80 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight leading-tight">
-            Promo & Penawaran Spesial
-          </h2>
+    <section
+      id="promo"
+      aria-label="Voucher dan Promo Spesial"
+      className="py-16 md:py-24 bg-[#FBFBFC] border-b border-slate-200/80 relative overflow-hidden"
+    >
+      {/* Subtle Islamic Motif Watermark */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.2] mix-blend-multiply"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23049788' stroke-width='1' stroke-opacity='0.25'%3E%3Cpath d='M40 0 L50 20 L70 10 L60 30 L80 40 L60 50 L70 70 L50 60 L40 80 L30 60 L10 70 L20 50 L0 40 L20 30 L10 10 L30 20 Z'/%3E%3Ccircle cx='40' cy='40' r='14' stroke='%23049788' stroke-width='0.75' stroke-opacity='0.2'/%3E%3Ccircle cx='40' cy='40' r='6' fill='%23049788' fill-opacity='0.08' stroke='none'/%3E%3Cpath d='M0 0 L15 15 M80 0 L65 15 M0 80 L15 65 M80 80 L65 65' stroke-opacity='0.15'/%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundSize: "80px 80px",
+          maskImage: "radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 20%, transparent 80%)",
+        }}
+        aria-hidden="true"
+      />
 
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-            Dapatkan kemudahan belajar Al-Qur'an dengan potongan biaya dan bonus materi eksklusif bulan ini.
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Clean Header — The Heading Self-Weight Rule */}
+        <div className="text-center max-w-xl mx-auto mb-12 space-y-2.5">
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-950 tracking-tight leading-tight">
+            Voucher & <span className="text-[#049788]">Promo Spesial</span>
+          </h2>
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            Gunakan voucher berikut saat pendaftaran untuk menikmati potongan biaya dan fasilitas belajar eksklusif.
           </p>
         </div>
 
-        {/* Promo Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 max-w-6xl mx-auto">
+        {/* 3 Clean Voucher Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {promos.map((promo, index) => {
-            const Icon = promo.icon;
             const isCopied = copiedCode === promo.code;
 
             return (
-              <motion.div
+              <motion.article
                 key={promo.id}
-                initial={shouldReduceMotion ? undefined : { opacity: 0, y: 15 }}
+                initial={shouldReduceMotion ? undefined : { opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.08 }}
+                transition={{ duration: 0.3, delay: index * 0.06 }}
                 className={cn(
-                  "group rounded-[28px] border p-7 sm:p-8 flex flex-col justify-between shadow-2xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden",
-                  promo.theme
+                  "relative rounded-2xl p-6 flex flex-col justify-between transition-all duration-200 overflow-hidden",
+                  promo.isFeatured
+                    ? "bg-white border-2 border-[#049788] shadow-sm ring-4 ring-[#049788]/10"
+                    : "bg-white border border-slate-200 hover:border-slate-300 shadow-2xs"
                 )}
               >
+                {/* Content Top */}
                 <div>
-                  {/* Top Badge & Highlight */}
-                  <div className="flex items-center justify-between gap-2 mb-6">
-                    <span className={cn("text-xs font-bold px-3 py-1 rounded-full shadow-2xs", promo.badgeColor)}>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span
+                      className={cn(
+                        "text-xs font-bold px-2.5 py-0.5 rounded-full",
+                        promo.isFeatured
+                          ? "bg-[#049788] text-white"
+                          : "bg-slate-100 text-slate-700"
+                      )}
+                    >
                       {promo.badge}
                     </span>
-                    <span className="text-xs font-semibold text-slate-500">
-                      {promo.highlight}
+                    <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
+                      <Tag className="w-3 h-3 text-[#049788]" />
+                      <span>Kupon Aktif</span>
                     </span>
                   </div>
 
-                  {/* Icon & Title */}
-                  <div className="flex items-center gap-3.5 mb-3">
-                    <div className="w-11 h-11 rounded-2xl bg-white border border-slate-200/80 shadow-2xs text-[#049788] flex items-center justify-center shrink-0">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-950 tracking-tight leading-snug">
-                      {promo.title}
-                    </h3>
+                  <div className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+                    {promo.discount}
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-                    {promo.description}
+                  <h3 className="text-base font-bold text-slate-900 mt-2">
+                    {promo.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mt-1.5">
+                    {promo.desc}
                   </p>
-
-                  {/* Benefits List */}
-                  <div className="space-y-2 mb-6 pt-4 border-t border-slate-200/60">
-                    {promo.benefits.map((benefit, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-slate-700">
-                        <Check className="w-4 h-4 text-[#049788] shrink-0 mt-0.5" />
-                        <span>{benefit}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
-                {/* Coupon Code Box & CTA */}
-                <div className="pt-4 border-t border-slate-200/60 space-y-3">
-                  <div className="flex items-center justify-between bg-white border border-dashed border-slate-300 rounded-xl px-3.5 py-2.5">
-                    <div className="flex items-center gap-2">
-                      <Tag className="w-4 h-4 text-[#049788]" />
-                      <span className="text-xs font-mono font-bold text-slate-900 tracking-wider">
-                        {promo.code}
-                      </span>
-                    </div>
+                {/* Perforated Divider with Ticket Notches */}
+                <div className="relative my-5 -mx-6">
+                  <div
+                    className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FBFBFC] border-r border-slate-200 shadow-inner"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="border-t border-dashed border-slate-200 mx-5"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#FBFBFC] border-l border-slate-200 shadow-inner"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                {/* Voucher Code & Action */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5">
+                    <span className="font-mono text-xs sm:text-sm font-bold text-slate-900 tracking-wider">
+                      {promo.code}
+                    </span>
+
                     <button
+                      type="button"
                       onClick={() => handleCopy(promo.code)}
-                      className="text-xs font-semibold text-[#049788] hover:text-[#038073] flex items-center gap-1 transition-colors cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788] rounded-md px-1"
-                      title="Salin kode promo"
-                      aria-label={`Salin kode promo ${promo.code}`}
+                      className={cn(
+                        "inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all min-h-[44px] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#049788]",
+                        isCopied
+                          ? "bg-emerald-100 text-emerald-800"
+                          : "bg-white text-[#049788] hover:bg-[#EBF8F6] border border-slate-200"
+                      )}
+                      aria-label={`Salin kode voucher ${promo.code}`}
                     >
                       {isCopied ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
-                          <span className="text-emerald-600">Tersalin</span>
+                          <Check className="w-3.5 h-3.5 text-emerald-700" />
+                          <span>Tersalin</span>
                         </>
                       ) : (
                         <>
@@ -164,20 +172,25 @@ export default function PromoSection({ onOpenModal }) {
                   </div>
 
                   <button
+                    type="button"
                     onClick={() => {
                       if (onOpenModal) onOpenModal(`Klaim Promo ${promo.code}`);
                     }}
-                    className="w-full py-3 bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788]"
+                    className="w-full py-2.5 px-4 min-h-[44px] bg-[#049788] hover:bg-[#038073] active:scale-[0.99] text-white font-bold rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-2xs cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#049788]"
                   >
-                    <span>Klaim Promo Sekarang</span>
+                    <span>Gunakan Voucher</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
 
+        {/* Single Quiet Trust Line */}
+        <p className="text-xs text-slate-500 text-center mt-10">
+          Garansi ganti guru jika merasa belum cocok • Biaya transparan tanpa biaya tersembunyi
+        </p>
       </div>
     </section>
   );

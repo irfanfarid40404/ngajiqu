@@ -38,6 +38,10 @@ import {
   HelpCircle,
   Maximize2,
   CheckCircle2,
+  Clock,
+  ArrowRight,
+  Copy,
+  CheckCircle,
 } from "lucide-react";
 import { siteConfig } from "@/data/content";
 
@@ -288,6 +292,90 @@ const initialNotifications = [
   { id: 3, title: "Streak 14 Hari Tercapai!", desc: "Selamat, Anda mendapatkan bonus +100 XP atas keistiqamahan Anda.", time: "Kemarin", unread: false },
 ];
 
+// ─── 11. PAKET PERPANJANGAN (RENEWAL OPTIONS) ───
+const renewalPackagesList = [
+  {
+    id: "pkg-1m",
+    name: "Paket Lanjut (1 Bulan)",
+    sessions: 8,
+    price: 249000,
+    priceFormatted: "Rp 249.000",
+    originalPriceFormatted: null,
+    period: "1 Bulan",
+    pricePerSession: "Rp 31.125 / sesi",
+    badge: null,
+    highlight: false,
+    description: "Sangat pas untuk menjaga ritme belajar pekanan dengan pendalaman materi tajwid spesifik.",
+    features: [
+      "8 Sesi Live Privat 1-on-1 (60 Menit)",
+      "Jadwal fleksibel 2x seminggu",
+      "Modul Tajwid & Rangkuman Sesi PDF",
+      "Konsultasi chat bebas bersama Ustadz",
+      "Garansi ganti ustadz kapan saja tanpa biaya",
+    ],
+  },
+  {
+    id: "pkg-2m",
+    name: "Paket Istiqamah (2 Bulan)",
+    sessions: 16,
+    price: 449000,
+    priceFormatted: "Rp 449.000",
+    originalPriceFormatted: "Rp 498.000",
+    period: "2 Bulan",
+    pricePerSession: "Rp 28.062 / sesi",
+    badge: "Paling Diminati · Hemat Rp 49.000",
+    highlight: true,
+    description: "Pilihan paling favorit santri untuk menuntaskan kaidah makhraj & tajwid secara tartil tanpa jeda.",
+    features: [
+      "16 Sesi Live Privat 1-on-1 (60 Menit)",
+      "Prioritas kunci jadwal & guru tetap favorit Anda",
+      "Bonus 2x Review Audio Murattal Guru Eksklusif",
+      "Akses penuh bank soal & evaluasi berkala",
+      "Reschedule fleksibel hingga H-2 jam tanpa hangus",
+    ],
+  },
+  {
+    id: "pkg-3m",
+    name: "Paket Intensif Talaqqi (3 Bulan)",
+    sessions: 24,
+    price: 649000,
+    priceFormatted: "Rp 649.000",
+    originalPriceFormatted: "Rp 749.000",
+    period: "3 Bulan",
+    pricePerSession: "Rp 27.041 / sesi",
+    badge: "Nilai Terbaik · Hemat Rp 100.000",
+    highlight: false,
+    description: "Bimbingan komprehensif talaqqi bersanad untuk penguasaan bacaan Al-Qur'an dan fiqih paripurna.",
+    features: [
+      "24 Sesi Live Privat 1-on-1 (60 Menit)",
+      "Prioritas bimbingan talaqqi sanad keilmuan",
+      "Sertifikat kelulusan resmi ber-SKHUN",
+      "Gratis Buku Cetak Tajwid Praktis (dikirim ke rumah)",
+      "Akses konsultasi fiqih & keluarga tanpa batas",
+    ],
+  },
+];
+
+// ─── 12. RIWAYAT TRANSAKSI ───
+const initialInvoicesList = [
+  {
+    id: "INV-2026-0893",
+    packageTitle: "Paket Reguler Privat (16 Sesi)",
+    date: "03 Agu 2026",
+    method: "Transfer Bank BSI Syariah",
+    amount: "Rp 449.000",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0612",
+    packageTitle: "Paket Trial & Buku Panduan Tajwid Fisik",
+    date: "25 Jul 2026",
+    method: "QRIS Instant",
+    amount: "Rp 99.000",
+    status: "Lunas",
+  },
+];
+
 export default function ClientDashboard({ onNavigate }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -329,6 +417,58 @@ export default function ClientDashboard({ onNavigate }) {
   const [cart, setCart] = useState([]);
   const [cartModalOpen, setCartModalOpen] = useState(false);
 
+  // Billing & Renewal state
+  const [invoices, setInvoices] = useState(initialInvoicesList);
+  const [renewalModalOpen, setRenewalModalOpen] = useState(false);
+  const [selectedRenewalPackage, setSelectedRenewalPackage] = useState(renewalPackagesList[1]);
+  const [renewalPaymentMethod, setRenewalPaymentMethod] = useState("bsi");
+  const [copiedBank, setCopiedBank] = useState(false);
+  const [isProcessingRenewal, setIsProcessingRenewal] = useState(false);
+
+  const handleCopyAccount = (text) => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(text);
+    }
+    setCopiedBank(true);
+    setTimeout(() => setCopiedBank(false), 2500);
+    showToast("Nomor rekening berhasil disalin ke clipboard!", "info");
+  };
+
+  const handleConfirmRenewal = () => {
+    setIsProcessingRenewal(true);
+    setTimeout(() => {
+      const addedSessions = selectedRenewalPackage.sessions;
+      setStudentData((prev) => ({
+        ...prev,
+        totalSessions: prev.totalSessions + addedSessions,
+      }));
+
+      const newInv = {
+        id: `INV-2026-${Math.floor(1000 + Math.random() * 9000)}`,
+        packageTitle: `${selectedRenewalPackage.name} (${selectedRenewalPackage.sessions} Sesi)`,
+        date: "Hari Ini, 6 Sep 2026",
+        method:
+          renewalPaymentMethod === "bsi"
+            ? "Transfer Bank BSI Syariah"
+            : renewalPaymentMethod === "mandiri"
+            ? "Transfer Bank Mandiri"
+            : renewalPaymentMethod === "bca"
+            ? "Transfer Bank BCA"
+            : "QRIS Instant",
+        amount: selectedRenewalPackage.priceFormatted,
+        status: "Lunas",
+      };
+      setInvoices((prev) => [newInv, ...prev]);
+
+      setIsProcessingRenewal(false);
+      setRenewalModalOpen(false);
+      showToast(
+        `Alhamdulillah! Pembayaran ${selectedRenewalPackage.name} berhasil. +${addedSessions} sesi telah ditambahkan ke saldo Anda!`,
+        "success"
+      );
+    }, 900);
+  };
+
   // Game state
   const [currentGameIdx, setCurrentGameIdx] = useState(0);
   const [selectedGameAnswer, setSelectedGameAnswer] = useState(null);
@@ -340,23 +480,39 @@ export default function ClientDashboard({ onNavigate }) {
   // Chat state
   const [chatMessages, setChatMessages] = useState(initialChatMessages);
   const [inputMessage, setInputMessage] = useState("");
+  const [chatDrawerOpen, setChatDrawerOpen] = useState(false);
+  const [unreadChatCount, setUnreadChatCount] = useState(1);
+
+  const handleOpenChatDrawer = () => {
+    setChatDrawerOpen((prev) => !prev);
+    setUnreadChatCount(0);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && chatDrawerOpen) {
+        setChatDrawerOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [chatDrawerOpen]);
 
   // Search query
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Grouped Navigation Definition
+  // ─── TABS: PEMBELAJARAN (HORIZONTAL TABS) ───
+  const learningTabs = [
+    { id: "overview", label: "Dashboard", icon: LayoutDashboard },
+    { id: "my_courses", label: "Kelas Saya", icon: BookMarked },
+    { id: "materials", label: "Materi & Modul", icon: BookOpen },
+    { id: "audio", label: "Audio & Murattal", icon: Volume2, badge: "Audio" },
+    { id: "schedule", label: "Jadwal Kelas", icon: Calendar },
+    { id: "assignments", label: "Tugas & Bank Soal", icon: FileCheck, badge: "1 Baru" },
+  ];
+
+  // ─── SIDEBAR NAVIGATION (EVALUASI, GAME, TOKO & AKUN) ───
   const navigationGroups = [
-    {
-      group: "PEMBELAJARAN",
-      items: [
-        { id: "overview", label: "Dashboard", icon: LayoutDashboard },
-        { id: "my_courses", label: "Kelas Saya", icon: BookMarked },
-        { id: "materials", label: "Materi & Modul", icon: BookOpen },
-        { id: "audio", label: "Audio & Murattal", icon: Volume2, badge: "Audio" },
-        { id: "schedule", label: "Jadwal Kelas", icon: Calendar },
-        { id: "assignments", label: "Tugas & Bank Soal", icon: FileCheck, badge: "1 Baru" },
-      ],
-    },
     {
       group: "EVALUASI & PROGRES",
       items: [
@@ -378,7 +534,6 @@ export default function ClientDashboard({ onNavigate }) {
       items: [
         { id: "store", label: "Toko Buku & Produk", icon: ShoppingCart },
         { id: "billing", label: "Pembayaran & Paket", icon: CreditCard },
-        { id: "chat", label: "Chat Ustadz", icon: MessageSquare },
         { id: "profile", label: "Profil & Keamanan", icon: User },
       ],
     },
@@ -553,6 +708,358 @@ export default function ClientDashboard({ onNavigate }) {
                 </a>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL: PERPANJANGAN & PEMBAYARAN PAKET ─── */}
+      {renewalModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl border border-slate-200">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-950">Perpanjang Masa Belajar</h3>
+                  <p className="text-xs text-slate-500">Kunci slot jadwal & teruskan bimbingan guru</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRenewalModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center cursor-pointer transition-colors"
+                aria-label="Tutup modal perpanjangan"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Package Summary Box */}
+            {selectedRenewalPackage && (
+              <div className="p-4 rounded-2xl bg-[#EBF8F6]/70 border border-[#049788]/20 flex items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-slate-950">{selectedRenewalPackage.name}</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-[#049788] text-white">
+                      +{selectedRenewalPackage.sessions} Sesi
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600">
+                    Durasi {selectedRenewalPackage.period} · {selectedRenewalPackage.pricePerSession}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-black text-[#049788]">{selectedRenewalPackage.priceFormatted}</div>
+                  <span className="text-xs text-emerald-800 font-semibold">Bimbingan 1-on-1</span>
+                </div>
+              </div>
+            )}
+
+            {/* Payment Method Selector */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-700 block">Pilih Metode Pembayaran</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: "bsi", label: "BSI Syariah", note: "Syariah Bebas Riba" },
+                  { id: "mandiri", label: "Bank Mandiri", note: "Transfer / Livin" },
+                  { id: "bca", label: "Bank BCA", note: "BCA Mobile" },
+                  { id: "qris", label: "QRIS Instant", note: "Semua E-Wallet" },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setRenewalPaymentMethod(m.id)}
+                    className={`p-2.5 rounded-xl border text-left cursor-pointer transition-all ${
+                      renewalPaymentMethod === m.id
+                        ? "border-[#049788] bg-[#EBF8F6] text-[#049788] ring-1 ring-[#049788]"
+                        : "border-slate-200 bg-slate-50/70 hover:bg-slate-100 text-slate-700"
+                    }`}
+                  >
+                    <div className="text-xs font-bold">{m.label}</div>
+                    <div className="text-xs text-slate-500 truncate">{m.note}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Payment Details Container */}
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+              {renewalPaymentMethod === "bsi" && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-medium">Bank Syariah Indonesia (BSI)</span>
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                      Akad Syar'i
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                    <div>
+                      <div className="text-xs text-slate-400">Nomor Rekening:</div>
+                      <div className="font-mono font-black text-slate-900 text-sm sm:text-base">7188-2993-01</div>
+                      <div className="text-xs text-slate-600">a.n. PT NgajiQ Global Indonesia</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyAccount("7188299301")}
+                      className="px-3 py-2 bg-[#EBF8F6] hover:bg-[#d8f2ee] text-[#049788] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shrink-0"
+                    >
+                      {copiedBank ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedBank ? "Tersalin!" : "Salin"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {renewalPaymentMethod === "mandiri" && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-medium">Bank Mandiri</span>
+                    <span className="text-xs font-semibold text-slate-600">Transfer ATM / Livin</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                    <div>
+                      <div className="text-xs text-slate-400">Nomor Rekening:</div>
+                      <div className="font-mono font-black text-slate-900 text-sm sm:text-base">127-00-1122334-5</div>
+                      <div className="text-xs text-slate-600">a.n. PT NgajiQ Global Indonesia</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyAccount("1270011223345")}
+                      className="px-3 py-2 bg-[#EBF8F6] hover:bg-[#d8f2ee] text-[#049788] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shrink-0"
+                    >
+                      {copiedBank ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedBank ? "Tersalin!" : "Salin"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {renewalPaymentMethod === "bca" && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-500 font-medium">Bank Central Asia (BCA)</span>
+                    <span className="text-xs font-semibold text-slate-600">BCA Mobile / myBCA</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white border border-slate-200">
+                    <div>
+                      <div className="text-xs text-slate-400">Nomor Rekening:</div>
+                      <div className="font-mono font-black text-slate-900 text-sm sm:text-base">822-019-3829</div>
+                      <div className="text-xs text-slate-600">a.n. PT NgajiQ Global Indonesia</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyAccount("8220193829")}
+                      className="px-3 py-2 bg-[#EBF8F6] hover:bg-[#d8f2ee] text-[#049788] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shrink-0"
+                    >
+                      {copiedBank ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copiedBank ? "Tersalin!" : "Salin"}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {renewalPaymentMethod === "qris" && (
+                <div className="space-y-2.5 text-center py-2">
+                  <div className="w-32 h-32 mx-auto rounded-2xl bg-white border-2 border-dashed border-slate-300 p-2 flex flex-col items-center justify-center">
+                    <div className="w-full h-full bg-slate-900 rounded-lg flex items-center justify-center text-white text-xs font-bold">
+                      QRIS NGAJIQ
+                    </div>
+                  </div>
+                  <div className="text-xs text-slate-600">
+                    Scan via <strong>GoPay, OVO, DANA, BCA Mobile, Livin</strong>, atau aplikasi perbankan apa saja.
+                  </div>
+                </div>
+              )}
+
+              <div className="text-xs text-slate-500 flex items-center gap-1.5 pt-1">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Transaksi aman, terverifikasi otomatis, dan bergaransi akad syar'i 100%.</span>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  const msg = `Halo Admin NgajiQ, saya santri ${studentData.name} ingin konfirmasi perpanjangan paket:
+- Paket: ${selectedRenewalPackage?.name}
+- Total: ${selectedRenewalPackage?.priceFormatted}
+- Metode Pembayaran: ${renewalPaymentMethod.toUpperCase()}
+Mohon dibantu verifikasi. Terima kasih!`;
+                  window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank");
+                  setRenewalModalOpen(false);
+                }}
+                className="py-2.5 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-slate-500" />
+                <span>Konfirmasi via WA</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={isProcessingRenewal}
+                onClick={handleConfirmRenewal}
+                className="flex-1 py-2.5 px-4 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-xs cursor-pointer transition-all"
+              >
+                {isProcessingRenewal ? (
+                  <span>Memverifikasi Pembayaran...</span>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4 text-emerald-200" />
+                    <span>Saya Sudah Bayar / Selesaikan</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── SLIDE-OVER DRAWER: CHAT GURU ─── */}
+      {chatDrawerOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop */}
+          <div
+            onClick={() => setChatDrawerOpen(false)}
+            className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs transition-opacity duration-300 animate-in fade-in"
+          />
+
+          <div className="fixed inset-y-0 right-0 w-full sm:w-auto flex justify-end">
+            <div className="w-full sm:w-96 md:w-[420px] max-w-full h-full bg-white shadow-2xl sm:border-l border-slate-200 flex flex-col animate-in slide-in-from-right duration-300">
+              
+              {/* Drawer Header */}
+              <div className="px-3.5 py-3 sm:px-5 sm:py-3.5 border-b border-slate-100 bg-white/95 backdrop-blur-md flex items-center justify-between gap-2.5 shrink-0">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+                  <div className="relative shrink-0">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold text-xs sm:text-sm border border-[#C8EDE9]">
+                      AM
+                    </div>
+                    <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-950 truncate max-w-[140px] xs:max-w-[190px] sm:max-w-none">
+                        {studentData.tutor}
+                      </h3>
+                      <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-semibold shrink-0">
+                        Online
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 truncate hidden xs:block">
+                      Konsultasi Talaqqi & Materi
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  {/* Expand to Full Tab (Desktop sm+) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setChatDrawerOpen(false);
+                      setActiveTab("chat");
+                      setUnreadChatCount(0);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="hidden sm:inline-flex p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                    title="Buka Layar Penuh"
+                    aria-label="Buka Layar Penuh"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </button>
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={() => setChatDrawerOpen(false)}
+                    className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
+                    title="Tutup Chat"
+                    aria-label="Tutup Chat"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Info Bar */}
+              <div className="px-3.5 sm:px-4 py-2 bg-slate-50 border-b border-slate-100 flex items-center justify-between text-xs text-slate-600 shrink-0">
+                <span className="truncate pr-2">Sesi: {studentData.nextSession.date}</span>
+                <a
+                  href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
+                    `Halo ${studentData.tutor}, saya ${studentData.name} ingin berkonsultasi materi tajwid.`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#049788] hover:text-[#038073] font-semibold flex items-center gap-1 shrink-0 text-xs"
+                >
+                  <Phone className="w-3 h-3" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+
+              {/* Drawer Messages Body */}
+              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[#F8FAFC]">
+                {chatMessages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex flex-col ${msg.sender === "student" ? "items-end" : "items-start"}`}
+                  >
+                    <div
+                      className={`max-w-[85%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${
+                        msg.sender === "student"
+                          ? "bg-[#049788] text-white rounded-tr-xs shadow-2xs"
+                          : "bg-white text-slate-800 rounded-tl-xs border border-slate-200/80 shadow-2xs"
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
+                    <span className="text-xs text-slate-400 mt-1 px-1">{msg.time}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Drawer Quick Prompts / Chips */}
+              <div className="p-2 sm:p-2.5 bg-white border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto scrollbar-none shrink-0">
+                {[
+                  "Pertanyaan hukum tajwid",
+                  "Izin konfirmasi jadwal",
+                  "Simakan rekaman audio",
+                ].map((chip, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setInputMessage(chip)}
+                    className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-[#EBF8F6] hover:text-[#049788] text-slate-600 text-xs whitespace-nowrap transition-colors cursor-pointer shrink-0"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+
+              {/* Drawer Input Form */}
+              <form onSubmit={handleSendMessage} className="p-3 sm:p-4 bg-white border-t border-slate-100 flex items-center gap-2 shrink-0">
+                <input
+                  type="text"
+                  placeholder="Tulis pertanyaan untuk ustadz..."
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:border-[#049788] bg-slate-50/50"
+                />
+                <button
+                  type="submit"
+                  disabled={!inputMessage.trim()}
+                  className="px-3.5 sm:px-4 py-2.5 bg-[#049788] hover:bg-[#038073] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0"
+                  aria-label="Kirim Pesan"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Kirim</span>
+                </button>
+              </form>
+
+            </div>
           </div>
         </div>
       )}
@@ -995,109 +1502,187 @@ export default function ClientDashboard({ onNavigate }) {
         {/* ─── MAIN CONTENT VIEWPORT ─── */}
         <div className="flex-1 flex flex-col min-w-0">
 
-          {/* Top Bar with Search & Notifications */}
-          <header className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between sticky top-0 z-30">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setMobileSidebarOpen(true)}
-                className="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl"
-                aria-label="Buka menu navigasi"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
-              
-              {/* Global Search Bar */}
-              <div className="relative hidden sm:block w-64 md:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Cari materi, jadwal, audio, atau tugas..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 rounded-xl text-xs border border-slate-200 focus:outline-none focus:border-[#049788] bg-slate-50/50"
-                />
-              </div>
-            </div>
-
-            {/* Top Right Actions */}
-            <div className="flex items-center gap-2.5">
-              
-              {/* Cart Button */}
-              <button
-                onClick={() => setCartModalOpen(true)}
-                className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 relative cursor-pointer"
-                title="Keranjang Belanja"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#049788] text-white text-[9px] font-bold flex items-center justify-center">
-                    {cart.length}
-                  </span>
-                )}
-              </button>
-
-              {/* Notification Center Popover Trigger */}
-              <div className="relative">
+          {/* Sticky Header + Pembelajaran Tabs Bar */}
+          <div className="sticky top-0 z-30 bg-white">
+            {/* Top Bar with Search & Notifications */}
+            <header className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setNotifOpen(!notifOpen)}
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 relative cursor-pointer"
-                  title="Notifikasi"
+                  onClick={() => setMobileSidebarOpen(true)}
+                  className="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl"
+                  aria-label="Buka menu navigasi"
                 >
-                  <Bell className="w-4 h-4" />
-                  {unreadNotifCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
-                      {unreadNotifCount}
+                  <Menu className="w-5 h-5" />
+                </button>
+                
+                {/* Global Search Bar */}
+                <div className="relative hidden sm:block w-64 md:w-80">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Cari materi, jadwal, audio, atau tugas..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-9 pr-3 py-1.5 rounded-xl text-xs border border-slate-200 focus:outline-none focus:border-[#049788] bg-slate-50/50"
+                  />
+                </div>
+              </div>
+
+              {/* Top Right Actions */}
+              <div className="flex items-center gap-2 sm:gap-2.5">
+                
+                {/* Chat Guru Shortcut Button (Next to Cart) */}
+                <button
+                  type="button"
+                  onClick={handleOpenChatDrawer}
+                  className={`p-2 md:px-3 md:py-2 rounded-xl border transition-all relative cursor-pointer flex items-center gap-1.5 ${
+                    chatDrawerOpen || activeTab === "chat"
+                      ? "bg-[#EBF8F6] border-[#049788] text-[#049788] shadow-2xs ring-1 ring-[#049788]/20 font-bold"
+                      : "border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
+                  }`}
+                  title={`Chat Guru (${studentData.tutor})`}
+                  aria-label={`Chat Guru (${studentData.tutor})`}
+                >
+                  <div className="relative flex items-center justify-center">
+                    <MessageSquare className="w-4 h-4" />
+                    {unreadChatCount > 0 ? (
+                      <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#049788] text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
+                        {unreadChatCount}
+                      </span>
+                    ) : (
+                      <span
+                        className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 ring-1.5 ring-white"
+                        title="Ustadz Online"
+                      />
+                    )}
+                  </div>
+                  <span className="hidden md:inline text-xs">Chat Guru</span>
+                </button>
+
+                {/* Cart Button */}
+                <button
+                  type="button"
+                  onClick={() => setCartModalOpen(true)}
+                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 relative cursor-pointer"
+                  title="Keranjang Belanja"
+                  aria-label="Keranjang Belanja"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#049788] text-white text-[9px] font-bold flex items-center justify-center">
+                      {cart.length}
                     </span>
                   )}
                 </button>
 
-                {/* Notif Dropdown */}
-                {notifOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 space-y-3 z-50 animate-in fade-in duration-150">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h4 className="text-xs font-bold text-slate-950">Pemberitahuan</h4>
-                      <button
-                        onClick={() =>
-                          setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
-                        }
-                        className="text-[10px] text-[#049788] font-bold hover:underline"
-                      >
-                        Tandai Semua Dibaca
-                      </button>
+                {/* Notification Center Popover Trigger */}
+                <div className="relative">
+                  <button
+                    onClick={() => setNotifOpen(!notifOpen)}
+                    className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 relative cursor-pointer"
+                    title="Notifikasi"
+                  >
+                    <Bell className="w-4 h-4" />
+                    {unreadNotifCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center animate-pulse">
+                        {unreadNotifCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Notif Dropdown */}
+                  {notifOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 p-4 space-y-3 z-50 animate-in fade-in duration-150">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h4 className="text-xs font-bold text-slate-950">Pemberitahuan</h4>
+                        <button
+                          onClick={() =>
+                            setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
+                          }
+                          className="text-[10px] text-[#049788] font-bold hover:underline"
+                        >
+                          Tandai Semua Dibaca
+                        </button>
+                      </div>
+                      <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                        {notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            className={`p-2.5 rounded-xl text-xs space-y-1 ${
+                              n.unread ? "bg-[#EBF8F6]/60 border border-[#C8EDE9]" : "bg-slate-50"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between font-bold text-slate-900">
+                              <span>{n.title}</span>
+                              <span className="text-[9px] text-slate-400 font-normal">{n.time}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-                      {notifications.map((n) => (
-                        <div
-                          key={n.id}
-                          className={`p-2.5 rounded-xl text-xs space-y-1 ${
-                            n.unread ? "bg-[#EBF8F6]/60 border border-[#C8EDE9]" : "bg-slate-50"
+                  )}
+                </div>
+
+                {/* Join Live Class Shortcut */}
+                <a
+                  href={studentData.nextSession.meetLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Masuk Kelas (19.30)</span>
+                  <span className="sm:hidden">Kelas</span>
+                </a>
+              </div>
+            </header>
+
+            {/* ─── PEMBELAJARAN HORIZONTAL TAB BAR ─── */}
+            <nav
+              aria-label="Tab Pembelajaran"
+              className="bg-slate-50/90 border-b border-slate-200/80 px-4 sm:px-6 lg:px-8 py-2 overflow-x-auto scrollbar-none flex items-center gap-2 sm:gap-3"
+            >
+              <span className="text-[10px] font-black tracking-wider text-slate-400 uppercase hidden sm:inline shrink-0 pr-2 border-r border-slate-200">
+                Pembelajaran
+              </span>
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {learningTabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveTab(tab.id);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 shrink-0 ${
+                        isActive
+                          ? "bg-[#049788] text-white shadow-xs shadow-[#049788]/25"
+                          : "text-slate-600 hover:text-slate-950 hover:bg-white/90 border border-transparent"
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                      <span>{tab.label}</span>
+                      {tab.badge && (
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                            isActive
+                              ? "bg-white/25 text-white"
+                              : "bg-amber-100 text-amber-800"
                           }`}
                         >
-                          <div className="flex items-center justify-between font-bold text-slate-900">
-                            <span>{n.title}</span>
-                            <span className="text-[9px] text-slate-400 font-normal">{n.time}</span>
-                          </div>
-                          <p className="text-[11px] text-slate-600 leading-snug">{n.desc}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                          {tab.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-
-              {/* Join Live Class Shortcut */}
-              <a
-                href={studentData.nextSession.meetLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-xs transition-colors"
-              >
-                <Video className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Masuk Kelas (19.30)</span>
-                <span className="sm:hidden">Kelas</span>
-              </a>
-            </div>
-          </header>
+            </nav>
+          </div>
 
           {/* ─── BODY TABS ─── */}
           <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
@@ -1587,7 +2172,8 @@ export default function ClientDashboard({ onNavigate }) {
 
                   <div className="flex gap-3 pt-2">
                     <button
-                      onClick={() => setActiveTab("chat")}
+                      type="button"
+                      onClick={handleOpenChatDrawer}
                       className="px-5 py-2.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl flex items-center gap-2 cursor-pointer"
                     >
                       <MessageSquare className="w-4 h-4" />
@@ -1901,46 +2487,352 @@ export default function ClientDashboard({ onNavigate }) {
             )}
 
             {/* ================= 14. TAB: PEMBAYARAN & PAKET ================= */}
-            {activeTab === "billing" && (
-              <div className="space-y-6 animate-in fade-in duration-200">
-                <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                    <div>
-                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                        Paket Aktif
-                      </span>
-                      <h2 className="text-xl font-black text-slate-950 mt-1">{studentData.package}</h2>
-                      <p className="text-xs text-slate-500">Masa aktif hingga 20 Oktober 2026 · Sisa 10 Sesi</p>
+            {activeTab === "billing" && (() => {
+              const remainingSessions = Math.max(0, studentData.totalSessions - studentData.completedSessions);
+              const progressPercent = Math.min(100, Math.round((studentData.completedSessions / studentData.totalSessions) * 100));
+
+              return (
+                <div className="space-y-8 animate-in fade-in duration-200">
+                  {/* ─── 1. HERO SALDO SESI (ENLARGED & PROMINENT) ─── */}
+                  <div className="relative overflow-hidden rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 shadow-2xs">
+                    {/* Decorative ambient background accent */}
+                    <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-[#EBF8F6]/70 blur-3xl pointer-events-none" />
+                    
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                      <div className="space-y-4 max-w-2xl flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200/60">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            Paket Aktif & Berjalan
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
+                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            Masa aktif s.d. 20 Oktober 2026 (44 hari lagi)
+                          </span>
+                        </div>
+
+                        <div>
+                          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                            Sisa Saldo Sesi Belajar Anda
+                          </div>
+                          {/* SALDO DI PERBESAR AGAR TERLIHAT SANGAT JELAS */}
+                          <div className="flex items-baseline gap-2.5 sm:gap-3 mt-1.5">
+                            <span className="text-5xl sm:text-6xl md:text-7xl font-black text-slate-950 tracking-tight leading-none">
+                              {remainingSessions}
+                            </span>
+                            <span className="text-2xl sm:text-3xl font-bold text-slate-400">
+                              / {studentData.totalSessions} Sesi Tersedia
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          Anda sedang mengambil <strong className="text-slate-900 font-bold">{studentData.package}</strong> dibimbing langsung oleh <strong className="text-slate-900 font-bold">{studentData.tutor}</strong>. Setara dengan total <strong className="text-slate-900 font-bold">{remainingSessions * 60} menit ({remainingSessions} jam)</strong> bimbingan privat tatap muka intensif.
+                        </p>
+
+                        {/* Progress Bar & Badges */}
+                        <div className="space-y-2 pt-1">
+                          <div className="flex justify-between text-xs font-semibold text-slate-500">
+                            <span>{studentData.completedSessions} Sesi Terlaksana ({progressPercent}%)</span>
+                            <span className="text-[#049788] font-bold">{remainingSessions} Sesi Tersisa ({100 - progressPercent}%)</span>
+                          </div>
+                          <div className="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/70 flex">
+                            <div
+                              className="h-full bg-slate-300 rounded-l-full transition-all duration-500"
+                              style={{ width: `${progressPercent}%` }}
+                              title={`${studentData.completedSessions} Sesi Selesai`}
+                            />
+                            <div
+                              className="h-full bg-[#049788] rounded-r-full transition-all duration-500"
+                              style={{ width: `${100 - progressPercent}%` }}
+                              title={`${remainingSessions} Sesi Tersisa`}
+                            />
+                          </div>
+                          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-500">
+                            <span className="inline-flex items-center gap-1 bg-slate-100/80 px-2.5 py-1 rounded-lg">
+                              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                              Estimasi Cukup: <strong>{Math.ceil(remainingSessions / 2)} Pekan Belajar</strong>
+                            </span>
+                            <span className="inline-flex items-center gap-1 bg-slate-100/80 px-2.5 py-1 rounded-lg">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              Kehadiran Santri: <strong>{studentData.attendanceRate} (Tertib)</strong>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Hero Action Card */}
+                      <div className="flex flex-col gap-3 min-w-[280px] p-5 rounded-2xl bg-slate-50/90 border border-slate-200/80 lg:max-w-xs shrink-0">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shrink-0">
+                            <ShieldCheck className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-slate-900">Slot Guru & Jadwal Tetap</div>
+                            <div className="text-xs text-slate-500 truncate">{studentData.tutor}</div>
+                          </div>
+                        </div>
+                        <p className="text-xs text-slate-600 leading-normal">
+                          Perpanjang masa aktif sekarang untuk memastikan slot privat Selasa & Kamis (19.30 WIB) Anda tetap terkunci eksklusif.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedRenewalPackage(renewalPackagesList[1]);
+                            setRenewalModalOpen(true);
+                          }}
+                          className="w-full py-3 bg-[#049788] hover:bg-[#038073] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-xs cursor-pointer transition-all"
+                        >
+                          <Sparkles className="w-4 h-4 text-emerald-200" />
+                          <span>Perpanjang Paket Sekarang</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ─── 2. VALUE REALIZATION & CAPAIAN BELAJAR ─── */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                        Investasi & Pencapaian Belajar Anda Sejauh Ini
+                      </h3>
+                      <span className="text-xs text-slate-500">Data terverifikasi sistem NgajiQ</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+                      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <div className="text-xs text-slate-500 font-medium">Sesi Terlaksana</div>
+                        <div className="text-2xl font-black text-slate-950">
+                          {studentData.completedSessions} <span className="text-xs font-bold text-emerald-600 font-sans">Pertemuan</span>
+                        </div>
+                        <div className="text-xs text-slate-500">100% kehadiran tanpa absen</div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <div className="text-xs text-slate-500 font-medium">Waktu Bimbingan</div>
+                        <div className="text-2xl font-black text-slate-950">
+                          {studentData.totalMinutesLearned} <span className="text-xs font-bold text-[#049788] font-sans">Menit</span>
+                        </div>
+                        <div className="text-xs text-slate-500">Tatap muka privat 1-on-1</div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <div className="text-xs text-slate-500 font-medium">Nilai Rata-rata</div>
+                        <div className="text-2xl font-black text-slate-950">
+                          {studentData.score} <span className="text-xs font-bold text-amber-600 font-sans">/ 100 (Mumtaz)</span>
+                        </div>
+                        <div className="text-xs text-slate-500">Evaluasi makhraj & sifat huruf</div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-1">
+                        <div className="text-xs text-slate-500 font-medium">Streak Istiqamah</div>
+                        <div className="text-2xl font-black text-slate-950">
+                          {studentData.streakDays} <span className="text-xs font-bold text-orange-600 font-sans">Hari Rutin</span>
+                        </div>
+                        <div className="text-xs text-slate-500">Kebiasaan membaca konsisten</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ─── 3. TEACHER RETENTION HOOK CALLOUT ─── */}
+                  <div className="p-5 sm:p-6 rounded-3xl bg-amber-50/70 border border-amber-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 font-bold">
+                        <ShieldCheck className="w-5 h-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-slate-950">
+                          Kunci Guru & Jadwal Favorit Anda Sebelum Terisi Santri Lain
+                        </h4>
+                        <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">
+                          Bimbingan privat bersama <strong>{studentData.tutor}</strong> pada jadwal pilihan Anda memiliki kuota terbatas. Dengan memperpanjang paket sekarang, jadwal Anda otomatis diprioritaskan dan terlindungi dari santri baru tanpa jeda.
+                        </p>
+                      </div>
                     </div>
                     <button
+                      type="button"
                       onClick={() => {
-                        if (onNavigate) onNavigate("/daftar-kelas");
-                        else window.location.pathname = "/daftar-kelas";
+                        setSelectedRenewalPackage(renewalPackagesList[1]);
+                        setRenewalModalOpen(true);
                       }}
-                      className="px-5 py-2.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl cursor-pointer shadow-xs"
+                      className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shrink-0 cursor-pointer shadow-xs transition-colors"
                     >
-                      Perpanjang / Tambah Paket
+                      Kunci Jadwal Saya
                     </button>
                   </div>
 
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-bold text-slate-900">Riwayat Pembayaran</h3>
-                    <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50/60 flex items-center justify-between text-xs">
+                  {/* ─── 4. PILIHAN PAKET PERPANJANGAN ─── */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="text-base sm:text-lg font-black text-slate-950">
+                        Pilihan Paket Perpanjangan Masa Belajar
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500">
+                        Pilih paket sesuai target capaian mengaji Anda. Semua paket sudah termasuk rekaman video meet, modul materi PDF, dan konsultasi tanya jawab ustadz.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                      {renewalPackagesList.map((pkg) => (
+                        <div
+                          key={pkg.id}
+                          className={`relative rounded-3xl p-6 transition-all flex flex-col justify-between ${
+                            pkg.highlight
+                              ? "bg-white border-2 border-[#049788] shadow-md ring-4 ring-[#EBF8F6]"
+                              : "bg-white border border-slate-200/90 shadow-2xs hover:border-slate-300"
+                          }`}
+                        >
+                          {pkg.badge && (
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#049788] text-white text-xs font-bold shadow-xs whitespace-nowrap">
+                              {pkg.badge}
+                            </div>
+                          )}
+
+                          <div className="space-y-4">
+                            <div>
+                              <h4 className="text-base font-bold text-slate-950">{pkg.name}</h4>
+                              <p className="text-xs text-slate-500 mt-1">{pkg.description}</p>
+                            </div>
+
+                            <div className="pt-2 border-t border-slate-100">
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-2xl sm:text-3xl font-black text-slate-950">
+                                  {pkg.priceFormatted}
+                                </span>
+                                {pkg.originalPriceFormatted && (
+                                  <span className="text-xs line-through text-slate-400">
+                                    {pkg.originalPriceFormatted}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs font-semibold text-[#049788] mt-0.5">
+                                {pkg.pricePerSession} · Durasi {pkg.period}
+                              </div>
+                            </div>
+
+                            <div className="space-y-2.5 pt-2">
+                              <div className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                                Fasilitas Termasuk:
+                              </div>
+                              <ul className="space-y-2">
+                                {pkg.features.map((feat, fIdx) => (
+                                  <li key={fIdx} className="flex items-start gap-2 text-xs text-slate-600">
+                                    <Check className="w-4 h-4 text-[#049788] shrink-0 mt-0.5" />
+                                    <span>{feat}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          <div className="pt-6 mt-4 border-t border-slate-100">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedRenewalPackage(pkg);
+                                setRenewalModalOpen(true);
+                              }}
+                              className={`w-full py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                                pkg.highlight
+                                  ? "bg-[#049788] hover:bg-[#038073] active:scale-[0.98] text-white shadow-xs"
+                                  : "bg-slate-100 hover:bg-slate-200 text-slate-800"
+                              }`}
+                            >
+                              <span>{pkg.highlight ? "Pilih Paket Istiqamah" : `Pilih ${pkg.name}`}</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ─── 5. JAMINAN & KEUNGGULAN AKAD SYAR'I ─── */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-2">
+                      <div className="w-9 h-9 rounded-xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold">
+                        <UserCheck className="w-4 h-4" />
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-950">Garansi Bebas Ganti Guru</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        Jika merasa kurang cocok dengan metode atau gaya bimbingan, Anda bebas meminta pergantian ustadz kapan saja tanpa biaya tambahan.
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-2">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-950">Reschedule Tanpa Hangus Sesi</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        Ada agenda lembur atau urusan keluarga mendadak? Anda berhak mengajukan jadwal pengganti hingga H-2 jam sebelum kelas tanpa memotong kuota sesi.
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs space-y-2">
+                      <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center font-bold">
+                        <ShieldCheck className="w-4 h-4" />
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-950">Akad Syar'i & Transparan</h4>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        Tidak ada sistem langganan otomatis (auto-debit) tanpa izin Anda. Pembayaran hanya terjadi saat Anda secara sadar mengonfirmasi perpanjangan.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* ─── 6. RIWAYAT PEMBAYARAN & INVOICE RESMI ─── */}
+                  <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <div>
-                        <div className="font-bold text-slate-950">INV-2026-0893 (Paket Reguler 16 Sesi)</div>
-                        <div className="text-[11px] text-slate-500">03 Agu 2026 · Transfer Bank BSI Syariah</div>
+                        <h3 className="text-base font-bold text-slate-950">Riwayat Pembayaran & Kwitansi Resmi</h3>
+                        <p className="text-xs text-slate-500">Semua bukti transaksi resmi bergaransi dan tersimpan rapi</p>
                       </div>
-                      <div className="text-right">
-                        <div className="font-black text-slate-900">Rp 449.000</div>
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                          Lunas
-                        </span>
-                      </div>
+                      <span className="text-xs font-semibold text-slate-500">
+                        {invoices.length} Transaksi Tercatat
+                      </span>
+                    </div>
+
+                    <div className="space-y-3">
+                      {invoices.map((inv) => (
+                        <div
+                          key={inv.id}
+                          className="p-4 rounded-2xl border border-slate-100 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                        >
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono font-bold text-slate-900">{inv.id}</span>
+                              <span className="font-bold text-slate-950">· {inv.packageTitle}</span>
+                            </div>
+                            <div className="text-xs text-slate-500">
+                              {inv.date} · {inv.method}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/60">
+                            <div className="text-left sm:text-right">
+                              <div className="font-black text-slate-900 text-sm">{inv.amount}</div>
+                              <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-block">
+                                {inv.status}
+                              </span>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => showToast(`Mengunduh file kwitansi resmi ${inv.id} (PDF)...`, "info")}
+                              className="px-3 py-2 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs shrink-0"
+                              title="Unduh Kwitansi Pembayaran"
+                            >
+                              <Download className="w-3.5 h-3.5 text-slate-500" />
+                              <span className="hidden sm:inline">Kwitansi PDF</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* ================= 15. TAB: CHAT ================= */}
             {activeTab === "chat" && (
@@ -1953,13 +2845,27 @@ export default function ClientDashboard({ onNavigate }) {
                       </div>
                       <div>
                         <h3 className="text-sm font-bold text-slate-950">{studentData.tutor}</h3>
-                        <span className="text-[11px] text-emerald-600 flex items-center gap-1 font-semibold">
+                        <span className="text-xs text-emerald-600 flex items-center gap-1 font-semibold">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                           Online
                         </span>
                       </div>
                     </div>
-                    <span className="text-xs text-slate-400">Konsultasi Talaqqi</span>
+                    <div className="flex items-center gap-2">
+                      <span className="hidden sm:inline text-xs text-slate-400">Konsultasi Talaqqi</span>
+                      <a
+                        href={`https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
+                          `Halo ${studentData.tutor}, saya ${studentData.name} ingin bertanya materi tajwid.`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center gap-1 transition-colors"
+                        title="Chat via WhatsApp"
+                      >
+                        <Phone className="w-3 h-3 text-emerald-600" />
+                        <span className="hidden sm:inline">WhatsApp</span>
+                      </a>
+                    </div>
                   </div>
 
                   <div className="flex-1 overflow-y-auto py-4 space-y-3 pr-2">
@@ -1977,7 +2883,7 @@ export default function ClientDashboard({ onNavigate }) {
                         >
                           {msg.text}
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-1 px-1">{msg.time}</span>
+                        <span className="text-xs text-slate-400 mt-1 px-1">{msg.time}</span>
                       </div>
                     ))}
                   </div>

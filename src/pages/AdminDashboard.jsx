@@ -31,8 +31,160 @@ import {
   MessageSquare,
   Award,
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Clock,
 } from "lucide-react";
 import { siteConfig } from "@/data/content";
+
+// ─── HELPER: DATE UTILITIES ───────────────────────────────────────────────────
+const formatDateIndonesian = (dateStr) => {
+  if (!dateStr) return "";
+  const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const d = new Date(year, month - 1, day);
+  const dayName = days[d.getDay()];
+  const monthName = months[d.getMonth()];
+  return `${dayName}, ${day} ${monthName} ${year}`;
+};
+
+const shiftDate = (dateStr, deltaDays) => {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const d = new Date(year, month - 1, day);
+  d.setDate(d.getDate() + deltaDays);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dt = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dt}`;
+};
+
+// ─── HELPER: PAGINATION COMPONENT ─────────────────────────────────────────────
+const TablePagination = ({
+  currentPage,
+  totalItems,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  pageSizeOptions = [5, 10, 20],
+  label = "data",
+}) => {
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  if (totalItems === 0) return null;
+
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
+      }
+    }
+    return pages;
+  };
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 bg-white border-t border-slate-100">
+      <div className="flex items-center gap-3 text-xs text-slate-500 font-medium w-full sm:w-auto justify-between sm:justify-start">
+        <span>
+          Menampilkan <strong className="text-slate-900 font-bold">{startItem}–{endItem}</strong> dari{" "}
+          <strong className="text-slate-900 font-bold">{totalItems}</strong> {label}
+        </span>
+
+        {pageSizeOptions && onPageSizeChange && (
+          <div className="flex items-center gap-1.5 ml-2">
+            <span className="hidden md:inline text-slate-400">Tampilkan:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                onPageSizeChange(Number(e.target.value));
+                onPageChange(1);
+              }}
+              className="px-2 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-[#049788] cursor-pointer"
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt} / hal
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1 transition-colors ${
+              currentPage === 1
+                ? "opacity-40 cursor-not-allowed bg-slate-50 text-slate-400"
+                : "bg-white text-slate-700 hover:bg-slate-50 cursor-pointer shadow-2xs"
+            }`}
+            aria-label="Halaman Sebelumnya"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Sebelumnya</span>
+          </button>
+
+          <div className="flex items-center gap-1">
+            {getPageNumbers().map((page, idx) => {
+              if (page === "...") {
+                return (
+                  <span key={`dots-${idx}`} className="px-2 py-1 text-slate-400 font-bold text-xs">
+                    …
+                  </span>
+                );
+              }
+              const isActive = page === currentPage;
+              return (
+                <button
+                  key={page}
+                  onClick={() => onPageChange(page)}
+                  className={`w-8 h-8 rounded-xl text-xs font-bold flex items-center justify-center transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-[#049788] text-white shadow-xs"
+                      : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold flex items-center gap-1 transition-colors ${
+              currentPage === totalPages
+                ? "opacity-40 cursor-not-allowed bg-slate-50 text-slate-400"
+                : "bg-white text-slate-700 hover:bg-slate-50 cursor-pointer shadow-2xs"
+            }`}
+            aria-label="Halaman Berikutnya"
+          >
+            <span className="hidden sm:inline">Berikutnya</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ─── INITIAL MOCK DATA ────────────────────────────────────────────────────────
 
@@ -61,6 +213,7 @@ const initialLeads = [
     slot: "Sore (16.00 WIB)",
     status: "baru",
     date: "Hari Ini, 08.15",
+    rawDate: "2026-09-06",
     tutorPref: "Ustadzah",
     notes: "Belum kenal huruf hijaiyah sama sekali.",
   },
@@ -73,8 +226,74 @@ const initialLeads = [
     slot: "Malam (19.30 WIB)",
     status: "dihubungi",
     date: "Hari Ini, 07.40",
+    rawDate: "2026-09-06",
     tutorPref: "Ustadz",
     notes: "Sudah bisa baca, tapi makhraj dan panjang-pendek sering keliru.",
+  },
+  {
+    id: "LD-8906",
+    name: "Siti Sarah (Mahasiswi - 20 th)",
+    parent: "Mandiri",
+    phone: "085811223344",
+    program: "Tahsin Tartil Akhwat",
+    slot: "Siang (13.00 WIB)",
+    status: "baru",
+    date: "Hari Ini, 11.20",
+    rawDate: "2026-09-06",
+    tutorPref: "Ustadzah",
+    notes: "Ingin lancar membaca Al-Qur'an sebelum wisuda sarjana.",
+  },
+  {
+    id: "LD-8908",
+    name: "Yusuf Ramadhan (Dewasa - 27 th)",
+    parent: "Mandiri",
+    phone: "081287654321",
+    program: "Tahsin Cepat 30 Hari",
+    slot: "Malam (20.00 WIB)",
+    status: "baru",
+    date: "Hari Ini, 14.15",
+    rawDate: "2026-09-06",
+    tutorPref: "Ustadz",
+    notes: "Ingin lancar tadarrus di musholla kantor.",
+  },
+  {
+    id: "LD-8909",
+    name: "Kayla Azzahra (Anak - 7 th)",
+    parent: "Ibu Nurul",
+    phone: "085712998877",
+    program: "Iqro & Tahfidz Juz 30",
+    slot: "Sore (16.30 WIB)",
+    status: "dihubungi",
+    date: "Hari Ini, 13.00",
+    rawDate: "2026-09-06",
+    tutorPref: "Ustadzah",
+    notes: "Fokus huruf hijaiyah dan doa harian anak.",
+  },
+  {
+    id: "LD-8910",
+    name: "Ir. Bambang Sujarwo (52 th)",
+    parent: "Mandiri",
+    phone: "081198761234",
+    program: "Tahsin Tartil Lansia",
+    slot: "Pagi (08.30 WIB)",
+    status: "terjadwal",
+    date: "Hari Ini, 10.05",
+    rawDate: "2026-09-06",
+    tutorPref: "Ustadz",
+    notes: "Persiapan ibadah umroh bulan depan.",
+  },
+  {
+    id: "LD-8911",
+    name: "Medina & Rayyan (Kakak Beradik)",
+    parent: "Bpk. Fajar",
+    phone: "087788990011",
+    program: "Al-Qur'an Anak Berdua",
+    slot: "Sore (15.00 WIB)",
+    status: "baru",
+    date: "Hari Ini, 09.30",
+    rawDate: "2026-09-06",
+    tutorPref: "Ustadzah",
+    notes: "Ingin belajar bersama dalam 1 sesi privat.",
   },
   {
     id: "LD-8903",
@@ -84,11 +303,38 @@ const initialLeads = [
     program: "Nahwu & Shorof Dasar",
     slot: "Weekend (10.00 WIB)",
     status: "terjadwal",
-    date: "Kemarin",
+    date: "Kemarin, 14.30",
+    rawDate: "2026-09-05",
     tutorPref: "Ustadzah",
     trialSchedule: "Sabtu, 10.00 WIB",
     assignedTutor: "Ustazah Syaimaa', S.Pd.I",
     notes: "Persiapan masuk pesantren tahun depan.",
+  },
+  {
+    id: "LD-8907",
+    name: "Hendra Wijaya (Eksekutif - 41 th)",
+    parent: "Mandiri",
+    phone: "081299887766",
+    program: "Tahsin Privat Eksekutif",
+    slot: "Malam (20.30 WIB)",
+    status: "dihubungi",
+    date: "Kemarin, 09.10",
+    rawDate: "2026-09-05",
+    tutorPref: "Ustadz",
+    notes: "Jadwal hanya bisa setelah ba'da Isya karena kesibukan kantor.",
+  },
+  {
+    id: "LD-8912",
+    name: "Maya Anggraini (Mahasiswi)",
+    parent: "Mandiri",
+    phone: "081355443322",
+    program: "Tahsin & Tajwid Lanjutan",
+    slot: "Malam (19.30 WIB)",
+    status: "terjadwal",
+    date: "Kemarin, 16.00",
+    rawDate: "2026-09-05",
+    tutorPref: "Ustadzah",
+    notes: "Jadwal trial Ahad malam.",
   },
   {
     id: "LD-8904",
@@ -98,10 +344,24 @@ const initialLeads = [
     program: "Fiqih Muamalah Bisnis",
     slot: "Malam (20.30 WIB)",
     status: "selesai_trial",
-    date: "2 Sep 2026",
+    date: "4 Sep 2026, 16.45",
+    rawDate: "2026-09-04",
     tutorPref: "Ustadz",
     assignedTutor: "Ustadz H. Abdul Malik, Lc.",
     notes: "Trial lancar, tertarik ambil Paket Intensif 3 Bulan.",
+  },
+  {
+    id: "LD-8913",
+    name: "Danang Pratama (Karyawan)",
+    parent: "Mandiri",
+    phone: "082266778899",
+    program: "Fiqih Muamalah Syariah",
+    slot: "Malam (20.30 WIB)",
+    status: "selesai_trial",
+    date: "4 Sep 2026, 11.20",
+    rawDate: "2026-09-04",
+    tutorPref: "Ustadz",
+    notes: "Trial selesai, konfirmasi paket akhir pekan.",
   },
   {
     id: "LD-8905",
@@ -111,10 +371,24 @@ const initialLeads = [
     program: "Tahfidz Juz 30 Anak",
     slot: "Sore (15.30 WIB)",
     status: "konversi",
-    date: "1 Sep 2026",
+    date: "3 Sep 2026, 10.15",
+    rawDate: "2026-09-03",
     tutorPref: "Ustadzah",
     assignedTutor: "Ustazah Fatimah Azzahra",
     notes: "Sudah bayar Paket Keluarga 3 Bulan.",
+  },
+  {
+    id: "LD-8914",
+    name: "Shofa Marwah (Remaja - 15 th)",
+    parent: "Ibu Dewi",
+    phone: "085811335577",
+    program: "Tahfidz Al-Qur'an",
+    slot: "Pagi (09.00 WIB)",
+    status: "konversi",
+    date: "3 Sep 2026, 14.10",
+    rawDate: "2026-09-03",
+    tutorPref: "Ustadzah",
+    notes: "Sudah pembayaran Paket 3 Bulan.",
   },
 ];
 
@@ -215,6 +489,134 @@ const initialStudents = [
     xp: 3600,
     score: 92,
   },
+  {
+    id: "ST-1048",
+    name: "Farhan Ramadhan",
+    program: "Al-Qur'an (Tahsin Lanjutan)",
+    level: "Lanjutan (Level 5)",
+    package: "Paket Intensif (3x/mgg)",
+    tutor: "Ustadz H. Abdul Malik, Lc.",
+    completedSessions: 8,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Aktif",
+    joinDate: "5 Agu 2026",
+    phone: "081244556677",
+    xp: 1950,
+    score: 90,
+  },
+  {
+    id: "ST-1049",
+    name: "Salma Hanifah",
+    program: "Tahfidz Juz 30 Anak",
+    level: "Dasar (Level 2)",
+    package: "Paket Reguler (2x/mgg)",
+    tutor: "Ustazah Fatimah Azzahra",
+    completedSessions: 5,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Aktif",
+    joinDate: "12 Agu 2026",
+    phone: "081377889900",
+    xp: 1400,
+    score: 87,
+  },
+  {
+    id: "ST-1050",
+    name: "Dimas Kurniawan",
+    program: "Nahwu & Shorof Dasar",
+    level: "Menengah (Level 3)",
+    package: "Paket Fleksibel",
+    tutor: "Ustadz Ahmad Fauzi, M.Ag.",
+    completedSessions: 10,
+    totalSessions: 16,
+    attendance: "90%",
+    status: "Aktif",
+    joinDate: "22 Jul 2026",
+    phone: "085711335577",
+    xp: 2100,
+    score: 86,
+  },
+  {
+    id: "ST-1051",
+    name: "Annisa Maharani",
+    program: "Fiqih Muamalah Bisnis",
+    level: "Menengah (Level 4)",
+    package: "Paket Reguler (2x/mgg)",
+    tutor: "Ustadz H. Abdul Malik, Lc.",
+    completedSessions: 3,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Baru Mulai",
+    joinDate: "01 Sep 2026",
+    phone: "082188990011",
+    xp: 750,
+    score: 89,
+  },
+  {
+    id: "ST-1052",
+    name: "Kenzo Al-Ghifari (8 th)",
+    program: "Iqro Anak Ceria",
+    level: "Dasar (Level 1)",
+    package: "Paket Reguler (2x/mgg)",
+    tutor: "Ustazah Syaimaa', S.Pd.I",
+    completedSessions: 7,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Aktif",
+    joinDate: "18 Agu 2026",
+    phone: "087866554433",
+    xp: 1600,
+    score: 91,
+  },
+  {
+    id: "ST-1053",
+    name: "drg. Maya Safitri",
+    program: "Tahsin Tartil Dewasa",
+    level: "Menengah (Level 3)",
+    package: "Paket VIP Eksklusif",
+    tutor: "Ustazah Hanifah, S.Hum.",
+    completedSessions: 14,
+    totalSessions: 16,
+    attendance: "95%",
+    status: "Hampir Selesai",
+    joinDate: "02 Jul 2026",
+    phone: "081122334455",
+    xp: 2980,
+    score: 95,
+  },
+  {
+    id: "ST-1054",
+    name: "Zulfikar Ali",
+    program: "Fiqih Ibadah Praktis",
+    level: "Dasar (Level 2)",
+    package: "Paket Reguler (2x/mgg)",
+    tutor: "Ustadz Rahmat Hidayat",
+    completedSessions: 1,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Baru Mulai",
+    joinDate: "03 Sep 2026",
+    phone: "081299001122",
+    xp: 420,
+    score: 84,
+  },
+  {
+    id: "ST-1055",
+    name: "Nurul Izzah",
+    program: "Bahasa Arab Percakapan",
+    level: "Menengah (Level 4)",
+    package: "Paket Intensif (3x/mgg)",
+    tutor: "Ustadz Ahmad Fauzi, M.Ag.",
+    completedSessions: 16,
+    totalSessions: 16,
+    attendance: "100%",
+    status: "Lulus",
+    joinDate: "15 Mei 2026",
+    phone: "085677889911",
+    xp: 3750,
+    score: 97,
+  },
 ];
 
 const initialTutors = [
@@ -273,8 +675,11 @@ const initialTutors = [
 ];
 
 const initialSchedule = [
+  // ─── HARI INI: 2026-09-06 ───
   {
     id: "SCH-301",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
     time: "16.00 – 17.00 WIB",
     student: "Muhammad Rayhan (10 th)",
     tutor: "Ustadz Rahmat Hidayat",
@@ -285,6 +690,8 @@ const initialSchedule = [
   },
   {
     id: "SCH-302",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
     time: "16.30 – 17.30 WIB",
     student: "Alya Putri",
     tutor: "Ustazah Syaimaa', S.Pd.I",
@@ -295,6 +702,8 @@ const initialSchedule = [
   },
   {
     id: "SCH-303",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
     time: "19.30 – 20.30 WIB",
     student: "Ahmad Fauzi",
     tutor: "Ustadz H. Abdul Malik, Lc.",
@@ -305,6 +714,8 @@ const initialSchedule = [
   },
   {
     id: "SCH-304",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
     time: "20.00 – 21.00 WIB",
     student: "Rizky Maulana",
     tutor: "Ustadz Ahmad Fauzi",
@@ -313,12 +724,252 @@ const initialSchedule = [
     roomLink: "https://meet.google.com/qwe-rty-uio",
     platform: "Zoom",
   },
+  {
+    id: "SCH-307",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
+    time: "09.00 – 10.00 WIB",
+    student: "Farhan Ramadhan",
+    tutor: "Ustadz H. Abdul Malik, Lc.",
+    program: "Tahsin Lanjutan Surat Al-Baqarah",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/sesi-farhan",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-308",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
+    time: "10.30 – 11.30 WIB",
+    student: "drg. Maya Safitri",
+    tutor: "Ustazah Hanifah, S.Hum.",
+    program: "Tahsin Tartil Dewasa",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/sesi-maya",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-309",
+    date: "2026-09-06",
+    dateLabel: "Hari Ini (6 Sep 2026)",
+    time: "21.00 – 22.00 WIB",
+    student: "Budi Prasetyo",
+    tutor: "Ustadz Ahmad Fauzi",
+    program: "Kaidah Tajwid Mad Jaiz & Wajib",
+    status: "Mendatang",
+    roomLink: "https://meet.google.com/sesi-budi",
+    platform: "Google Meet",
+  },
+  // ─── KEMARIN: 2026-09-05 ───
+  {
+    id: "SCH-298",
+    date: "2026-09-05",
+    dateLabel: "Kemarin (5 Sep 2026)",
+    time: "09.00 – 10.00 WIB",
+    student: "Nabila Azzahra",
+    tutor: "Ustazah Fatimah Azzahra",
+    program: "Fiqih Ibadah Shalat Jamak & Qashar",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/xyz-123-abc",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-299",
+    date: "2026-09-05",
+    dateLabel: "Kemarin (5 Sep 2026)",
+    time: "14.00 – 15.00 WIB",
+    student: "Hj. Siti Rahmawati",
+    tutor: "Ustazah Hanifah, S.Hum.",
+    program: "Tahsin Tartil Juz Amma Lansia",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/def-456-ghi",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-300",
+    date: "2026-09-05",
+    dateLabel: "Kemarin (5 Sep 2026)",
+    time: "19.30 – 20.30 WIB",
+    student: "Budi Prasetyo",
+    tutor: "Ustadz Ahmad Fauzi",
+    program: "Makhraj & Sifat Huruf Lisan",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/ghi-789-jkl",
+    platform: "Google Meet",
+  },
+  // ─── 4 SEP 2026 ───
+  {
+    id: "SCH-295",
+    date: "2026-09-04",
+    dateLabel: "4 Sep 2026",
+    time: "16.00 – 17.00 WIB",
+    student: "dr. Irfan Hakim",
+    tutor: "Ustadz H. Abdul Malik, Lc.",
+    program: "Trial Fiqih Muamalah Bisnis",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/trial-irfan-01",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-296",
+    date: "2026-09-04",
+    dateLabel: "4 Sep 2026",
+    time: "19.30 – 20.30 WIB",
+    student: "Ahmad Fauzi",
+    tutor: "Ustadz H. Abdul Malik, Lc.",
+    program: "Sesi 6: Evaluasi Makhraj Surah Al-Fatihah",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/sesi6-fauzi",
+    platform: "Google Meet",
+  },
+  // ─── 3 SEP 2026 ───
+  {
+    id: "SCH-291",
+    date: "2026-09-03",
+    dateLabel: "3 Sep 2026",
+    time: "15.30 – 16.30 WIB",
+    student: "Zahra & Zaky",
+    tutor: "Ustazah Fatimah Azzahra",
+    program: "Tahfidz Juz 30 Anak (Surah An-Naba)",
+    status: "Selesai",
+    roomLink: "https://meet.google.com/tahfidz-anak",
+    platform: "Google Meet",
+  },
+  // ─── BESOK: 2026-09-07 ───
+  {
+    id: "SCH-305",
+    date: "2026-09-07",
+    dateLabel: "Besok (7 Sep 2026)",
+    time: "09.00 – 10.00 WIB",
+    student: "Fatimah Humaira",
+    tutor: "Ustazah Syaimaa', S.Pd.I",
+    program: "Trial Nahwu & Shorof Dasar",
+    status: "Terjadwal",
+    roomLink: "https://meet.google.com/trial-fatimah",
+    platform: "Google Meet",
+  },
+  {
+    id: "SCH-306",
+    date: "2026-09-07",
+    dateLabel: "Besok (7 Sep 2026)",
+    time: "16.00 – 17.00 WIB",
+    student: "Ahmad Rizwan (Anak)",
+    tutor: "Ustazah Syaimaa', S.Pd.I",
+    program: "Trial Iqro Dasar Anak",
+    status: "Terjadwal",
+    roomLink: "https://meet.google.com/trial-rizwan",
+    platform: "Google Meet",
+  },
 ];
 
 const initialTransactions = [
+  // ─── HARI INI: 2026-09-06 ───
+  {
+    id: "INV-2026-0895",
+    date: "06 Sep 2026, 11:20",
+    rawDate: "2026-09-06",
+    student: "Ahmad Fauzi",
+    package: "Perpanjangan Paket Istiqamah (2 Bulan)",
+    amount: 449000,
+    method: "Bank Syariah Indonesia (BSI)",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0896",
+    date: "06 Sep 2026, 14:45",
+    rawDate: "2026-09-06",
+    student: "Siti Sarah",
+    package: "Paket Belajar Reguler (1 Bulan)",
+    amount: 249000,
+    method: "QRIS Instant",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0898",
+    date: "06 Sep 2026, 16:30",
+    rawDate: "2026-09-06",
+    student: "Yusuf Ramadhan",
+    package: "Paket Belajar Reguler (1 Bulan)",
+    amount: 249000,
+    method: "QRIS Instant",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0899",
+    date: "06 Sep 2026, 15:10",
+    rawDate: "2026-09-06",
+    student: "Kayla Azzahra (Ibu Nurul)",
+    package: "Paket Istiqamah Anak (2 Bulan)",
+    amount: 449000,
+    method: "Bank Mandiri Virtual Account",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0900",
+    date: "06 Sep 2026, 13:25",
+    rawDate: "2026-09-06",
+    student: "Ir. Bambang Sujarwo",
+    package: "Paket Fleksibel Privat Lansia",
+    amount: 649000,
+    method: "Bank Syariah Indonesia (BSI)",
+    status: "Menunggu Verifikasi",
+  },
+  {
+    id: "INV-2026-0904",
+    date: "06 Sep 2026, 09:15",
+    rawDate: "2026-09-06",
+    student: "Medina & Rayyan",
+    package: "Paket Belajar Bersaudara (2 Santri)",
+    amount: 850000,
+    method: "BCA Virtual Account",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0905",
+    date: "06 Sep 2026, 08:00",
+    rawDate: "2026-09-06",
+    student: "Kenzo Al-Ghifari",
+    package: "Paket Iqro Ceria (1 Bulan)",
+    amount: 249000,
+    method: "GoPay / QRIS",
+    status: "Lunas",
+  },
+  // ─── KEMARIN: 2026-09-05 ───
+  {
+    id: "INV-2026-0897",
+    date: "05 Sep 2026, 16:10",
+    rawDate: "2026-09-05",
+    student: "Nabila Azzahra",
+    package: "Paket VIP Bimbingan Fiqih",
+    amount: 649000,
+    method: "BCA Virtual Account",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0901",
+    date: "05 Sep 2026, 18:40",
+    rawDate: "2026-09-05",
+    student: "Farhan Ramadhan",
+    package: "Paket Intensif Talaqqi (3 Bulan)",
+    amount: 649000,
+    method: "BCA Virtual Account",
+    status: "Lunas",
+  },
+  {
+    id: "INV-2026-0902",
+    date: "05 Sep 2026, 11:15",
+    rawDate: "2026-09-05",
+    student: "drg. Maya Safitri",
+    package: "Perpanjangan Paket VIP Eksklusif",
+    amount: 649000,
+    method: "BSI Syariah",
+    status: "Lunas",
+  },
+  // ─── 4 SEP 2026 ───
   {
     id: "INV-2026-0891",
     date: "04 Sep 2026, 09:12",
+    rawDate: "2026-09-04",
     student: "Zahra & Zaky (Ibu Dian)",
     package: "Paket Belajar Keluarga (3 Bulan)",
     amount: 1450000,
@@ -328,6 +979,7 @@ const initialTransactions = [
   {
     id: "INV-2026-0892",
     date: "04 Sep 2026, 08:30",
+    rawDate: "2026-09-04",
     student: "dr. Irfan Hakim",
     package: "Paket VIP Eksklusif (1 Bulan)",
     amount: 649000,
@@ -335,8 +987,20 @@ const initialTransactions = [
     status: "Menunggu Verifikasi",
   },
   {
+    id: "INV-2026-0903",
+    date: "04 Sep 2026, 14:50",
+    rawDate: "2026-09-04",
+    student: "Dimas Kurniawan",
+    package: "Paket Nahwu Shorof (2 Bulan)",
+    amount: 449000,
+    method: "Mandiri Livin",
+    status: "Lunas",
+  },
+  // ─── 3 SEP 2026 ───
+  {
     id: "INV-2026-0893",
     date: "03 Sep 2026, 21:15",
+    rawDate: "2026-09-03",
     student: "Ahmad Fauzi",
     package: "Perpanjangan Reguler (1 Bulan)",
     amount: 449000,
@@ -346,6 +1010,7 @@ const initialTransactions = [
   {
     id: "INV-2026-0894",
     date: "03 Sep 2026, 17:40",
+    rawDate: "2026-09-03",
     student: "Budi Prasetyo",
     package: "Paket Santri Baru (Diskon 25%)",
     amount: 336750,
@@ -509,6 +1174,251 @@ export default function AdminDashboard({ onNavigate }) {
   const [leadStatusFilter, setLeadStatusFilter] = useState("Semua");
   const [notifOpen, setNotifOpen] = useState(false);
 
+  // ─── PAGINATION STATES ───
+  const [leadsPage, setLeadsPage] = useState(1);
+  const [leadsPageSize, setLeadsPageSize] = useState(5);
+
+  const [studentsPage, setStudentsPage] = useState(1);
+  const [studentsPageSize, setStudentsPageSize] = useState(6);
+
+  const [transactionsPage, setTransactionsPage] = useState(1);
+  const [transactionsPageSize, setTransactionsPageSize] = useState(5);
+
+  const [schedulePage, setSchedulePage] = useState(1);
+  const [schedulePageSize, setSchedulePageSize] = useState(5);
+
+  const resetDatePagination = () => {
+    setLeadsPage(1);
+    setTransactionsPage(1);
+    setSchedulePage(1);
+  };
+
+  const handleSearchChange = (val) => {
+    setSearchQuery(val);
+    setStudentsPage(1);
+    setLeadsPage(1);
+  };
+
+  const handleLeadStatusChange = (val) => {
+    setLeadStatusFilter(val);
+    setLeadsPage(1);
+  };
+
+  // ─── DATE FILTER STATE ───
+  const [datePreset, setDatePreset] = useState("today"); // 'today' | 'yesterday' | 'week' | 'month' | 'custom'
+  const [selectedDate, setSelectedDate] = useState("2026-09-06"); // Mock reference date
+
+  const handlePreviousDay = () => {
+    const newDate = shiftDate(selectedDate, -1);
+    setSelectedDate(newDate);
+    resetDatePagination();
+    if (newDate === "2026-09-06") {
+      setDatePreset("today");
+    } else if (newDate === "2026-09-05") {
+      setDatePreset("yesterday");
+    } else {
+      setDatePreset("custom");
+    }
+  };
+
+  const handleNextDay = () => {
+    const newDate = shiftDate(selectedDate, 1);
+    setSelectedDate(newDate);
+    resetDatePagination();
+    if (newDate === "2026-09-06") {
+      setDatePreset("today");
+    } else if (newDate === "2026-09-05") {
+      setDatePreset("yesterday");
+    } else {
+      setDatePreset("custom");
+    }
+  };
+
+  const handleSelectPreset = (preset) => {
+    setDatePreset(preset);
+    resetDatePagination();
+    if (preset === "today") {
+      setSelectedDate("2026-09-06");
+    } else if (preset === "yesterday") {
+      setSelectedDate("2026-09-05");
+    }
+  };
+
+  const handleCustomDateChange = (dateVal) => {
+    if (!dateVal) return;
+    setSelectedDate(dateVal);
+    resetDatePagination();
+    if (dateVal === "2026-09-06") {
+      setDatePreset("today");
+    } else if (dateVal === "2026-09-05") {
+      setDatePreset("yesterday");
+    } else {
+      setDatePreset("custom");
+    }
+  };
+
+  // Human readable label for active date/range
+  const formattedDateLabel = useMemo(() => {
+    if (datePreset === "today") return formatDateIndonesian(selectedDate);
+    if (datePreset === "yesterday") return formatDateIndonesian(selectedDate);
+    if (datePreset === "week") return "Pekan Ini (31 Agu – 6 Sep 2026)";
+    if (datePreset === "month") return "Bulan Ini (September 2026)";
+    return formatDateIndonesian(selectedDate);
+  }, [datePreset, selectedDate]);
+
+  // Filtered schedules according to active date filter
+  const filteredSchedules = useMemo(() => {
+    return schedules.filter((sch) => {
+      if (datePreset === "month") {
+        return sch.date.startsWith("2026-09");
+      }
+      if (datePreset === "week") {
+        return sch.date >= "2026-08-31" && sch.date <= "2026-09-06";
+      }
+      return sch.date === selectedDate;
+    });
+  }, [schedules, datePreset, selectedDate]);
+
+  // Filtered leads according to active date filter, status, and search query
+  const filteredLeads = useMemo(() => {
+    return leads.filter((item) => {
+      const matchSearch =
+        !searchQuery.trim() ||
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.phone.includes(searchQuery) ||
+        item.id.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchStatus = leadStatusFilter === "Semua" || item.status === leadStatusFilter;
+
+      let matchDate = true;
+      if (datePreset === "month") {
+        matchDate = item.rawDate?.startsWith("2026-09");
+      } else if (datePreset === "week") {
+        matchDate = item.rawDate >= "2026-08-31" && item.rawDate <= "2026-09-06";
+      } else {
+        matchDate = item.rawDate === selectedDate;
+      }
+
+      return matchSearch && matchStatus && matchDate;
+    });
+  }, [leads, searchQuery, leadStatusFilter, datePreset, selectedDate]);
+
+  // Filtered transactions according to active date filter
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) => {
+      if (datePreset === "month") {
+        return t.rawDate?.startsWith("2026-09");
+      }
+      if (datePreset === "week") {
+        return t.rawDate >= "2026-08-31" && t.rawDate <= "2026-09-06";
+      }
+      return t.rawDate === selectedDate;
+    });
+  }, [transactions, datePreset, selectedDate]);
+
+  // Dynamic KPI Stats according to date
+  const currentStats = useMemo(() => {
+    if (datePreset === "month") {
+      return {
+        titlePeriod: "Bulan Ini (September 2026)",
+        activeStudents: 1248,
+        activeStudentsGrowth: "+12.4%",
+        trialLeads: 412,
+        trialLeadsGrowth: "+24.5%",
+        sessions: 1840,
+        sessionsLive: 0,
+        revenue: 78450000,
+        revenueGrowth: "+15.8%",
+        tutorsOnDuty: 32,
+      };
+    }
+    if (datePreset === "week") {
+      return {
+        titlePeriod: "Pekan Ini (7 Hari Terakhir)",
+        activeStudents: 1248,
+        activeStudentsGrowth: "+5.2%",
+        trialLeads: 236,
+        trialLeadsGrowth: "+14.8%",
+        sessions: 548,
+        sessionsLive: 14,
+        revenue: 28600000,
+        revenueGrowth: "+18.2%",
+        tutorsOnDuty: 32,
+      };
+    }
+    if (selectedDate === "2026-09-06") {
+      return {
+        titlePeriod: "Hari Ini (6 Sep 2026)",
+        activeStudents: 1248,
+        activeStudentsGrowth: "+12.4%",
+        trialLeads: 42,
+        trialLeadsGrowth: "+18.2%",
+        sessions: 86,
+        sessionsLive: 14,
+        revenue: 4250000,
+        revenueGrowth: "+20.1%",
+        tutorsOnDuty: 32,
+      };
+    }
+    if (selectedDate === "2026-09-05") {
+      return {
+        titlePeriod: "Kemarin (5 Sep 2026)",
+        activeStudents: 1244,
+        activeStudentsGrowth: "+8.5%",
+        trialLeads: 38,
+        trialLeadsGrowth: "+12.0%",
+        sessions: 82,
+        sessionsLive: 0,
+        revenue: 3850000,
+        revenueGrowth: "+14.2%",
+        tutorsOnDuty: 30,
+      };
+    }
+    if (selectedDate === "2026-09-04") {
+      return {
+        titlePeriod: "Jumat, 4 Sep 2026",
+        activeStudents: 1238,
+        activeStudentsGrowth: "+6.1%",
+        trialLeads: 35,
+        trialLeadsGrowth: "+10.4%",
+        sessions: 74,
+        sessionsLive: 0,
+        revenue: 2099000,
+        revenueGrowth: "+9.8%",
+        tutorsOnDuty: 28,
+      };
+    }
+    if (selectedDate === "2026-09-03") {
+      return {
+        titlePeriod: "Kamis, 3 Sep 2026",
+        activeStudents: 1232,
+        activeStudentsGrowth: "+4.5%",
+        trialLeads: 29,
+        trialLeadsGrowth: "+8.2%",
+        sessions: 80,
+        sessionsLive: 0,
+        revenue: 785750,
+        revenueGrowth: "+5.4%",
+        tutorsOnDuty: 29,
+      };
+    }
+    const leadsCount = filteredLeads.length;
+    const sessionsCount = filteredSchedules.length;
+    const rev = filteredTransactions.reduce((acc, c) => acc + c.amount, 0);
+    return {
+      titlePeriod: formatDateIndonesian(selectedDate),
+      activeStudents: 1220,
+      activeStudentsGrowth: "+3.0%",
+      trialLeads: leadsCount > 0 ? leadsCount * 8 : 18,
+      trialLeadsGrowth: "+5.0%",
+      sessions: sessionsCount > 0 ? sessionsCount * 12 : 36,
+      sessionsLive: 0,
+      revenue: rev > 0 ? rev : 1850000,
+      revenueGrowth: "+8.0%",
+      tutorsOnDuty: 26,
+    };
+  }, [datePreset, selectedDate, filteredLeads, filteredSchedules, filteredTransactions]);
+
   // Modals
   const [newLeadModalOpen, setNewLeadModalOpen] = useState(false);
   const [gradeModalOpen, setGradeModalOpen] = useState(null);
@@ -615,18 +1525,6 @@ export default function AdminDashboard({ onNavigate }) {
     },
   ];
 
-  // Filtered Leads
-  const filteredLeads = useMemo(() => {
-    return leads.filter((item) => {
-      const matchSearch =
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.phone.includes(searchQuery) ||
-        item.id.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchStatus = leadStatusFilter === "Semua" || item.status === leadStatusFilter;
-      return matchSearch && matchStatus;
-    });
-  }, [leads, searchQuery, leadStatusFilter]);
-
   // Filtered Students
   const filteredStudents = useMemo(() => {
     return students.filter((item) => {
@@ -638,6 +1536,27 @@ export default function AdminDashboard({ onNavigate }) {
       );
     });
   }, [students, searchQuery]);
+
+  // ─── PAGINATED SLICES ───
+  const paginatedLeads = useMemo(() => {
+    const start = (leadsPage - 1) * leadsPageSize;
+    return filteredLeads.slice(start, start + leadsPageSize);
+  }, [filteredLeads, leadsPage, leadsPageSize]);
+
+  const paginatedStudents = useMemo(() => {
+    const start = (studentsPage - 1) * studentsPageSize;
+    return filteredStudents.slice(start, start + studentsPageSize);
+  }, [filteredStudents, studentsPage, studentsPageSize]);
+
+  const paginatedTransactions = useMemo(() => {
+    const start = (transactionsPage - 1) * transactionsPageSize;
+    return filteredTransactions.slice(start, start + transactionsPageSize);
+  }, [filteredTransactions, transactionsPage, transactionsPageSize]);
+
+  const paginatedSchedules = useMemo(() => {
+    const start = (schedulePage - 1) * schedulePageSize;
+    return filteredSchedules.slice(start, start + schedulePageSize);
+  }, [filteredSchedules, schedulePage, schedulePageSize]);
 
   const unreadNotifCount = notifications.filter((n) => n.unread).length;
 
@@ -1135,7 +2054,7 @@ export default function AdminDashboard({ onNavigate }) {
                   type="text"
                   placeholder="Cari santri, nomor WA, ustadz, atau invoice..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => handleSearchChange(e.target.value)}
                   className="w-full pl-9 pr-3 py-1.5 rounded-xl text-xs border border-slate-200 focus:outline-none focus:border-[#049788] bg-slate-50/50"
                 />
               </div>
@@ -1218,6 +2137,153 @@ export default function AdminDashboard({ onNavigate }) {
           {/* ─── BODY TABS ─── */}
           <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
 
+            {/* ─── GLOBAL DATE FILTER TOOLBAR (KONTROL PENYARING TANGGAL) ─── */}
+            <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                
+                {/* Left: Active Date Display & Day Stepper */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-2xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold border border-[#C8EDE9] shrink-0">
+                      <Calendar className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-sm sm:text-base font-black text-slate-950">
+                          {formattedDateLabel}
+                        </h3>
+                        {datePreset === "today" && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                            Hari Ini
+                          </span>
+                        )}
+                        {datePreset === "yesterday" && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                            Kemarin
+                          </span>
+                        )}
+                        {datePreset === "week" && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                            Rentang 7 Hari
+                          </span>
+                        )}
+                        {datePreset === "month" && (
+                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                            Bulanan
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        Filter operasional aktif: Melihat data pendaftar, sesi kelas, &amp; mutasi sesuai tanggal
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Day Stepper Buttons (◀ Previous Day | Next Day ▶) */}
+                  <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60 shrink-0">
+                    <button
+                      type="button"
+                      onClick={handlePreviousDay}
+                      className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
+                      title="Hari Sebelumnya"
+                      aria-label="Hari Sebelumnya"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-xs font-semibold text-slate-500 px-1.5 select-none">
+                      Navigasi Hari
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleNextDay}
+                      className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
+                      title="Hari Berikutnya"
+                      aria-label="Hari Berikutnya"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Right: Presets & Custom Date Picker */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {/* Preset Buttons */}
+                  <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset("today")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                        datePreset === "today"
+                          ? "bg-white text-[#049788] shadow-xs"
+                          : "text-slate-600 hover:text-slate-950"
+                      }`}
+                    >
+                      Hari Ini
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset("yesterday")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                        datePreset === "yesterday"
+                          ? "bg-white text-[#049788] shadow-xs"
+                          : "text-slate-600 hover:text-slate-950"
+                      }`}
+                    >
+                      Kemarin
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset("week")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                        datePreset === "week"
+                          ? "bg-white text-[#049788] shadow-xs"
+                          : "text-slate-600 hover:text-slate-950"
+                      }`}
+                    >
+                      7 Hari
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset("month")}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                        datePreset === "month"
+                          ? "bg-white text-[#049788] shadow-xs"
+                          : "text-slate-600 hover:text-slate-950"
+                      }`}
+                    >
+                      Bulan Ini
+                    </button>
+                  </div>
+
+                  {/* Native Date Input */}
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition-colors">
+                    <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => handleCustomDateChange(e.target.value)}
+                      className="text-xs font-bold text-slate-800 bg-transparent focus:outline-none cursor-pointer"
+                      title="Pilih tanggal spesifik dari kalender"
+                    />
+                  </div>
+
+                  {/* Quick Reset to Today button */}
+                  {(datePreset !== "today" || selectedDate !== "2026-09-06") && (
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset("today")}
+                      className="px-3 py-1.5 text-xs text-[#049788] hover:text-[#038073] font-bold cursor-pointer hover:underline flex items-center gap-1"
+                    >
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>Kembali ke Hari Ini</span>
+                    </button>
+                  )}
+                </div>
+
+              </div>
+            </div>
+
           {/* ================= 1. TAB: OVERVIEW / RINGKASAN EKSEKUTIF ================= */}
           {activeTab === "overview" && (
             <div className="space-y-6">
@@ -1225,11 +2291,16 @@ export default function AdminDashboard({ onNavigate }) {
               {/* Header Title & Actions */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-2xs">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
-                    Ringkasan Operasional &amp; Metrik Utama
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-500">
-                    Pantauan live pendaftar trial, santri aktif, jadwal sesi mengajar, dan arus pendapatan.
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
+                      Ringkasan Operasional &amp; Metrik Utama
+                    </h2>
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBF8F6] text-[#049788] border border-[#C8EDE9]">
+                      {currentStats.titlePeriod}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                    Pantauan pendaftar trial, santri aktif, jadwal sesi mengajar, dan mutasi pendapatan untuk periode {currentStats.titlePeriod}.
                   </p>
                 </div>
                 <div className="flex items-center gap-2.5">
@@ -1241,7 +2312,7 @@ export default function AdminDashboard({ onNavigate }) {
                     <span>Input Pendaftar</span>
                   </button>
                   <button
-                    onClick={() => showToast("Data laporan berhasil diexport ke CSV!", "info")}
+                    onClick={() => showToast("Data laporan operasional tanggal " + selectedDate + " berhasil diexport ke CSV!", "info")}
                     className="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 cursor-pointer"
                     title="Export Laporan"
                   >
@@ -1261,18 +2332,18 @@ export default function AdminDashboard({ onNavigate }) {
                     </div>
                     <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-0.5">
                       <ArrowUpRight className="w-3.5 h-3.5" />
-                      {initialAdminStats.activeStudentsGrowth}
+                      {currentStats.activeStudentsGrowth}
                     </span>
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-black text-slate-950">
-                      {initialAdminStats.activeStudents.toLocaleString("id-ID")}
+                      {currentStats.activeStudents.toLocaleString("id-ID")}
                     </h3>
                     <p className="text-xs text-slate-500 font-medium mt-0.5">Santri Aktif Terdaftar</p>
                   </div>
                 </div>
 
-                {/* 2. Pendaftar Trial Hari Ini */}
+                {/* 2. Pendaftar Trial */}
                 <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200">
@@ -1280,36 +2351,40 @@ export default function AdminDashboard({ onNavigate }) {
                     </div>
                     <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-0.5">
                       <ArrowUpRight className="w-3.5 h-3.5" />
-                      {initialAdminStats.trialLeadsGrowth}
+                      {currentStats.trialLeadsGrowth}
                     </span>
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-black text-slate-950">
-                      {initialAdminStats.trialLeadsToday}
+                      {currentStats.trialLeads}
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">Pendaftar Trial Hari Ini</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                      Pendaftar Trial ({datePreset === "today" ? "Hari Ini" : datePreset === "yesterday" ? "Kemarin" : datePreset === "week" ? "Pekan Ini" : datePreset === "month" ? "Bulan Ini" : "Tanggal Terpilih"})
+                    </p>
                   </div>
                 </div>
 
-                {/* 3. Sesi Mengajar Hari Ini */}
+                {/* 3. Sesi Mengajar */}
                 <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center border border-teal-200">
                       <Video className="w-5 h-5" />
                     </div>
                     <span className="text-xs font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md">
-                      {initialAdminStats.sessionsLive} Live Sekarang
+                      {currentStats.sessionsLive > 0 ? `${currentStats.sessionsLive} Live Sekarang` : `${currentStats.tutorsOnDuty} Guru Siaga`}
                     </span>
                   </div>
                   <div>
                     <h3 className="text-2xl sm:text-3xl font-black text-slate-950">
-                      {initialAdminStats.sessionsToday}
+                      {currentStats.sessions}
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">Total Sesi Kelas Hari Ini</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                      Total Sesi Kelas ({datePreset === "today" ? "Hari Ini" : datePreset === "yesterday" ? "Kemarin" : datePreset === "week" ? "Pekan Ini" : datePreset === "month" ? "Bulan Ini" : "Tanggal Terpilih"})
+                    </p>
                   </div>
                 </div>
 
-                {/* 4. Arus Pendapatan Bulan Ini */}
+                {/* 4. Arus Pendapatan */}
                 <div className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
@@ -1317,14 +2392,16 @@ export default function AdminDashboard({ onNavigate }) {
                     </div>
                     <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-0.5">
                       <ArrowUpRight className="w-3.5 h-3.5" />
-                      {initialAdminStats.revenueGrowth}
+                      {currentStats.revenueGrowth}
                     </span>
                   </div>
                   <div>
                     <h3 className="text-xl sm:text-2xl font-black text-slate-950 truncate">
-                      Rp {(initialAdminStats.monthlyRevenue / 1000000).toFixed(1)} Jt
+                      Rp {currentStats.revenue >= 1000000 ? (currentStats.revenue / 1000000).toFixed(1) + " Jt" : currentStats.revenue.toLocaleString("id-ID")}
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">Pendapatan Bersih Bulan Ini</p>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                      Pendapatan Bersih ({datePreset === "today" ? "Hari Ini" : datePreset === "yesterday" ? "Kemarin" : datePreset === "week" ? "Pekan Ini" : datePreset === "month" ? "Bulan Ini" : "Tanggal Terpilih"})
+                    </p>
                   </div>
                 </div>
 
@@ -1333,12 +2410,16 @@ export default function AdminDashboard({ onNavigate }) {
               {/* Grid 2 Column: Live Sessions & Recent Leads */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                {/* Left (7 Cols): Sesi Mengajar Live & Mendatang */}
+                {/* Left (7 Cols): Sesi Mengajar Sesuai Tanggal Filter */}
                 <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200/90 p-6 space-y-5 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-base font-bold text-slate-950">Jadwal Sesi Kelas Hari Ini</h3>
-                      <p className="text-xs text-slate-500">Monitoring link Google Meet / Zoom santri &amp; ustadz</p>
+                      <h3 className="text-base font-bold text-slate-950">
+                        Jadwal Sesi Kelas · {datePreset === "today" ? "Hari Ini" : datePreset === "yesterday" ? "Kemarin" : formattedDateLabel}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Monitoring link Google Meet / Zoom santri &amp; ustadz ({filteredSchedules.length} Sesi Terjadwal)
+                      </p>
                     </div>
                     <button
                       onClick={() => setActiveTab("schedule")}
@@ -1348,50 +2429,73 @@ export default function AdminDashboard({ onNavigate }) {
                     </button>
                   </div>
 
-                  <div className="space-y-3">
-                    {schedules.map((sch) => (
-                      <div
-                        key={sch.id}
-                        className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-white hover:border-[#049788]/30 transition-all"
+                  {filteredSchedules.length === 0 ? (
+                    <div className="py-10 text-center space-y-2 bg-slate-50/70 rounded-2xl border border-slate-100">
+                      <Calendar className="w-8 h-8 mx-auto text-slate-300" />
+                      <p className="text-xs font-semibold text-slate-600">
+                        Tidak ada jadwal sesi kelas pada tanggal {formattedDateLabel}.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("today")}
+                        className="text-xs text-[#049788] hover:underline font-bold cursor-pointer"
                       >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                                sch.status.includes("Live")
-                                  ? "bg-emerald-100 text-emerald-800 animate-pulse"
-                                  : "bg-slate-200 text-slate-700"
-                              }`}
-                            >
-                              {sch.status}
-                            </span>
-                            <span className="text-xs font-mono font-semibold text-slate-500">{sch.time}</span>
-                          </div>
-                          <h4 className="text-sm font-bold text-slate-950">{sch.student}</h4>
-                          <p className="text-xs text-slate-600">
-                            Guru: <span className="font-semibold text-slate-900">{sch.tutor}</span> · {sch.program}
-                          </p>
-                        </div>
-                        <a
-                          href={sch.roomLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-4 py-2 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shrink-0 shadow-xs"
+                        Lihat Jadwal Hari Ini (6 Sep 2026)
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {filteredSchedules.map((sch) => (
+                        <div
+                          key={sch.id}
+                          className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-white hover:border-[#049788]/30 transition-all"
                         >
-                          <Video className="w-3.5 h-3.5" />
-                          <span>Masuk Ruang Kelas</span>
-                        </a>
-                      </div>
-                    ))}
-                  </div>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`text-xs font-bold px-2 py-0.5 rounded-md ${
+                                  sch.status.includes("Live")
+                                    ? "bg-emerald-100 text-emerald-800 animate-pulse"
+                                    : sch.status === "Selesai"
+                                    ? "bg-slate-200 text-slate-600"
+                                    : "bg-teal-100 text-teal-800"
+                                }`}
+                              >
+                                {sch.status}
+                              </span>
+                              <span className="text-xs font-mono font-semibold text-slate-500">{sch.time}</span>
+                              <span className="text-xs text-slate-400">· {sch.dateLabel}</span>
+                            </div>
+                            <h4 className="text-sm font-bold text-slate-950">{sch.student}</h4>
+                            <p className="text-xs text-slate-600">
+                              Guru: <span className="font-semibold text-slate-900">{sch.tutor}</span> · {sch.program}
+                            </p>
+                          </div>
+                          <a
+                            href={sch.roomLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shrink-0 shadow-xs"
+                          >
+                            <Video className="w-3.5 h-3.5" />
+                            <span>Masuk Ruang Kelas</span>
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* Right (5 Cols): Leads / Pendaftar Terbaru */}
+                {/* Right (5 Cols): Leads / Pendaftar Sesuai Tanggal Filter */}
                 <div className="lg:col-span-5 bg-white rounded-3xl border border-slate-200/90 p-6 space-y-5 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-base font-bold text-slate-950">Pendaftar Trial Terbaru</h3>
-                      <p className="text-xs text-slate-500">Calon santri yang perlu segera di-follow up</p>
+                      <h3 className="text-base font-bold text-slate-950">
+                        Pendaftar Trial · {datePreset === "today" ? "Hari Ini" : datePreset === "yesterday" ? "Kemarin" : formattedDateLabel}
+                      </h3>
+                      <p className="text-xs text-slate-500">
+                        Calon santri terdaftar pada periode ini ({filteredLeads.length} Pendaftar)
+                      </p>
                     </div>
                     <button
                       onClick={() => setActiveTab("leads")}
@@ -1401,31 +2505,52 @@ export default function AdminDashboard({ onNavigate }) {
                     </button>
                   </div>
 
-                  <div className="space-y-3">
-                    {leads.slice(0, 4).map((ld) => (
-                      <div
-                        key={ld.id}
-                        className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-3 text-xs"
+                  {filteredLeads.length === 0 ? (
+                    <div className="py-10 text-center space-y-2 bg-slate-50/70 rounded-2xl border border-slate-100">
+                      <Sparkles className="w-8 h-8 mx-auto text-slate-300" />
+                      <p className="text-xs font-semibold text-slate-600">
+                        Tidak ada pendaftar trial pada {formattedDateLabel}.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("today")}
+                        className="text-xs text-[#049788] hover:underline font-bold cursor-pointer"
                       >
-                        <div className="space-y-0.5 min-w-0">
-                          <h4 className="font-bold text-slate-950 truncate">{ld.name}</h4>
-                          <p className="text-[11px] text-slate-500 truncate">{ld.program}</p>
-                          <span className="text-[10px] text-slate-400 font-mono">{ld.date}</span>
-                        </div>
-                        <a
-                          href={`https://wa.me/62${ld.phone.replace(/^0/, "")}?text=${encodeURIComponent(
-                            `Halo ${ld.name}, kami dari Tim Akademik NgajiQ ingin mengonfirmasi jadwal sesi trial class membaca Al-Qur'an.`
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors shrink-0"
-                          title="Hubungi via WhatsApp"
+                        Lihat Pendaftar Hari Ini (6 Sep 2026)
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {filteredLeads.slice(0, 5).map((ld) => (
+                        <div
+                          key={ld.id}
+                          className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between gap-3 text-xs"
                         >
-                          <Phone className="w-4 h-4" />
-                        </a>
-                      </div>
-                    ))}
-                  </div>
+                          <div className="space-y-0.5 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <h4 className="font-bold text-slate-950 truncate">{ld.name}</h4>
+                              <span className="text-xs px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-700">
+                                {ld.status}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-500 truncate">{ld.program}</p>
+                            <span className="text-xs text-slate-400 font-mono">{ld.date}</span>
+                          </div>
+                          <a
+                            href={`https://wa.me/62${ld.phone.replace(/^0/, "")}?text=${encodeURIComponent(
+                              `Halo ${ld.name}, kami dari Tim Akademik NgajiQ ingin mengonfirmasi jadwal sesi trial class membaca Al-Qur'an.`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors shrink-0"
+                            title="Hubungi via WhatsApp"
+                          >
+                            <Phone className="w-4 h-4" />
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
               </div>
@@ -1571,7 +2696,7 @@ export default function AdminDashboard({ onNavigate }) {
                     Jadwal &amp; Ruang Kelas Virtual
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-500">
-                    Daftar seluruh sesi kelas live dan jadwal terjadwal hari ini.
+                    Daftar sesi kelas live dan jadwal terjadwal untuk {formattedDateLabel} ({filteredSchedules.length} Sesi).
                   </p>
                 </div>
                 <button
@@ -1583,47 +2708,77 @@ export default function AdminDashboard({ onNavigate }) {
                 </button>
               </div>
 
-              <div className="space-y-3">
-                {schedules.map((sch) => (
-                  <div
-                    key={sch.id}
-                    className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                  >
-                    <div className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                          {sch.time}
-                        </span>
-                        <span
-                          className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${
-                            sch.status.includes("Live")
-                              ? "bg-emerald-100 text-emerald-800 animate-pulse"
-                              : "bg-slate-100 text-slate-600"
-                          }`}
-                        >
-                          {sch.status}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-black text-slate-950">{sch.student}</h3>
-                      <p className="text-xs text-slate-600">
-                        Ustadz: <span className="font-bold text-slate-900">{sch.tutor}</span> · Topik: {sch.program}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center gap-2.5 shrink-0">
-                      <a
-                        href={sch.roomLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-5 py-2.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-xs"
-                      >
-                        <Video className="w-4 h-4" />
-                        <span>Buka Google Meet</span>
-                      </a>
-                    </div>
+              {filteredSchedules.length === 0 ? (
+                <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/90 shadow-2xs">
+                  <div className="w-12 h-12 rounded-2xl bg-teal-50 text-[#049788] flex items-center justify-center mx-auto mb-3">
+                    <Calendar className="w-6 h-6" />
                   </div>
-                ))}
-              </div>
+                  <p className="text-sm font-bold text-slate-800">Tidak ada jadwal sesi kelas pada {formattedDateLabel}</p>
+                  <p className="text-xs text-slate-500 mt-1">Silakan pilih tanggal lain melalui filter di atas atau kembali ke hari ini.</p>
+                  <button
+                    onClick={() => handleSelectPreset("today")}
+                    className="mt-4 px-4 py-2 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                  >
+                    Kembali ke Hari Ini
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-3">
+                    {paginatedSchedules.map((sch) => (
+                      <div
+                        key={sch.id}
+                        className="p-5 rounded-3xl bg-white border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                      >
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                              {sch.time}
+                            </span>
+                            <span
+                              className={`text-xs font-bold px-2.5 py-0.5 rounded-md ${
+                                sch.status.includes("Live")
+                                  ? "bg-emerald-100 text-emerald-800 animate-pulse"
+                                  : "bg-slate-100 text-slate-600"
+                              }`}
+                            >
+                              {sch.status}
+                            </span>
+                          </div>
+                          <h3 className="text-base font-black text-slate-950">{sch.student}</h3>
+                          <p className="text-xs text-slate-600">
+                            Ustadz: <span className="font-bold text-slate-900">{sch.tutor}</span> · Topik: {sch.program}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2.5 shrink-0">
+                          <a
+                            href={sch.roomLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-5 py-2.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-xs"
+                          >
+                            <Video className="w-4 h-4" />
+                            <span>Buka Google Meet</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
+                    <TablePagination
+                      currentPage={schedulePage}
+                      totalItems={filteredSchedules.length}
+                      pageSize={schedulePageSize}
+                      onPageChange={setSchedulePage}
+                      onPageSizeChange={setSchedulePageSize}
+                      pageSizeOptions={[5, 10, 20]}
+                      label="sesi kelas"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -1705,7 +2860,7 @@ export default function AdminDashboard({ onNavigate }) {
                     Pipeline Pendaftar Trial (Leads)
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-500">
-                    Kelola alur konversi calon santri dari pendaftaran baru hingga sesi trial dan pembayaran.
+                    Kelola alur konversi calon santri untuk {formattedDateLabel} ({filteredLeads.length} Calon Santri).
                   </p>
                 </div>
                 <button
@@ -1722,7 +2877,7 @@ export default function AdminDashboard({ onNavigate }) {
                 {["Semua", "baru", "dihubungi", "terjadwal", "selesai_trial", "konversi"].map((st) => (
                   <button
                     key={st}
-                    onClick={() => setLeadStatusFilter(st)}
+                    onClick={() => handleLeadStatusChange(st)}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold capitalize whitespace-nowrap cursor-pointer transition-colors ${
                       leadStatusFilter === st
                         ? "bg-[#049788] text-white shadow-xs"
@@ -1748,59 +2903,90 @@ export default function AdminDashboard({ onNavigate }) {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700">
-                      {filteredLeads.map((ld) => (
-                        <tr key={ld.id} className="hover:bg-slate-50/80 transition-colors">
-                          <td className="p-4">
-                            <span className="font-bold text-slate-950 block">{ld.name}</span>
-                            <span className="text-[11px] text-slate-400 font-mono">{ld.id} · {ld.date}</span>
-                          </td>
-                          <td className="p-4">
-                            <span className="font-semibold text-slate-900 block">{ld.program}</span>
-                            <span className="text-[11px] text-slate-500">{ld.slot}</span>
-                          </td>
-                          <td className="p-4">
-                            <span className="font-medium text-slate-800 block">{ld.parent}</span>
-                            <span className="text-[11px] text-slate-500">{ld.phone}</span>
-                          </td>
-                          <td className="p-4">
-                            <span
-                              className={`px-2.5 py-1 rounded-full text-[11px] font-bold capitalize ${
-                                ld.status === "baru"
-                                  ? "bg-amber-100 text-amber-800"
-                                  : ld.status === "konversi"
-                                  ? "bg-emerald-100 text-emerald-800"
-                                  : "bg-teal-100 text-teal-800"
-                              }`}
-                            >
-                              {ld.status}
-                            </span>
-                          </td>
-                          <td className="p-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <a
-                                href={`https://wa.me/62${ld.phone.replace(/^0/, "")}?text=${encodeURIComponent(
-                                  `Halo ${ld.name}, kami dari Tim Akademik NgajiQ ingin mengonfirmasi sesi trial class.`
-                                )}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                                title="Chat WhatsApp"
-                              >
-                                <Phone className="w-3.5 h-3.5" />
-                              </a>
+                      {filteredLeads.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="p-8 text-center text-slate-500">
+                            <div className="flex flex-col items-center justify-center">
+                              <Sparkles className="w-8 h-8 text-slate-300 mb-2" />
+                              <p className="font-bold text-sm text-slate-700">Tidak ada data pendaftar trial pada {formattedDateLabel}</p>
+                              <p className="text-xs text-slate-400 mt-1">Gunakan preset lain atau klik tombol untuk melihat hari ini.</p>
                               <button
-                                onClick={() => handleUpdateLeadStatus(ld.id, "konversi")}
-                                className="px-3 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl cursor-pointer"
+                                onClick={() => {
+                                  handleSelectPreset("today");
+                                  handleLeadStatusChange("Semua");
+                                }}
+                                className="mt-3 px-3.5 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl cursor-pointer"
                               >
-                                Set Konversi
+                                Lihat Hari Ini
                               </button>
                             </div>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        paginatedLeads.map((ld) => (
+                          <tr key={ld.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="p-4">
+                              <span className="font-bold text-slate-950 block">{ld.name}</span>
+                              <span className="text-xs text-slate-400 font-mono">{ld.id} · {ld.date}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="font-semibold text-slate-900 block">{ld.program}</span>
+                              <span className="text-xs text-slate-500">{ld.slot}</span>
+                            </td>
+                            <td className="p-4">
+                              <span className="font-medium text-slate-800 block">{ld.parent}</span>
+                              <span className="text-xs text-slate-500">{ld.phone}</span>
+                            </td>
+                            <td className="p-4">
+                              <span
+                                className={`px-2.5 py-1 rounded-full text-xs font-bold capitalize ${
+                                  ld.status === "baru"
+                                    ? "bg-amber-100 text-amber-800"
+                                    : ld.status === "konversi"
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-teal-100 text-teal-800"
+                                }`}
+                              >
+                                {ld.status}
+                              </span>
+                            </td>
+                            <td className="p-4 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                <a
+                                  href={`https://wa.me/62${ld.phone.replace(/^0/, "")}?text=${encodeURIComponent(
+                                    `Halo ${ld.name}, kami dari Tim Akademik NgajiQ ingin mengonfirmasi sesi trial class.`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="p-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                                  title="Chat WhatsApp"
+                                >
+                                  <Phone className="w-3.5 h-3.5" />
+                                </a>
+                                <button
+                                  onClick={() => handleUpdateLeadStatus(ld.id, "konversi")}
+                                  className="px-3 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl cursor-pointer"
+                                >
+                                  Set Konversi
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
+
+                <TablePagination
+                  currentPage={leadsPage}
+                  totalItems={filteredLeads.length}
+                  pageSize={leadsPageSize}
+                  onPageChange={setLeadsPage}
+                  onPageSizeChange={setLeadsPageSize}
+                  pageSizeOptions={[5, 10, 20]}
+                  label="calon santri"
+                />
               </div>
             </div>
           )}
@@ -1827,45 +3013,75 @@ export default function AdminDashboard({ onNavigate }) {
               </div>
 
               {/* Students Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filteredStudents.map((st) => (
-                  <div
-                    key={st.id}
-                    className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">
-                          {st.id}
-                        </span>
-                        <span className="text-xs font-bold text-[#049788] bg-[#EBF8F6] px-2.5 py-0.5 rounded-full">
-                          {st.level}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-bold text-slate-950">{st.name}</h3>
-                      <div className="space-y-1 text-xs text-slate-600">
-                        <p>Program: <span className="font-semibold text-slate-900">{st.program}</span></p>
-                        <p>Paket: <span className="font-semibold text-slate-900">{st.package}</span></p>
-                        <p>Ustadz: <span className="font-semibold text-slate-900">{st.tutor}</span></p>
-                        <p>WhatsApp: <span className="font-mono text-slate-900">{st.phone}</span></p>
-                      </div>
-                    </div>
-
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-slate-500 font-medium">XP: {st.xp}</span>
-                      <a
-                        href={`https://wa.me/62${st.phone.replace(/^0/, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 bg-[#EBF8F6] text-[#049788] hover:bg-[#DCF3F0] font-bold rounded-xl flex items-center gap-1"
-                      >
-                        <Phone className="w-3.5 h-3.5" />
-                        <span>Chat Santri</span>
-                      </a>
-                    </div>
+              {filteredStudents.length === 0 ? (
+                <div className="p-12 text-center bg-white rounded-3xl border border-slate-200/90 shadow-2xs">
+                  <div className="w-12 h-12 rounded-2xl bg-teal-50 text-[#049788] flex items-center justify-center mx-auto mb-3">
+                    <Users className="w-6 h-6" />
                   </div>
-                ))}
-              </div>
+                  <p className="text-sm font-bold text-slate-800">Santri tidak ditemukan</p>
+                  <p className="text-xs text-slate-500 mt-1">Tidak ada data santri yang cocok dengan pencarian "{searchQuery}".</p>
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="mt-4 px-4 py-2 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl transition-colors cursor-pointer"
+                  >
+                    Reset Pencarian
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {paginatedStudents.map((st) => (
+                      <div
+                        key={st.id}
+                        className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                              {st.id}
+                            </span>
+                            <span className="text-xs font-bold text-[#049788] bg-[#EBF8F6] px-2.5 py-0.5 rounded-full">
+                              {st.level}
+                            </span>
+                          </div>
+                          <h3 className="text-base font-bold text-slate-950">{st.name}</h3>
+                          <div className="space-y-1 text-xs text-slate-600">
+                            <p>Program: <span className="font-semibold text-slate-900">{st.program}</span></p>
+                            <p>Paket: <span className="font-semibold text-slate-900">{st.package}</span></p>
+                            <p>Ustadz: <span className="font-semibold text-slate-900">{st.tutor}</span></p>
+                            <p>WhatsApp: <span className="font-mono text-slate-900">{st.phone}</span></p>
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                          <span className="text-slate-500 font-medium">XP: {st.xp}</span>
+                          <a
+                            href={`https://wa.me/62${st.phone.replace(/^0/, "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3.5 py-1.5 bg-[#EBF8F6] text-[#049788] hover:bg-[#DCF3F0] font-bold rounded-xl flex items-center gap-1"
+                          >
+                            <Phone className="w-3.5 h-3.5" />
+                            <span>Chat Santri</span>
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-white rounded-3xl border border-slate-200/90 shadow-2xs overflow-hidden">
+                    <TablePagination
+                      currentPage={studentsPage}
+                      totalItems={filteredStudents.length}
+                      pageSize={studentsPageSize}
+                      onPageChange={setStudentsPage}
+                      onPageSizeChange={setStudentsPageSize}
+                      pageSizeOptions={[6, 12, 24]}
+                      label="santri"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -2131,7 +3347,7 @@ export default function AdminDashboard({ onNavigate }) {
                     className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between"
                   >
                     <div className="space-y-2">
-                      <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-[#EBF8F6] text-[#049788]">
+                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#EBF8F6] text-[#049788]">
                         {prd.category}
                       </span>
                       <h3 className="text-base font-bold text-slate-950">{prd.name}</h3>
@@ -2159,7 +3375,7 @@ export default function AdminDashboard({ onNavigate }) {
                     Transaksi &amp; Pembayaran Santri
                   </h2>
                   <p className="text-xs sm:text-sm text-slate-500">
-                    Mutasi pembayaran paket belajar, perpanjangan kelas, dan verifikasi bukti transfer.
+                    Mutasi pembayaran untuk {formattedDateLabel} ({filteredTransactions.length} Transaksi).
                   </p>
                 </div>
                 <button
@@ -2186,44 +3402,72 @@ export default function AdminDashboard({ onNavigate }) {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 text-slate-700">
-                      {transactions.map((tx) => (
-                        <tr key={tx.id} className="hover:bg-slate-50/80 transition-colors">
-                          <td className="p-4 font-mono">
-                            <span className="font-bold text-slate-950 block">{tx.id}</span>
-                            <span className="text-[11px] text-slate-400">{tx.date}</span>
-                          </td>
-                          <td className="p-4 font-bold text-slate-900">{tx.student}</td>
-                          <td className="p-4 text-slate-600">{tx.package}</td>
-                          <td className="p-4 font-black text-slate-950">
-                            Rp {tx.amount.toLocaleString("id-ID")}
-                          </td>
-                          <td className="p-4 text-slate-500 font-medium">{tx.method}</td>
-                          <td className="p-4">
-                            <span
-                              className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${
-                                tx.status === "Lunas"
-                                  ? "bg-emerald-100 text-emerald-800"
-                                  : "bg-amber-100 text-amber-800"
-                              }`}
-                            >
-                              {tx.status}
-                            </span>
-                          </td>
-                          <td className="p-4 text-right">
-                            {tx.status !== "Lunas" && (
+                      {filteredTransactions.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="p-8 text-center text-slate-500">
+                            <div className="flex flex-col items-center justify-center">
+                              <CreditCard className="w-8 h-8 text-slate-300 mb-2" />
+                              <p className="font-bold text-sm text-slate-700">Tidak ada transaksi pada {formattedDateLabel}</p>
+                              <p className="text-xs text-slate-400 mt-1">Pilih rentang tanggal lain atau reset ke data hari ini.</p>
                               <button
-                                onClick={() => handleVerifyTransaction(tx.id)}
-                                className="px-3 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl cursor-pointer text-xs"
+                                onClick={() => handleSelectPreset("today")}
+                                className="mt-3 px-3.5 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold text-xs rounded-xl cursor-pointer"
                               >
-                                Verifikasi
+                                Lihat Hari Ini
                               </button>
-                            )}
+                            </div>
                           </td>
                         </tr>
-                      ))}
+                      ) : (
+                        paginatedTransactions.map((tx) => (
+                          <tr key={tx.id} className="hover:bg-slate-50/80 transition-colors">
+                            <td className="p-4 font-mono">
+                              <span className="font-bold text-slate-950 block">{tx.id}</span>
+                              <span className="text-xs text-slate-400">{tx.date}</span>
+                            </td>
+                            <td className="p-4 font-bold text-slate-900">{tx.student}</td>
+                            <td className="p-4 text-slate-600">{tx.package}</td>
+                            <td className="p-4 font-black text-slate-950">
+                              Rp {tx.amount.toLocaleString("id-ID")}
+                            </td>
+                            <td className="p-4 text-slate-500 font-medium">{tx.method}</td>
+                            <td className="p-4">
+                              <span
+                                className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                                  tx.status === "Lunas"
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-amber-100 text-amber-800"
+                                }`}
+                              >
+                                {tx.status}
+                              </span>
+                            </td>
+                            <td className="p-4 text-right">
+                              {tx.status !== "Lunas" && (
+                                <button
+                                  onClick={() => handleVerifyTransaction(tx.id)}
+                                  className="px-3 py-1.5 bg-[#049788] hover:bg-[#038073] text-white font-bold rounded-xl cursor-pointer text-xs"
+                                >
+                                  Verifikasi
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
+
+                <TablePagination
+                  currentPage={transactionsPage}
+                  totalItems={filteredTransactions.length}
+                  pageSize={transactionsPageSize}
+                  onPageChange={setTransactionsPage}
+                  onPageSizeChange={setTransactionsPageSize}
+                  pageSizeOptions={[5, 10, 20]}
+                  label="transaksi"
+                />
               </div>
             </div>
           )}

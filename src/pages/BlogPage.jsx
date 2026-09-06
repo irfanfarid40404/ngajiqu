@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
 import {
   Sparkles,
   Search,
@@ -8,6 +8,8 @@ import {
   ArrowRight,
   Share2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   X,
   Check,
   Bookmark,
@@ -280,6 +282,118 @@ const allBlogArticles = [
       },
     ],
   },
+  {
+    id: 9,
+    tag: "Ilmu Tajwid",
+    date: "5 Januari 2026",
+    readTime: "5 Menit Baca",
+    author: "Ustadz H. Ahmad Fauzi, Lc.",
+    authorRole: "Pengajar Tahsin & Sanad Qiraat",
+    title: "Panduan Memahami Tanda Waqaf dalam Mushaf Al-Qur'an Standar Indonesia",
+    description:
+      "Mengenal tanda waqaf lazim (م), jaiz (ج), mamnu' (لا), saktah (ساكته), dan cara berhenti tanpa merusak makna ayat.",
+    imageUrl: "/hero-tutor.jpg",
+    featured: false,
+    takeaways: [
+      "Waqaf lazim mewajibkan berhenti untuk menjaga kemurnian arti ayat.",
+      "Tanda mamnu' (لا) melarang berhenti jika masih terikat makna ayat selanjutnya.",
+      "Latihan nafas diafragma membantu menjaga kestabilan saat membaca ayat panjang.",
+    ],
+    content: [
+      {
+        heading: "Urgensi Memahami Tanda Berhenti dalam Tilawah",
+        text: "Berhenti pada posisi yang keliru dapat membalikkan makna firman Allah secara mendasar. Mengenal tanda waqaf adalah syarat mutlak bagi santri yang ingin membaca Al-Qur'an secara tartil.",
+      },
+      {
+        heading: "Ragam Tanda Waqaf Populer",
+        text: "Tanda 'Mim' (مـ) menandakan waqaf lazim (harus berhenti). Tanda 'Jim' (ج) membolehkan berhenti atau lanjut. Tanda 'La' (لا) menandakan tidak boleh berhenti kecuali di ujung ayat.",
+      },
+    ],
+  },
+  {
+    id: 10,
+    tag: "Fiqih Ibadah",
+    date: "28 Desember 2025",
+    readTime: "6 Menit Baca",
+    author: "Ustadz Dr. Muhammad Zaki, M.Pd.I",
+    authorRole: "Direktur Akademik & Pembina Tahfidz",
+    title: "Fiqih Shalat Berjamaah: Syarat Menjadi Makmum dan Tata Cara Masbuq yang Sah",
+    description:
+      "Panduan praktis meluruskan shaf, membaca Al-Fatihah di belakang imam, dan langkah menyempurnakan rakaat yang tertinggal.",
+    imageUrl: "/persona-family.jpg",
+    featured: false,
+    takeaways: [
+      "Makmum masbuq mendapati rakaat jika sempat ruku' thuma'ninah bersama imam.",
+      "Gerakan takbiratul ihram wajib dilakukan dalam keadaan berdiri tegak.",
+      "Menyempurnakan sisa rakaat dilakukan setelah imam mengucapkan salam kedua.",
+    ],
+    content: [
+      {
+        heading: "Kriteria Mendapatkan Rakaat Bersama Imam",
+        text: "Santri dianggap mendapatkan satu rakaat penuh jika berhasil menyusul ruku' imam dengan thuma'ninah sebelum imam bangkit untuk i'tidal.",
+      },
+      {
+        heading: "Etika Masuk Masjid Saat Shalat Berlangsung",
+        text: "Datanglah dengan tenang dan tidak terburu-buru berlari, sebagaimana sabda Rasulullah SAW dalam riwayat Bukhari.",
+      },
+    ],
+  },
+  {
+    id: 11,
+    tag: "Bahasa Arab",
+    date: "20 Desember 2025",
+    readTime: "5 Menit Baca",
+    author: "Ustadzah Fatimah Azzahra, M.Ag.",
+    authorRole: "Pakar Tajwid & Qari'ah Nasional",
+    title: "Mengapa Belajar Nahwu dan Shorof Membuka Pemahaman Al-Qur'an Lebih Dalam?",
+    description:
+      "Peran gramatika bahasa Arab dalam merasakan keindahan sastra Al-Qur'an dan memahami struktur ayat hukum secara mandiri.",
+    imageUrl: "/teachers-banner.jpg",
+    featured: false,
+    takeaways: [
+      "Ilmu Nahwu mempelajari harakat akhir kata dan fungsi sintaksisnya dalam kalimat.",
+      "Ilmu Shorof membedah perubahan bentuk kata (tashrif) dari akar katanya.",
+      "Pemahaman gramatika menghadirkan kekhusyukan berlipat saat membaca tilawah.",
+    ],
+    content: [
+      {
+        heading: "Nahwu Sebagai Penjaga Harakat dan Makna",
+        text: "Perubahan harakat dari dhommah ke fathah dapat mengubah status subjek menjadi objek. Di sinilah letak pentingnya memahami kaidah i'rab.",
+      },
+      {
+        heading: "Shorof Sebagai Pabrik Kosakata",
+        text: "Dari satu akar kata tiga huruf (fa'ala), ilmu shorof dapat melahirkan puluhan turunan makna yang kaya dan mendalam.",
+      },
+    ],
+  },
+  {
+    id: 12,
+    tag: "Keluarga & Anak",
+    date: "14 Desember 2025",
+    readTime: "4 Menit Baca",
+    author: "Ustadzah Rina Maryana, S.Pd.I",
+    authorRole: "Koordinator Bimbingan Anak & Balita",
+    title: "Metode Menumbuhkan Kecintaan Al-Qur'an pada Anak Tanpa Paksaan",
+    description:
+      "Pendekatan bercerita kisah teladan nabawi dan gamifikasi mengaji yang efektif membuat anak antusias menyimak setiap hari.",
+    imageUrl: "/persona-engineer.jpg",
+    featured: false,
+    takeaways: [
+      "Jadikan tilawah sebagai rutinitas menyenangkan di rumah, bukan hukuman.",
+      "Beri apresiasi atas usaha anak melafalkan huruf, bukan hanya hasil hafalan.",
+      "Pilih guru privat yang sabar dan memahami psikologi perkembangan anak.",
+    ],
+    content: [
+      {
+        heading: "Menciptakan Sudut Mengaji yang Nyaman di Rumah",
+        text: "Sediakan pojok baca Al-Qur'an yang terang, rapi, dan harum agar anak merasa senang menghabiskan waktu di tempat tersebut.",
+      },
+      {
+        heading: "Keteladanan Orang Tua Adalah Kurikulum Terbaik",
+        text: "Anak meniru apa yang mereka lihat. Ketika orang tua rutin membaca Al-Qur'an setiap hari, anak secara alami tergerak untuk mengikuti.",
+      },
+    ],
+  },
 ];
 
 const categoryTabs = [
@@ -317,6 +431,9 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
   const [activeArticle, setActiveArticle] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
   const [faqOpen, setFaqOpen] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesSectionRef = useRef(null);
+  const ARTICLES_PER_PAGE = 6;
 
   // Filter logic
   const filteredArticles = useMemo(() => {
@@ -346,6 +463,30 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
     }
     return filteredArticles;
   }, [filteredArticles, featuredArticle]);
+
+  const totalPages = Math.max(1, Math.ceil(gridArticles.length / ARTICLES_PER_PAGE));
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1);
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("Semua");
+    setCurrentPage(1);
+  };
+
+  const paginatedArticles = useMemo(() => {
+    const start = (safeCurrentPage - 1) * ARTICLES_PER_PAGE;
+    return gridArticles.slice(start, start + ARTICLES_PER_PAGE);
+  }, [gridArticles, safeCurrentPage]);
 
   const handleShareWhatsApp = (article) => {
     const url = window.location.href;
@@ -439,12 +580,12 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                 type="text"
                 placeholder="Cari topik artikel, kaidah tajwid, ustadz, atau panduan..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none bg-transparent"
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery("")}
+                  onClick={() => handleSearchChange("")}
                   className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
                   title="Hapus pencarian"
                 >
@@ -466,7 +607,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
               return (
                 <button
                   key={tab}
-                  onClick={() => setSelectedCategory(tab)}
+                  onClick={() => handleCategoryChange(tab)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
                     isActive
                       ? "bg-[#049788] text-white shadow-md shadow-[#049788]/25"
@@ -475,7 +616,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                 >
                   <span>{tab}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
+                    className={`text-xs px-1.5 py-0.5 rounded-full font-mono ${
                       isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
                     }`}
                   >
@@ -561,7 +702,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-slate-900">{featuredArticle.author}</h4>
-                        <span className="text-[11px] text-slate-500">{featuredArticle.authorRole}</span>
+                        <span className="text-xs text-slate-500">{featuredArticle.authorRole}</span>
                       </div>
                     </div>
                   </div>
@@ -588,13 +729,13 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
           )}
 
           {/* Regular Articles Grid */}
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
+          <div ref={articlesSectionRef} className="space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <h3 className="text-lg sm:text-xl font-black text-slate-950">
                 {selectedCategory === "Semua" ? "Daftar Artikel Terbaru" : `Artikel Kategori: ${selectedCategory}`}
               </h3>
               <span className="text-xs text-slate-500 font-semibold">
-                Menampilkan {gridArticles.length} artikel
+                Menampilkan {gridArticles.length > 0 ? (safeCurrentPage - 1) * ARTICLES_PER_PAGE + 1 : 0}–{Math.min(safeCurrentPage * ARTICLES_PER_PAGE, gridArticles.length)} dari {gridArticles.length} artikel
               </span>
             </div>
 
@@ -606,10 +747,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                   Coba gunakan kata kunci pencarian yang lain atau pilih kategori artikel yang berbeda.
                 </p>
                 <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory("Semua");
-                  }}
+                  onClick={handleResetFilters}
                   className="px-4 py-2 bg-[#049788] text-white rounded-xl font-bold text-xs cursor-pointer shadow-xs"
                 >
                   Reset Pencarian
@@ -617,7 +755,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-                {gridArticles.map((article) => (
+                {paginatedArticles.map((article) => (
                   <article
                     key={article.id}
                     className="group rounded-3xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-[#049788]/40 transition-all duration-300 flex flex-col justify-between overflow-hidden"
@@ -664,7 +802,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                       {/* Author & Read Button */}
                       <div className="pt-3 border-t border-slate-100 space-y-3">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-full bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold text-[10px] shrink-0">
+                          <div className="w-7 h-7 rounded-full bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold text-xs shrink-0">
                             <User className="w-3.5 h-3.5" />
                           </div>
                           <span className="text-xs font-semibold text-slate-700 truncate">{article.author}</span>
@@ -682,6 +820,73 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                   </article>
                 ))}
               </div>
+            )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <nav
+                aria-label="Paginasi Artikel Blog"
+                className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-slate-200"
+              >
+                <p className="text-xs text-slate-500 font-medium">
+                  Halaman <span className="font-bold text-slate-800">{safeCurrentPage}</span> dari{" "}
+                  <span className="font-bold text-slate-800">{totalPages}</span>
+                </p>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const prev = Math.max(1, safeCurrentPage - 1);
+                      setCurrentPage(prev);
+                      articlesSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    disabled={safeCurrentPage === 1}
+                    className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-xs font-bold gap-1 px-3.5 cursor-pointer"
+                    aria-label="Halaman artikel sebelumnya"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span className="hidden sm:inline">Sebelumnya</span>
+                  </button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => {
+                          setCurrentPage(pageNum);
+                          articlesSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        aria-current={safeCurrentPage === pageNum ? "page" : undefined}
+                        aria-label={`Halaman ${pageNum}`}
+                        className={`min-h-[44px] min-w-[44px] rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
+                          safeCurrentPage === pageNum
+                            ? "bg-[#049788] text-white shadow-xs"
+                            : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = Math.min(totalPages, safeCurrentPage + 1);
+                      setCurrentPage(next);
+                      articlesSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    disabled={safeCurrentPage === totalPages}
+                    className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors text-xs font-bold gap-1 px-3.5 cursor-pointer"
+                    aria-label="Halaman artikel selanjutnya"
+                  >
+                    <span className="hidden sm:inline">Selanjutnya</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </nav>
             )}
           </div>
 
@@ -856,7 +1061,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
             {/* Modal Sticky Header */}
             <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md px-6 py-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2 min-w-0 pr-4">
-                <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-[#EBF8F6] text-[#049788] shrink-0">
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#EBF8F6] text-[#049788] shrink-0">
                   {activeArticle.tag}
                 </span>
                 <span className="text-xs text-slate-500 font-mono truncate">{activeArticle.date}</span>
@@ -895,7 +1100,7 @@ export default function BlogPage({ onOpenModal, onNavigate }) {
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-900">{activeArticle.author}</h4>
-                      <span className="text-slate-500 text-[11px]">{activeArticle.authorRole}</span>
+                      <span className="text-slate-500 text-xs">{activeArticle.authorRole}</span>
                     </div>
                   </div>
 
