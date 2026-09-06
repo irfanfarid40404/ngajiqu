@@ -19,7 +19,7 @@ import LoginModal from "@/components/modals/LoginModal";
 export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [kelasDropdownOpen, setKelasDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // 'Kursus' | 'Ibadah' | null
   const [waktuSolatModalOpen, setWaktuSolatModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -34,7 +34,6 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
     }
   });
 
-  const dropdownRef = useRef(null);
   const userDropdownRef = useRef(null);
 
   const handleLoginSuccess = (user) => {
@@ -60,8 +59,8 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setKelasDropdownOpen(false);
+      if (!event.target.closest('[data-dropdown="nav-dropdown"]')) {
+        setOpenDropdown(null);
       }
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
         setUserDropdownOpen(false);
@@ -88,7 +87,16 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
     },
     { label: "Hubungi", href: `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent("Halo Admin NgajiQ, saya ingin tanya informasi kelas.")}`, isExternal: true },
     { label: "Lokasi", href: "/#cara-kerja" },
-    { label: "Waktu Solat", action: "waktu-solat" },
+    {
+      label: "Ibadah",
+      hasDropdown: true,
+      children: [
+        { label: "Waktu Sholat", href: "/waktu-sholat", desc: "Jadwal 5 waktu fardhu & hitung mundur" },
+        { label: "Doa & Dzikir", href: "/doa-dzikir", desc: "Kumpulan doa harian & dzikir bersanad" },
+        { label: "Arah Kiblat", href: "/arah-kiblat", desc: "Kompas digital presisi ke Ka'bah Makkah" },
+        { label: "Kalender Islam", href: "/kalender-islam", desc: "Kalender Hijriyah & puasa sunnah" },
+      ],
+    },
     { label: "Testimoni", href: "/#testimoni" },
     { label: "Blog", href: "/blog" },
   ];
@@ -109,6 +117,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
     const href = item.href;
 
     if (
+      href === "/kursus" ||
       href === "/kursus/alquran" ||
       href === "/kursus/fiqih" ||
       href === "/kursus/nahwu-shorof" ||
@@ -120,7 +129,14 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       href === "/dashboard" ||
       href === "/santri" ||
       href === "/admin" ||
-      href === "/admin-dashboard"
+      href === "/admin-dashboard" ||
+      href === "/waktu-sholat" ||
+      href === "/jadwal-sholat" ||
+      href === "/doa-dzikir" ||
+      href === "/arah-kiblat" ||
+      href === "/kompas-kiblat" ||
+      href === "/kalender-islam" ||
+      href === "/ibadah"
     ) {
       e.preventDefault();
       if (onNavigate) {
@@ -129,7 +145,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
         window.location.pathname = href;
       }
       setMobileMenuOpen(false);
-      setKelasDropdownOpen(false);
+      setOpenDropdown(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (href === "/") {
       if (currentPath !== "/") {
@@ -141,12 +157,12 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
         }
       }
       setMobileMenuOpen(false);
-      setKelasDropdownOpen(false);
+      setOpenDropdown(null);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (href.startsWith("/#")) {
       e.preventDefault();
       setMobileMenuOpen(false);
-      setKelasDropdownOpen(false);
+      setOpenDropdown(null);
       const targetId = href.replace("/", "");
       if (currentPath !== "/") {
         if (onNavigate) {
@@ -227,24 +243,37 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                   (item.href === "/blog" || item.href === "/artikel") &&
                   (currentPath === "/blog" || currentPath === "/artikel");
                 const isKursusActive =
-                  item.hasDropdown &&
-                  (currentPath === "/kursus/alquran" ||
+                  item.label === "Kursus" &&
+                  (currentPath === "/kursus" ||
+                    currentPath === "/kursus/alquran" ||
                     currentPath === "/kursus/fiqih" ||
                     currentPath === "/kursus/nahwu-shorof");
+                const isIbadahActive =
+                  item.label === "Ibadah" &&
+                  (currentPath === "/ibadah" ||
+                    currentPath === "/waktu-sholat" ||
+                    currentPath === "/jadwal-sholat" ||
+                    currentPath === "/doa-dzikir" ||
+                    currentPath === "/arah-kiblat" ||
+                    currentPath === "/kompas-kiblat" ||
+                    currentPath === "/kalender-islam");
+                const isItemDropdownActive = isKursusActive || isIbadahActive;
 
                 if (item.hasDropdown) {
+                  const isCurrentOpen = openDropdown === item.label;
                   return (
                     <div
                       key={item.label}
-                      ref={dropdownRef}
+                      data-dropdown="nav-dropdown"
                       className="relative"
-                      onMouseEnter={() => setKelasDropdownOpen(true)}
-                      onMouseLeave={() => setKelasDropdownOpen(false)}
+                      onMouseEnter={() => setOpenDropdown(item.label)}
+                      onMouseLeave={() => setOpenDropdown(null)}
                     >
                       <button
-                        onClick={() => setKelasDropdownOpen((prev) => !prev)}
+                        onClick={() => setOpenDropdown((prev) => (prev === item.label ? null : item.label))}
+                        aria-expanded={isCurrentOpen}
                         className={`inline-flex items-center gap-1 font-semibold transition-all cursor-pointer ${
-                          isKursusActive
+                          isItemDropdownActive
                             ? "text-[#049788] bg-[#EBF8F6] px-3 py-1.5 rounded-full text-xs font-bold"
                             : isScrolled
                             ? "px-3 py-1.5 rounded-full text-xs text-slate-700 hover:text-[#049788] hover:bg-white shadow-2xs"
@@ -252,11 +281,11 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                         }`}
                       >
                         <span>{item.label}</span>
-                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${kelasDropdownOpen ? "rotate-180" : ""}`} />
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isCurrentOpen ? "rotate-180" : ""}`} />
                       </button>
 
                       {/* Dropdown Menu */}
-                      {kelasDropdownOpen && (
+                      {isCurrentOpen && (
                         <div className="absolute top-full left-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200/90 shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
                           {item.children.map((child) => (
                             <a
@@ -342,7 +371,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                       isScrolled ? "px-3 py-1.5 text-xs" : "px-3.5 py-2 text-xs"
                     }`}
                   >
-                    <div className="w-5 h-5 rounded-full bg-[#049788] text-white flex items-center justify-center text-[10px] font-black">
+                    <div className="w-5 h-5 rounded-full bg-[#049788] text-white flex items-center justify-center text-xs font-black">
                       {currentUser.avatar || currentUser.name.charAt(0)}
                     </div>
                     <span className="max-w-[90px] truncate">{currentUser.name}</span>
@@ -353,7 +382,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in zoom-in-95 duration-150 text-xs">
                       <div className="p-2.5 border-b border-slate-100">
                         <p className="font-bold text-slate-900 truncate">{currentUser.name}</p>
-                        <span className="text-[10px] text-emerald-600 font-semibold block">
+                        <span className="text-xs text-emerald-600 font-semibold block">
                           {currentUser.role === "admin" ? "Super Admin" : "Santri Aktif"}
                         </span>
                       </div>
@@ -446,18 +475,23 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
               {navItems.map((item) => {
                 if (item.hasDropdown) {
                   return (
-                    <React.Fragment key={item.label}>
-                      {item.children.map((child) => (
-                        <a
-                          key={child.label}
-                          href={child.href}
-                          onClick={(e) => handleLinkClick(e, child)}
-                          className="px-3 py-2 text-xs font-semibold text-slate-700 hover:text-[#049788] hover:bg-[#EBF8F6] rounded-xl transition-colors"
-                        >
-                          {child.label}
-                        </a>
-                      ))}
-                    </React.Fragment>
+                    <div key={item.label} className="col-span-2 space-y-1 bg-slate-50/80 p-2.5 rounded-2xl border border-slate-200/60 mb-1">
+                      <span className="text-xs font-black text-[#049788] uppercase tracking-wider px-2 block">
+                        {item.label}
+                      </span>
+                      <div className="grid grid-cols-2 gap-1 pt-1">
+                        {item.children.map((child) => (
+                          <a
+                            key={child.label}
+                            href={child.href}
+                            onClick={(e) => handleLinkClick(e, child)}
+                            className="px-2.5 py-2 text-xs font-semibold text-slate-700 hover:text-[#049788] hover:bg-white rounded-xl transition-colors block"
+                          >
+                            {child.label}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
                   );
                 }
 
@@ -512,14 +546,14 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-900">{currentUser.name}</p>
-                        <span className="text-[10px] text-emerald-600 font-medium">
+                        <span className="text-xs text-emerald-600 font-medium">
                           {currentUser.role === "admin" ? "Super Admin" : "Santri Aktif"}
                         </span>
                       </div>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="text-[11px] text-rose-600 font-bold hover:underline"
+                      className="text-xs text-rose-600 font-bold hover:underline"
                     >
                       Keluar
                     </button>

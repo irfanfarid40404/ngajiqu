@@ -67,6 +67,10 @@ export default function Footer({ onNavigate }) {
               <li><a href="/#program" onClick={(e) => handleNav(e, "/#program")} className="hover:text-white transition-colors">Program & Kelas</a></li>
               <li><a href="/#cara-kerja" onClick={(e) => handleNav(e, "/#cara-kerja")} className="hover:text-white transition-colors">Lokasi & Cara Kerja</a></li>
               <li><a href="/#testimoni" onClick={(e) => handleNav(e, "/#testimoni")} className="hover:text-white transition-colors">Testimoni</a></li>
+              <li><a href="/waktu-sholat" onClick={(e) => handleNav(e, "/waktu-sholat")} className="hover:text-white transition-colors text-teal-300 font-semibold">Waktu Sholat</a></li>
+              <li><a href="/doa-dzikir" onClick={(e) => handleNav(e, "/doa-dzikir")} className="hover:text-white transition-colors">Doa & Dzikir</a></li>
+              <li><a href="/arah-kiblat" onClick={(e) => handleNav(e, "/arah-kiblat")} className="hover:text-white transition-colors">Arah Kiblat</a></li>
+              <li><a href="/kalender-islam" onClick={(e) => handleNav(e, "/kalender-islam")} className="hover:text-white transition-colors">Kalender Islam</a></li>
               <li><a href="/blog" onClick={(e) => handleNav(e, "/blog")} className="hover:text-white transition-colors">Blog & Panduan Mengaji</a></li>
               <li><a href="/#faq" onClick={(e) => handleNav(e, "/#faq")} className="hover:text-white transition-colors">FAQ</a></li>
             </ul>

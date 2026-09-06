@@ -19,6 +19,7 @@ import RegisterPage from "./pages/RegisterPage";
 import BlogPage from "./pages/BlogPage";
 import TeachersPage from "./pages/TeachersPage";
 import LoginPage from "./pages/LoginPage";
+import PrayerTimesPage from "./pages/PrayerTimesPage";
 
 // Landing Page Sections (Homepage)
 import Hero from "./components/sections/Hero";
@@ -52,7 +53,7 @@ export default function App() {
 
   // Update SEO Document Title & Description dynamically per route
   useEffect(() => {
-    if (currentPath === "/kursus/alquran") {
+    if (currentPath === "/kursus/alquran" || currentPath === "/kursus") {
       document.title = "Kursus Al-Qur'an Online | NgajiQ";
     } else if (currentPath === "/kursus/fiqih") {
       document.title = "Kursus Fiqih Online | NgajiQ";
@@ -70,6 +71,14 @@ export default function App() {
       document.title = "Tenaga Pengajar & Guru Bersanad | NgajiQ";
     } else if (currentPath === "/blog" || currentPath === "/artikel") {
       document.title = "Blog & Panduan Belajar Mengaji | NgajiQ";
+    } else if (currentPath === "/doa-dzikir") {
+      document.title = "Kumpulan Doa & Dzikir Harian Bersanad | NgajiQ";
+    } else if (currentPath === "/arah-kiblat" || currentPath === "/kompas-kiblat") {
+      document.title = "Kompas Digital Penunjuk Arah Kiblat Akurat | NgajiQ";
+    } else if (currentPath === "/kalender-islam") {
+      document.title = "Kalender Islam Hijriyah & Jadwal Puasa Sunnah | NgajiQ";
+    } else if (currentPath === "/waktu-sholat" || currentPath === "/jadwal-sholat" || currentPath === "/ibadah") {
+      document.title = "Jadwal Waktu Sholat & Pusat Ibadah Muslim | NgajiQ";
     } else {
       document.title = "NgajiQ — Bimbingan Mengaji Privat 1-on-1 untuk Dewasa & Anak";
     }
@@ -79,7 +88,9 @@ export default function App() {
     if (path !== currentPath) {
       window.history.pushState({}, "", path);
       setCurrentPath(path);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (!path.includes("#")) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     }
   };
 
@@ -131,7 +142,7 @@ export default function App() {
 
   const isTeachersPage = currentPath === "/guru-pengajar";
   const isBlogPage = currentPath === "/blog" || currentPath === "/artikel";
-  const isQuranCoursePage = currentPath === "/kursus/alquran";
+  const isQuranCoursePage = currentPath === "/kursus/alquran" || currentPath === "/kursus";
   const isFiqihCoursePage = currentPath === "/kursus/fiqih";
   const isNahwuShorofCoursePage = currentPath === "/kursus/nahwu-shorof";
   const isRegisterPage =
@@ -139,6 +150,14 @@ export default function App() {
     currentPath === "/daftar-kelas" ||
     currentPath === "/signup";
   const isLoginPage = currentPath === "/login" || currentPath === "/masuk";
+  const isIbadahPage =
+    currentPath === "/ibadah" ||
+    currentPath === "/waktu-sholat" ||
+    currentPath === "/jadwal-sholat" ||
+    currentPath === "/doa-dzikir" ||
+    currentPath === "/arah-kiblat" ||
+    currentPath === "/kompas-kiblat" ||
+    currentPath === "/kalender-islam";
   const isDashboardPage =
     currentPath === "/dashboard" ||
     currentPath === "/santri" ||
@@ -188,6 +207,9 @@ export default function App() {
         ) : isTeachersPage ? (
           /* Dedicated Teachers Page */
           <TeachersPage onOpenModal={handleOpenModal} />
+        ) : isIbadahPage ? (
+          /* Dedicated Ibadah Hub Page (Waktu Sholat, Doa & Dzikir, Arah Kiblat, Kalender Islam) */
+          <PrayerTimesPage currentPath={currentPath} onNavigate={handleNavigate} />
         ) : (
           /* Full Landing Page Flow */
           <>
