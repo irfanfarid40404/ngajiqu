@@ -35,6 +35,58 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
   });
 
   const userDropdownRef = useRef(null);
+  const dropdownTimeoutRef = useRef(null);
+  const openedByRef = useRef(null); // 'hover' | 'click' | null
+
+  const handleDropdownMouseEnter = (label) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    if (openDropdown !== label) {
+      openedByRef.current = "hover";
+      setOpenDropdown(label);
+    }
+  };
+
+  const handleDropdownMouseLeave = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+      openedByRef.current = null;
+    }, 200);
+  };
+
+  const handleDropdownClick = (e, label) => {
+    e.preventDefault();
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    if (openDropdown === label) {
+      // If opened by hover, promote to 'click' and keep open so clicking doesn't collide with hover
+      if (openedByRef.current === "hover") {
+        openedByRef.current = "click";
+        return;
+      }
+      // If clicked again deliberately, toggle close
+      setOpenDropdown(null);
+      openedByRef.current = null;
+    } else {
+      setOpenDropdown(label);
+      openedByRef.current = "click";
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeoutRef.current) {
+        clearTimeout(dropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
@@ -60,7 +112,12 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest('[data-dropdown="nav-dropdown"]')) {
+        if (dropdownTimeoutRef.current) {
+          clearTimeout(dropdownTimeoutRef.current);
+          dropdownTimeoutRef.current = null;
+        }
         setOpenDropdown(null);
+        openedByRef.current = null;
       }
       if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
         setUserDropdownOpen(false);
@@ -102,6 +159,10 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
   ];
 
   const handleLinkClick = (e, item) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
     if (item.action === "waktu-solat") {
       e.preventDefault();
       setWaktuSolatModalOpen(true);
@@ -146,6 +207,7 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       }
       setMobileMenuOpen(false);
       setOpenDropdown(null);
+      openedByRef.current = null;
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (href === "/") {
       if (currentPath !== "/") {
@@ -158,11 +220,13 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
       }
       setMobileMenuOpen(false);
       setOpenDropdown(null);
+      openedByRef.current = null;
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else if (href.startsWith("/#")) {
       e.preventDefault();
       setMobileMenuOpen(false);
       setOpenDropdown(null);
+      openedByRef.current = null;
       const targetId = href.replace("/", "");
       if (currentPath !== "/") {
         if (onNavigate) {
@@ -266,11 +330,12 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                       key={item.label}
                       data-dropdown="nav-dropdown"
                       className="relative"
-                      onMouseEnter={() => setOpenDropdown(item.label)}
-                      onMouseLeave={() => setOpenDropdown(null)}
+                      onMouseEnter={() => handleDropdownMouseEnter(item.label)}
+                      onMouseLeave={handleDropdownMouseLeave}
                     >
                       <button
-                        onClick={() => setOpenDropdown((prev) => (prev === item.label ? null : item.label))}
+                        type="button"
+                        onClick={(e) => handleDropdownClick(e, item.label)}
                         aria-expanded={isCurrentOpen}
                         className={`inline-flex items-center gap-1 font-semibold transition-all cursor-pointer ${
                           isItemDropdownActive
@@ -284,24 +349,30 @@ export default function Navbar({ _onOpenModal, currentPath = "/", onNavigate }) 
                         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isCurrentOpen ? "rotate-180" : ""}`} />
                       </button>
 
-                      {/* Dropdown Menu */}
+                      {/* Dropdown Menu with Seamless Hover Bridge (pt-2 instead of mt-2) */}
                       {isCurrentOpen && (
-                        <div className="absolute top-full left-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200/90 shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                          {item.children.map((child) => (
-                            <a
-                              key={child.label}
-                              href={child.href}
-                              onClick={(e) => handleLinkClick(e, child)}
-                              className="block p-3 rounded-xl hover:bg-[#EBF8F6] text-left transition-colors group"
-                            >
-                              <div className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#049788]">
-                                {child.label}
-                              </div>
-                              <div className="text-xs text-slate-500">
-                                {child.desc}
-                              </div>
-                            </a>
-                          ))}
+                        <div
+                          className="absolute top-full left-0 pt-2 w-64 z-50 animate-in fade-in zoom-in-95 duration-150"
+                          onMouseEnter={() => handleDropdownMouseEnter(item.label)}
+                          onMouseLeave={handleDropdownMouseLeave}
+                        >
+                          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-xl p-2">
+                            {item.children.map((child) => (
+                              <a
+                                key={child.label}
+                                href={child.href}
+                                onClick={(e) => handleLinkClick(e, child)}
+                                className="block p-3 rounded-xl hover:bg-[#EBF8F6] text-left transition-colors group"
+                              >
+                                <div className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#049788]">
+                                  {child.label}
+                                </div>
+                                <div className="text-xs text-slate-500">
+                                  {child.desc}
+                                </div>
+                              </a>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>

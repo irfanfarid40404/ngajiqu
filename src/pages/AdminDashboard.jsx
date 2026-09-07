@@ -2137,154 +2137,7 @@ export default function AdminDashboard({ onNavigate }) {
           {/* ─── BODY TABS ─── */}
           <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
 
-            {/* ─── GLOBAL DATE FILTER TOOLBAR (KONTROL PENYARING TANGGAL) ─── */}
-            <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                
-                {/* Left: Active Date Display & Day Stepper */}
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-10 h-10 rounded-2xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold border border-[#C8EDE9] shrink-0">
-                      <Calendar className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm sm:text-base font-black text-slate-950">
-                          {formattedDateLabel}
-                        </h3>
-                        {datePreset === "today" && (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                            Hari Ini
-                          </span>
-                        )}
-                        {datePreset === "yesterday" && (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
-                            Kemarin
-                          </span>
-                        )}
-                        {datePreset === "week" && (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-                            Rentang 7 Hari
-                          </span>
-                        )}
-                        {datePreset === "month" && (
-                          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
-                            Bulanan
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-500">
-                        Filter operasional aktif: Melihat data pendaftar, sesi kelas, &amp; mutasi sesuai tanggal
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Day Stepper Buttons (◀ Previous Day | Next Day ▶) */}
-                  <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60 shrink-0">
-                    <button
-                      type="button"
-                      onClick={handlePreviousDay}
-                      className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
-                      title="Hari Sebelumnya"
-                      aria-label="Hari Sebelumnya"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-                    <span className="text-xs font-semibold text-slate-500 px-1.5 select-none">
-                      Navigasi Hari
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleNextDay}
-                      className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
-                      title="Hari Berikutnya"
-                      aria-label="Hari Berikutnya"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Right: Presets & Custom Date Picker */}
-                <div className="flex flex-wrap items-center gap-2.5">
-                  {/* Preset Buttons */}
-                  <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60">
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPreset("today")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        datePreset === "today"
-                          ? "bg-white text-[#049788] shadow-xs"
-                          : "text-slate-600 hover:text-slate-950"
-                      }`}
-                    >
-                      Hari Ini
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPreset("yesterday")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        datePreset === "yesterday"
-                          ? "bg-white text-[#049788] shadow-xs"
-                          : "text-slate-600 hover:text-slate-950"
-                      }`}
-                    >
-                      Kemarin
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPreset("week")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        datePreset === "week"
-                          ? "bg-white text-[#049788] shadow-xs"
-                          : "text-slate-600 hover:text-slate-950"
-                      }`}
-                    >
-                      7 Hari
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPreset("month")}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
-                        datePreset === "month"
-                          ? "bg-white text-[#049788] shadow-xs"
-                          : "text-slate-600 hover:text-slate-950"
-                      }`}
-                    >
-                      Bulan Ini
-                    </button>
-                  </div>
-
-                  {/* Native Date Input */}
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition-colors">
-                    <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => handleCustomDateChange(e.target.value)}
-                      className="text-xs font-bold text-slate-800 bg-transparent focus:outline-none cursor-pointer"
-                      title="Pilih tanggal spesifik dari kalender"
-                    />
-                  </div>
-
-                  {/* Quick Reset to Today button */}
-                  {(datePreset !== "today" || selectedDate !== "2026-09-06") && (
-                    <button
-                      type="button"
-                      onClick={() => handleSelectPreset("today")}
-                      className="px-3 py-1.5 text-xs text-[#049788] hover:text-[#038073] font-bold cursor-pointer hover:underline flex items-center gap-1"
-                    >
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>Kembali ke Hari Ini</span>
-                    </button>
-                  )}
-                </div>
-
-              </div>
-            </div>
-
-          {/* ================= 1. TAB: OVERVIEW / RINGKASAN EKSEKUTIF ================= */}
+          {/* ================= 1. TAB: OVERVIEW / RINGKASAN EKSEKUTIF (DASHBOARD AWAL) ================= */}
           {activeTab === "overview" && (
             <div className="space-y-6">
               
@@ -2318,6 +2171,153 @@ export default function AdminDashboard({ onNavigate }) {
                   >
                     <Download className="w-4 h-4" />
                   </button>
+                </div>
+              </div>
+
+              {/* ─── DATE FILTER TOOLBAR (HANYA DITAMPILKAN DI DASHBOARD AWAL) ─── */}
+              <div className="bg-white rounded-3xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  
+                  {/* Left: Active Date Display & Day Stepper */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-10 h-10 rounded-2xl bg-[#EBF8F6] text-[#049788] flex items-center justify-center font-bold border border-[#C8EDE9] shrink-0">
+                        <Calendar className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="text-sm sm:text-base font-black text-slate-950">
+                            {formattedDateLabel}
+                          </h3>
+                          {datePreset === "today" && (
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                              Hari Ini
+                            </span>
+                          )}
+                          {datePreset === "yesterday" && (
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                              Kemarin
+                            </span>
+                          )}
+                          {datePreset === "week" && (
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
+                              Rentang 7 Hari
+                            </span>
+                          )}
+                          {datePreset === "month" && (
+                            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">
+                              Bulanan
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-slate-500">
+                          Filter operasional aktif: Melihat data pendaftar, sesi kelas, &amp; mutasi sesuai tanggal
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Day Stepper Buttons (◀ Previous Day | Next Day ▶) */}
+                    <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60 shrink-0">
+                      <button
+                        type="button"
+                        onClick={handlePreviousDay}
+                        className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
+                        title="Hari Sebelumnya"
+                        aria-label="Hari Sebelumnya"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      <span className="text-xs font-semibold text-slate-500 px-1.5 select-none">
+                        Navigasi Hari
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleNextDay}
+                        className="p-1.5 rounded-lg hover:bg-white text-slate-600 hover:text-slate-950 cursor-pointer transition-all shadow-2xs hover:shadow-xs"
+                        title="Hari Berikutnya"
+                        aria-label="Hari Berikutnya"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right: Presets & Custom Date Picker */}
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    {/* Preset Buttons */}
+                    <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/60">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("today")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                          datePreset === "today"
+                            ? "bg-white text-[#049788] shadow-xs"
+                            : "text-slate-600 hover:text-slate-950"
+                        }`}
+                      >
+                        Hari Ini
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("yesterday")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                          datePreset === "yesterday"
+                            ? "bg-white text-[#049788] shadow-xs"
+                            : "text-slate-600 hover:text-slate-950"
+                        }`}
+                      >
+                        Kemarin
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("week")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                          datePreset === "week"
+                            ? "bg-white text-[#049788] shadow-xs"
+                            : "text-slate-600 hover:text-slate-950"
+                        }`}
+                      >
+                        7 Hari
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("month")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+                          datePreset === "month"
+                            ? "bg-white text-[#049788] shadow-xs"
+                            : "text-slate-600 hover:text-slate-950"
+                        }`}
+                      >
+                        Bulan Ini
+                      </button>
+                    </div>
+
+                    {/* Native Date Input */}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl hover:border-slate-300 transition-colors">
+                      <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => handleCustomDateChange(e.target.value)}
+                        className="text-xs font-bold text-slate-800 bg-transparent focus:outline-none cursor-pointer"
+                        title="Pilih tanggal spesifik dari kalender"
+                      />
+                    </div>
+
+                    {/* Quick Reset to Today button */}
+                    {(datePreset !== "today" || selectedDate !== "2026-09-06") && (
+                      <button
+                        type="button"
+                        onClick={() => handleSelectPreset("today")}
+                        className="px-3 py-1.5 text-xs text-[#049788] hover:text-[#038073] font-bold cursor-pointer hover:underline flex items-center gap-1"
+                      >
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>Kembali ke Hari Ini</span>
+                      </button>
+                    )}
+                  </div>
+
                 </div>
               </div>
 
